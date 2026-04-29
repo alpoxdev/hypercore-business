@@ -1,0 +1,130 @@
+---
+name: korean-product-detail-page
+description: "스마트스토어, 카페24, 쿠팡형 마켓플레이스, 한국형 자사몰, 소셜커머스 셀러를 위해 국내 자료 기반의 한국형 상품 상세페이지를 전략, 한국어 카피, 섹션 구조, 이미지/컷 기획, 실제 생성·편집 이미지까지 끝-to-end로 만든다. 사용자가 한국형 상세페이지, 스마트스토어/쇼핑몰 상품 상세페이지, 제품 페이지 카피+비주얼, 이미지 포함 이커머스 상세페이지를 요청할 때 사용한다."
+compatibility: 국내 시장/플랫폼 리서치를 위한 라이브 검색, 로컬 파일 작성, 실제 래스터 이미지 생성이 필요할 때 로컬 `skills/image-generation` 스킬 폴더와 함께 동작한다.
+metadata:
+  author: Hypercore Business
+  version: "0.1.0"
+---
+
+@rules/korean-product-detail-page-workflow.ko.md
+@rules/platform-compliance.ko.md
+@references/research-findings.ko.md
+@references/section-templates.ko.md
+@references/image-direction.ko.md
+@references/image-generation-integration.ko.md
+
+# Korean Product Detail Page
+
+<purpose>
+
+한국 소비자와 국내 커머스 플랫폼에 맞는 이미지 중심 상품 상세페이지를 끝까지 만든다. 제품 정보, 타깃, 판매 채널, 레퍼런스를 분석해 상세페이지 전략, 한국어 카피, 이미지/컷 구성, 생성형 이미지 프롬프트, 실제 이미지 생성/편집, 시각 검증, 아카이브, 플랫폼 검수 체크리스트까지 산출한다.
+
+</purpose>
+
+<routing_rule>
+
+다음 요청에는 이 스킬을 사용한다:
+
+- 한국형 상세페이지, 스마트스토어 상세페이지, 쇼핑몰 상세페이지, 쿠팡/카페24/고도몰/자사몰 상품페이지
+- 제품 상세페이지를 “이미지랑 같이”, “한국 셀러 스타일”, “구매전환형”, “국내 자료 기반”으로 만들기
+- 상품 사진/간단 설명만 주고 상세페이지 구조, 카피, 컷 기획, 이미지 생성 프롬프트, 실제 생성 이미지까지 요청
+- 국내 플랫폼 규격과 상품정보제공고시를 고려한 상세페이지 초안/검수
+
+다음 경우에는 사용하지 않는다:
+
+- 일반 랜딩페이지, 브랜드 웹사이트, 앱 UI, 비커머스 페이지 작업
+- 상세페이지 구조나 한국 커머스 맥락 없이 순수 래스터 이미지만 생성하는 요청 → `image-generation` 사용
+- 법률 자문만 원하는 요청 → 컴플라이언스 체크리스트와 전문가 검토 권고로 처리
+- 한국 로컬라이즈가 아닌 Amazon US 같은 해외 마켓플레이스 전용 페이지
+
+</routing_rule>
+
+<execution_contract>
+
+- 결과물을 단순 문서가 아니라 구매전환용 커머스 산출물로 취급한다.
+- 사용자가 리서치를 금지하거나 승인된 레퍼런스를 제공하지 않는 한, 작성 전 한국 자료를 조사한다.
+- 일반 글로벌 UX 글보다 국내 플랫폼 고객센터, 셀러 도구, 국내 디자인 템플릿, 한국 운영자/대행사 자료를 우선한다.
+- 제품/카테고리 정보가 부족하면 안전한 가정을 명시하고 계속 진행한다. 카테고리, 법적 리스크, 제품 정체를 판단할 수 없을 때만 질문한다.
+- 이미지가 포함된 요청이면 브리프에서 멈추지 않는다. 로컬 `skills/image-generation/` 폴더의 `SKILL.md`, `rules/natural-image-workflow.md`, `references/json-prompt-best-practices.md`, `scripts/archive-generated-images.mjs`를 필수 실행 참고로 읽고, English JSON prompt 검수, 생성/편집 실행, 시각 검증, 이미지 아카이브까지 이 스킬의 일부로 수행한다.
+- 플랫폼/법적 적합성을 최종 법률 승인으로 주장하지 않는다. 항상 제작 체크리스트로 표시한다.
+
+</execution_contract>
+
+<trigger_examples>
+
+긍정 예시:
+
+- "이 화장품 제품으로 한국형 상세페이지 이미지까지 만들어줘."
+- "스마트스토어용 상세페이지를 국내 레퍼런스 찾아서 카피랑 컷 구성까지 짜줘."
+- "제품 사진 한 장밖에 없는데 카페24/자사몰용 상세페이지 기획해줘."
+- "쿠팡에 올릴 구매전환형 상품 상세페이지를 한국 소비자 스타일로 만들어줘."
+- "상세페이지 섹션별 이미지 생성 프롬프트도 같이 줘."
+
+부정 예시:
+
+- "이 로고 이미지만 AI 티 안 나게 생성해줘." → `image-generation` 사용.
+- "전자상거래법 조항만 찾아서 법률 검토해줘." → 법/컴플라이언스 리서치로 처리.
+- "SaaS 랜딩페이지 히어로 카피 써줘." → 일반 랜딩/카피 작업.
+
+경계 예시:
+
+- "상품 페이지 개선해줘." 제품이 한국 이커머스에서 판매되고 사용자가 상세페이지 카피/비주얼 구조를 기대하면 이 스킬을 사용한다. 단순 UI 사용성 피드백이면 디자인/UX 리뷰로 처리한다.
+
+</trigger_examples>
+
+<support_file_read_order>
+
+1. 이 `SKILL.ko.md`를 읽어 라우팅과 산출 범위를 확인한다.
+2. `references/research-findings.ko.md`에서 기본 한국 자료 근거와 출처를 확인한다.
+3. `rules/korean-product-detail-page-workflow.ko.md`에서 단계별 제작 워크플로우를 확인한다.
+4. 상세페이지 구조를 고를 때 `references/section-templates.ko.md`를 읽는다.
+5. 이미지/컷 브리프를 만들 때 `references/image-direction.ko.md`를 읽는다.
+6. 실제 생성/편집 이미지 파일 또는 prompt-ready JSON이 필요하면 `references/image-generation-integration.ko.md`를 읽는다.
+7. 실제 이미지 제작 시 `skills/image-generation/SKILL.md`와 통합 가이드에 명시된 로컬 지원 파일을 읽고 생성, 검증, 아카이브까지 계속 진행한다.
+8. SmartStore/Cafe24/Gmarket/Auction 대상 산출물을 마무리하기 전 `rules/platform-compliance.ko.md`를 읽는다.
+9. 이 스킬을 수정한 뒤 `scripts/validate-korean-product-detail-page-skill.mjs`를 실행한다.
+
+</support_file_read_order>
+
+<workflow>
+
+| Phase | Task | Output |
+|---|---|---|
+| 0 | 제품, 카테고리, 구매자, 플랫폼, 보유 에셋, 리스크 확인 | 가정/확인 로그 |
+| 1 | 한국 레퍼런스와 플랫폼 제약 조사 | 출처 기반 브리프 |
+| 2 | 상세페이지 퍼널과 섹션 순서 선택 | 섹션 맵 |
+| 3 | 섹션별 한국어 카피 작성 | 카피덱 |
+| 4 | 이미지 컷과 생성/편집 프롬프트 기획 | 이미지 브리프 JSON/Markdown |
+| 5 | `skills/image-generation` 규칙으로 요청 이미지 생성/편집, 시각 검증, 아카이브 | 생성 이미지 아카이브 + prompt JSON |
+| 6 | 상품정보제공고시, 배송, 교환, A/S, 주의사항, 플랫폼 체크 | 컴플라이언스 체크리스트 |
+| 7 | 제작용 산출물 패키징 | 파일, 생성 에셋, 최종 구조화 답변 |
+
+</workflow>
+
+<default_deliverables>
+
+전체 요청에서는 사용자가 더 짧은 답변을 요구하지 않는 한 다음을 산출한다:
+
+- `detail-page-brief.md`: 타깃, 오퍼, 주장, 섹션 순서, 가정, 인용 출처
+- `copydeck.ko.md`: 최종 한국어 헤드라인, 본문, 라벨, CTA, FAQ
+- `image-briefs.json`: 섹션별 이미지/컷 요구사항과 prompt-ready 가이드
+- `image-prompts/` 또는 `.hypercore/image-generation/<topic-slug>/prompt.json`: 이미지 생성 요청 시 검수된 English JSON prompt
+- 이미지 생성 요청 시 `.hypercore/image-generation/<topic-slug>/` 아래 보존된 `imageN.*` 파일
+- `platform-checklist.md`: SmartStore/Cafe24/오픈마켓, 상품정보제공고시, 이미지 가독성, 모바일 체크
+
+</default_deliverables>
+
+<validation>
+
+완료를 보고하기 전에 확인한다:
+
+- 새로운/낯선 카테고리에서는 한국 또는 한국 특화 자료를 최소 4개 검토했거나, 기본 리서치 파일을 명시적으로 재사용했다.
+- 섹션 맵에는 의도적으로 생략하지 않는 한 hero, problem/benefit, evidence, usage, detail/spec, FAQ/objection, policy/compliance 블록이 포함된다.
+- 사실, 법률, 기술, 의료, 화장품, 금융, 성능 관련으로 들리는 주장은 인용, 완화, 또는 판매자 확인 필요 표시 중 하나로 처리한다.
+- 이미지 브리프는 목적, 주제, 구도, 텍스트 리스크, 플랫폼 crop/safe zone, generate/edit/use existing 여부를 명시한다.
+- 이미지가 요청된 경우 `skills/image-generation` JSON prompt 검수, `gpt-image-2` 실행 규칙, 시각 검증, `.hypercore/image-generation/<topic-slug>/` 아카이브까지 완료한 뒤에만 완료를 주장한다.
+- 대상 채널의 플랫폼 제약과 상품정보제공고시를 확인한다.
+- 모바일에서 읽을 수 있고, 지나치게 긴 단일 이미지로 구성하지 않는다.
+
+</validation>
