@@ -4,7 +4,7 @@ description: "[HyperB][Codex Only] HyperB 작업에서 제품, 마케팅, 콘텐
 compatibility: Codex 전용; Codex 이미지 생성 기능 또는 명시적인 gpt-image-2 API/CLI 경로가 필요하다.
 metadata:
   author: HyperB
-  version: "0.1.0"
+  version: "0.1.1"
 ---
 
 @rules/natural-image-workflow.ko.md
@@ -48,6 +48,7 @@ metadata:
 - 편의성, 투명 배경, 비용, 호환성 때문에 다른 이미지 모델로 조용히 다운그레이드하지 않는다.
 - 투명 배경이 필요하지만 사용 가능한 경로에서 `gpt-image-2`가 네이티브 투명 배경을 제공하지 못하면, 불투명/크로마키 워크플로우를 사용하거나 다른 모델 사용 전에 요구사항 변경을 사용자에게 확인한다.
 - 시스템 `imagegen` 스킬을 사용할 수 있으면 실행 helper로 취급한다. 이 스킬은 더 상위 수준의 HyperB 리서치, 아트 디렉션, 자연스러움 검수를 담당한다.
+- 아카이브 요구사항: 생성/편집이 끝날 때마다 `.hypercore/image-generation/<topic-slug>/`를 만들고, 검수된 프롬프트를 `prompt.json`으로 저장한 뒤, `~/.codex/generated-images` 또는 반환된 이미지 경로의 결과물을 같은 폴더에 `image1.png`, `image2.png`, `image3.png`, ... 형식으로 복사한 다음에만 완료를 보고한다.
 
 </execution_contract>
 
@@ -83,10 +84,26 @@ metadata:
 8. **`gpt-image-2`로 생성/편집한다.** 검수된 JSON 프롬프트를 단일 진실 공급원으로 사용한다. 초안은 `quality: low`, 최종 에셋은 `medium` 또는 `high`를 사용한다. 크기는 `gpt-image-2`에 유효해야 하며 `1024x1024`, `1536x1024`, `1024x1536`, 또는 배치 위치에 맞는 16의 배수 크기를 선호한다.
 9. **전달 전 시각 검증을 수행한다.** 물리적 개연성, 조명, 해부학, 재질 반응, 텍스트, 브랜드 적합성, 아티팩트, generic/stock/AI 느낌 여부를 확인한다.
 10. **좁게 반복한다.** 한 번에 하나의 실패 축만 변경한다: 기하, 조명, 재질, 촬영 아티팩트, 텍스트, 구도. 다음 생성 전에 JSON 프롬프트를 업데이트하고 다시 검수한다.
-11. **의도적으로 저장한다.** 생성 또는 편집된 모든 출력물은 기본적으로 현재 저장소 루트 기준 `.hypercore/image-generation/<descriptive-kebab-case-filename>.<ext>`에 저장하고, 디렉터리가 없으면 만든다. 실제 요청/반환 포맷이 `jpeg` 또는 `webp`가 아닌 한 `.png`를 사용한다. 앱 코드나 커밋 대상 asset으로도 써야 하면 `.hypercore/image-generation/` 사본을 보존한 뒤 별도 프로젝트 asset 경로로 복사한다. 프로젝트에서 참조하는 에셋을 Codex/global generated-images 위치에만 남겨두지 않는다.
-12. **프롬프트와 근거를 보고한다.** 최종 저장 경로, 모델(`gpt-image-2`), 품질/크기(알 수 있으면), 최종 검수된 JSON 프롬프트/브리프, 사용한 출처를 포함한다.
+11. **의도적으로 아카이브한다.** 각 이미지 작업마다 설명적인 topic slug를 정하고 `.hypercore/image-generation/<topic-slug>/`를 만든다. 최종 검수된 JSON 프롬프트를 `.hypercore/image-generation/<topic-slug>/prompt.json`으로 저장한 뒤, 생성/편집된 모든 출력물을 `~/.codex/generated-images` 또는 이미지 생성 반환 경로에서 같은 폴더로 복사해 생성 순서대로 `image1.png`, `image2.png`, `image3.png`, ...로 저장한다. 로컬 파일 경로를 알 수 있으면 `scripts/archive-generated-images.mjs`를 사용한다. 반환 포맷이 실제로 `jpeg` 또는 `webp`이면 `.png`로 위장하지 말고 실제 확장자를 유지한다. 앱 코드나 커밋 대상 asset으로도 써야 하면 `.hypercore/image-generation/<topic-slug>/` 아카이브를 보존한 뒤 별도 프로젝트 asset 경로로 복사한다. 프로젝트에서 참조하는 에셋을 Codex/global generated-images 위치에만 남겨두지 않는다.
+12. **아카이브를 검증한다.** 완료 보고 전 archive directory를 listing해서 `prompt.json`과 기대한 모든 `imageN.*` 파일이 존재하는지 확인한다.
+13. **프롬프트와 근거를 보고한다.** 최종 archive 경로, 모델(`gpt-image-2`), 품질/크기(알 수 있으면), 최종 검수된 JSON 프롬프트/브리프, 사용한 출처, 앱/public asset 사본 경로를 포함한다.
 
 </workflow>
+
+<archive_helper>
+
+이미지 생성 경로가 파일을 `~/.codex/generated-images` 아래에 저장하면, 수동 rename에 의존하지 말고 즉시 로컬 helper로 아카이브한다:
+
+```bash
+node skills/image-generation/scripts/archive-generated-images.mjs \
+  --topic "descriptive topic" \
+  --prompt /path/to/reviewed-prompt.json \
+  --images ~/.codex/generated-images/generated-1.png ~/.codex/generated-images/generated-2.png
+```
+
+정확한 생성 파일 경로가 출력되지 않았지만 결과 개수를 알고 있으면, 생성 직후 `--latest <n>`을 사용해 최신 생성 파일을 `.hypercore/image-generation/<topic-slug>/` 안의 `image1.*`, `image2.*`, ...로 복사한다. 최종 응답 전 helper 출력과 directory listing을 반드시 확인한다.
+
+</archive_helper>
 
 <json_prompt_pipeline>
 
@@ -114,7 +131,18 @@ metadata:
     "format": "png",
     "background": "opaque",
     "destination_intent": "project-bound",
-    "save_path": ".hypercore/image-generation/descriptive-kebab-case-filename.png"
+    "save_path": ".hypercore/image-generation/descriptive-topic/image1.png",
+    "archive_dir": ".hypercore/image-generation/descriptive-topic",
+    "prompt_path": ".hypercore/image-generation/descriptive-topic/prompt.json"
+  },
+  "artifact_archive": {
+    "topic": "Human-readable topic for this generation job.",
+    "topic_slug": "descriptive-topic",
+    "prompt_path": ".hypercore/image-generation/descriptive-topic/prompt.json",
+    "image_paths": [
+      ".hypercore/image-generation/descriptive-topic/image1.png"
+    ],
+    "source_generated_images_dir": "~/.codex/generated-images"
   },
   "user_requirements_summary": "English summary of the user's requirements and inferred constraints.",
   "assumptions": [
@@ -242,7 +270,10 @@ edit/reference-guided 작업에서는 `"edit_plan": null`을 다음 구조로 �
 - [ ] 프롬프트가 상충되는 조명/렌즈 단서 없이 하나의 일관된 촬영/디자인 스토리를 사용한다.
 - [ ] 자연스러움이 렌즈, 노출, 조명, 재질 질감, 맥락 연속성 같은 물리적 근거를 사용한다.
 - [ ] 출력물을 일반적인 AI 티 기준으로 검사했다: 해부학, 손, 치아, 눈, 텍스트, 반복 패턴, 불가능한 그림자, 왜곡된 제품 디테일, 과도한 대칭, 스톡 사진 포즈.
-- [ ] 생성/편집된 모든 이미지는 `.hypercore/image-generation/<descriptive-kebab-case-filename>.<ext>` 아래 안정적인 사본을 갖는다.
+- [ ] 모든 생성/편집 작업은 `.hypercore/image-generation/<topic-slug>/` 아래 안정적인 archive directory를 갖는다.
+- [ ] archive에는 검수된 프롬프트가 `.hypercore/image-generation/<topic-slug>/prompt.json`으로 저장되어 있다.
+- [ ] 생성/편집된 모든 이미지는 archive 안에 `image1.png`, `image2.png`, `image3.png`, ... 또는 non-PNG 출력의 실제 확장자로 안정적인 사본을 갖는다.
+- [ ] 생성 이미지가 `~/.codex/generated-images` 또는 다른 Codex global/temp 위치에만 남아 있지 않다.
 - [ ] 앱 코드에서 참조해야 하는 project-bound 이미지는 필요 시 적절한 tracked/public asset 경로로도 복사했다.
 - [ ] 최종 응답에 저장 경로, 검수된 JSON 프롬프트 또는 간결한 프롬프트 요약, 출처, 남은 리스크를 포함했다.
 
@@ -253,6 +284,7 @@ edit/reference-guided 작업에서는 `"edit_plan": null`을 다음 구조로 �
 - `rules/natural-image-workflow.ko.md`: AI 티가 덜 나는 맥락 맞춤 이미지 디렉션을 위한 한국어 실무 규칙.
 - `references/gpt-image-2-research.ko.md`: 출처 기반 `gpt-image-2` 모델 사실과 링크의 한국어 mirror.
 - `references/json-prompt-best-practices.ko.md`: 리서치 기반 JSON prompt schema, review gate, source map의 한국어 mirror.
+- `scripts/archive-generated-images.mjs`: 검수된 prompt와 생성 이미지 파일을 `.hypercore/image-generation/<topic-slug>/prompt.json` 및 `imageN.*`로 복사하는 결정론적 helper.
 - `.hypercore/research/2026-04-29-image-generation-naturalism.md`: 재사용 가능한 naturalism/model 리서치 보고서.
 - `.hypercore/research/2026-04-29-json-prompt-best-practices-for-image-generation.md`: JSON prompt best-practice 리서치 보고서.
 
