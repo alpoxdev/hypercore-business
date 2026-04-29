@@ -18,7 +18,7 @@ Claude Code, Codex, Cursor에서 사용할 수 있는 비즈니스 중심 AI 에
 ### npx skills add
 
 ```bash
-npx skills add alpoxdev/hypercore-business --skill '*' -g -a claude-code -y
+npx skills add alpoxdev/hypercore-business --skill '*' -g -y
 ```
 
 ## 에이전트
