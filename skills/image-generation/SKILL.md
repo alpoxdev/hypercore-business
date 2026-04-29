@@ -83,7 +83,7 @@ Boundary example:
 8. **Generate/edit with `gpt-image-2`.** Use the reviewed JSON prompt as the source of truth. Use `quality: low` for drafts and `medium` or `high` for final assets. Keep sizes valid for `gpt-image-2`; prefer `1024x1024`, `1536x1024`, `1024x1536`, or a placement-specific multiple-of-16 size.
 9. **Validate visually before shipping.** Check physical plausibility, lighting, anatomy, material behavior, text, brand fit, artifacts, and whether it looks generic/stock/AI.
 10. **Iterate narrowly.** Change one failure dimension at a time: geometry, lighting, material, capture artifact, text, or composition. Update and re-review the JSON prompt before the next generation.
-11. **Save deliberately.** If the image is project-bound, move/copy the final file into the workspace and report the path. Do not leave a referenced asset only in a Codex/global generated-images location.
+11. **Save deliberately.** Save every generated or edited output under the current repository root at `.hypercore/image-generation/<descriptive-kebab-case-filename>.<ext>` by default, creating the directory if needed. Use `.png` unless the actual requested/returned format is `jpeg` or `webp`. If the asset must also be used by app code or committed, copy it separately to the project asset path after preserving the `.hypercore/image-generation/` copy. Do not leave a referenced asset only in a Codex/global generated-images location.
 12. **Report the prompt and evidence.** Include final saved path(s), model (`gpt-image-2`), quality/size if known, final reviewed JSON prompt/brief, and sources used.
 
 </workflow>
@@ -113,7 +113,8 @@ Load `references/json-prompt-best-practices.md` when creating or changing this s
     "quality": "medium",
     "format": "png",
     "background": "opaque",
-    "destination_intent": "project-bound"
+    "destination_intent": "project-bound",
+    "save_path": ".hypercore/image-generation/descriptive-kebab-case-filename.png"
   },
   "user_requirements_summary": "English summary of the user's requirements and inferred constraints.",
   "assumptions": [
@@ -241,7 +242,8 @@ Before completion, pass all checks:
 - [ ] The prompt uses one coherent capture/design story without contradictory lighting or lens cues.
 - [ ] Naturalism uses physical evidence: lens, exposure, lighting, material texture, or context continuity.
 - [ ] The output is checked for common AI tells: anatomy, hands, teeth, eyes, text, repeated patterns, impossible shadows, warped product details, excess symmetry, and stock-photo posing.
-- [ ] Project-bound images are saved inside the workspace with stable, descriptive filenames.
+- [ ] Every generated/edited image has a stable copy under `.hypercore/image-generation/<descriptive-kebab-case-filename>.<ext>`.
+- [ ] Project-bound images that app code must reference are additionally copied to the appropriate tracked/public asset path if needed.
 - [ ] Final response includes saved paths, reviewed JSON prompt or concise prompt summary, sources, and remaining risks if any.
 
 </validation>

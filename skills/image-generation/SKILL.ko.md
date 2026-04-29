@@ -7,9 +7,9 @@ metadata:
   version: "0.1.0"
 ---
 
-@rules/natural-image-workflow.md
-@references/gpt-image-2-research.md
-@references/json-prompt-best-practices.md
+@rules/natural-image-workflow.ko.md
+@references/gpt-image-2-research.ko.md
+@references/json-prompt-best-practices.ko.md
 
 # Image Generation
 
@@ -77,13 +77,13 @@ metadata:
 2. **상황을 리서치한다.** 낯선 도메인, 최신 제품, 시각 레퍼런스, 시장, 문화, 장소, 사실 기반 장면이 있으면 프롬프트 작성 전에 집중 리서치를 수행한다. 공식/제품 출처와 최신 시각 레퍼런스를 우선하고, 최종 메모에 출처를 기록한다.
 3. **이미지 작업 유형을 정한다.** `generate`, `edit`, `reference-guided generate`, `batch/variants` 중 하나로 분류한다.
 4. **아트 디렉션 브리프를 작성한다.** job-to-be-done, 시청자가 믿어야 할 내용, 장면, 주제, 카메라/구도, 조명, 재질/질감의 진실성, 제약, avoid 목록을 정의한다.
-5. **요구사항을 영어 JSON 프롬프트로 변환한다.** 아래 스키마와 `references/json-prompt-best-practices.md`를 사용한다. JSON을 단순 API payload가 아니라 검수 가능한 planning artifact로 취급한다. 프롬프트 값은 영어로 유지하고, 사용자가 요청한 정확한 표시 문구는 그대로 보존하며, 가정은 명시적으로 인코딩한다.
+5. **요구사항을 영어 JSON 프롬프트로 변환한다.** 아래 스키마와 `references/json-prompt-best-practices.ko.md`를 사용한다. JSON을 단순 API payload가 아니라 검수 가능한 planning artifact로 취급한다. 프롬프트 값은 영어로 유지하고, 사용자가 요청한 정확한 표시 문구는 그대로 보존하며, 가정은 명시적으로 인코딩한다.
 6. **생성 전 JSON 프롬프트를 검수한다.** JSON을 파싱하고, 필수 필드를 확인하고, 필요 시 source/reference role과 edit invariant를 검증하며, 상황에 구체적인지, 일관적인지, 상충되지 않는지, 안전한지, `gpt-image-2`와 호환되는지 확인한다. 실패 항목이 있으면 이미지 생성 전에 JSON을 수정한다.
-7. **자연스러움 규칙을 적용한다.** `rules/natural-image-workflow.md`를 로드하고, 선택한 촬영/디자인 스토리에 맞는 결함만 추가한다.
+7. **자연스러움 규칙을 적용한다.** `rules/natural-image-workflow.ko.md`를 로드하고, 선택한 촬영/디자인 스토리에 맞는 결함만 추가한다.
 8. **`gpt-image-2`로 생성/편집한다.** 검수된 JSON 프롬프트를 단일 진실 공급원으로 사용한다. 초안은 `quality: low`, 최종 에셋은 `medium` 또는 `high`를 사용한다. 크기는 `gpt-image-2`에 유효해야 하며 `1024x1024`, `1536x1024`, `1024x1536`, 또는 배치 위치에 맞는 16의 배수 크기를 선호한다.
 9. **전달 전 시각 검증을 수행한다.** 물리적 개연성, 조명, 해부학, 재질 반응, 텍스트, 브랜드 적합성, 아티팩트, generic/stock/AI 느낌 여부를 확인한다.
 10. **좁게 반복한다.** 한 번에 하나의 실패 축만 변경한다: 기하, 조명, 재질, 촬영 아티팩트, 텍스트, 구도. 다음 생성 전에 JSON 프롬프트를 업데이트하고 다시 검수한다.
-11. **의도적으로 저장한다.** 프로젝트 반영용 이미지라면 최종 파일을 워크스페이스 안으로 이동/복사하고 경로를 보고한다. 프로젝트에서 참조하는 에셋을 Codex/global generated-images 위치에만 남겨두지 않는다.
+11. **의도적으로 저장한다.** 생성 또는 편집된 모든 출력물은 기본적으로 현재 저장소 루트 기준 `.hypercore/image-generation/<descriptive-kebab-case-filename>.<ext>`에 저장하고, 디렉터리가 없으면 만든다. 실제 요청/반환 포맷이 `jpeg` 또는 `webp`가 아닌 한 `.png`를 사용한다. 앱 코드나 커밋 대상 asset으로도 써야 하면 `.hypercore/image-generation/` 사본을 보존한 뒤 별도 프로젝트 asset 경로로 복사한다. 프로젝트에서 참조하는 에셋을 Codex/global generated-images 위치에만 남겨두지 않는다.
 12. **프롬프트와 근거를 보고한다.** 최종 저장 경로, 모델(`gpt-image-2`), 품질/크기(알 수 있으면), 최종 검수된 JSON 프롬프트/브리프, 사용한 출처를 포함한다.
 
 </workflow>
@@ -92,7 +92,7 @@ metadata:
 
 프롬프트는 먼저 JSON으로 만들어야 한다. 유효한 JSON만 사용한다: 큰따옴표 키/문자열, 주석 없음, trailing comma 없음. JSON은 최종 모델-facing prompt의 검수된 source of truth이며, 단순한 Image API request body가 아니다.
 
-이 구조를 만들거나 변경할 때는 `references/json-prompt-best-practices.md`를 로드한다. Best-practice gate:
+이 구조를 만들거나 변경할 때는 `references/json-prompt-best-practices.ko.md`를 로드한다. Best-practice gate:
 
 - API/output settings와 creative direction을 분리한다.
 - 안정적인 `schema_version`을 사용하고, 검수하기 쉽도록 key order를 유지한다.
@@ -113,7 +113,8 @@ metadata:
     "quality": "medium",
     "format": "png",
     "background": "opaque",
-    "destination_intent": "project-bound"
+    "destination_intent": "project-bound",
+    "save_path": ".hypercore/image-generation/descriptive-kebab-case-filename.png"
   },
   "user_requirements_summary": "English summary of the user's requirements and inferred constraints.",
   "assumptions": [
@@ -233,7 +234,7 @@ edit/reference-guided 작업에서는 `"edit_plan": null`을 다음 구조로 �
 
 - [ ] 모델 요구사항을 충족했다: 생성 경로에서 `gpt-image-2`를 사용했거나 명시적으로 지정했다.
 - [ ] 사용자 요구사항을 생성 전에 유효한 영어 JSON 프롬프트로 변환했다.
-- [ ] JSON 프롬프트를 성공적으로 파싱했고 `references/json-prompt-best-practices.md`의 안정적인 schema를 따른다.
+- [ ] JSON 프롬프트를 성공적으로 파싱했고 `references/json-prompt-best-practices.ko.md`의 안정적인 schema를 따른다.
 - [ ] 이미지 생성 전에 JSON 프롬프트를 검수하고 수정했다.
 - [ ] reference-guided 또는 edit 작업에는 source-input role, edit invariant, 명시적인 preserve/change-only constraint가 있다.
 - [ ] 이미지 브리프가 상황에 구체적이며 generic style-word soup가 아니다.
@@ -241,16 +242,17 @@ edit/reference-guided 작업에서는 `"edit_plan": null`을 다음 구조로 �
 - [ ] 프롬프트가 상충되는 조명/렌즈 단서 없이 하나의 일관된 촬영/디자인 스토리를 사용한다.
 - [ ] 자연스러움이 렌즈, 노출, 조명, 재질 질감, 맥락 연속성 같은 물리적 근거를 사용한다.
 - [ ] 출력물을 일반적인 AI 티 기준으로 검사했다: 해부학, 손, 치아, 눈, 텍스트, 반복 패턴, 불가능한 그림자, 왜곡된 제품 디테일, 과도한 대칭, 스톡 사진 포즈.
-- [ ] 프로젝트 반영용 이미지는 워크스페이스 안에 안정적이고 설명적인 파일명으로 저장했다.
+- [ ] 생성/편집된 모든 이미지는 `.hypercore/image-generation/<descriptive-kebab-case-filename>.<ext>` 아래 안정적인 사본을 갖는다.
+- [ ] 앱 코드에서 참조해야 하는 project-bound 이미지는 필요 시 적절한 tracked/public asset 경로로도 복사했다.
 - [ ] 최종 응답에 저장 경로, 검수된 JSON 프롬프트 또는 간결한 프롬프트 요약, 출처, 남은 리스크를 포함했다.
 
 </validation>
 
 <reference_map>
 
-- `rules/natural-image-workflow.md`: AI 티가 덜 나는 맥락 맞춤 이미지 디렉션을 위한 실무 규칙.
-- `references/gpt-image-2-research.md`: 출처 기반 `gpt-image-2` 모델 사실과 링크.
-- `references/json-prompt-best-practices.md`: 리서치 기반 JSON prompt schema, review gate, source map.
+- `rules/natural-image-workflow.ko.md`: AI 티가 덜 나는 맥락 맞춤 이미지 디렉션을 위한 한국어 실무 규칙.
+- `references/gpt-image-2-research.ko.md`: 출처 기반 `gpt-image-2` 모델 사실과 링크의 한국어 mirror.
+- `references/json-prompt-best-practices.ko.md`: 리서치 기반 JSON prompt schema, review gate, source map의 한국어 mirror.
 - `.hypercore/research/2026-04-29-image-generation-naturalism.md`: 재사용 가능한 naturalism/model 리서치 보고서.
 - `.hypercore/research/2026-04-29-json-prompt-best-practices-for-image-generation.md`: JSON prompt best-practice 리서치 보고서.
 
