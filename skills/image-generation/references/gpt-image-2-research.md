@@ -7,7 +7,7 @@ This reference summarizes the saved research report at `.hypercore/research/2026
 ## Operational facts
 
 - OpenAI's image docs list `gpt-image-2` for image generation and edits and expose generation/edit endpoints through the Image API. Source: OpenAI Image Generation docs.
-- `gpt-image-2` is the required model for this skill. The OpenAI prompting guide describes it as the default recommendation for new high-quality generation/editing workflows, including photorealism, text-heavy images, compositing, and identity-sensitive edits.
+- `gpt-image-2` is the required model for this skill. OpenAI describes GPT Image 2 as its state-of-the-art image generation model for fast, high-quality generation and editing; the GPT Image 1.5 prompting guide remains useful for transferable production prompting patterns such as photorealism, text-heavy images, compositing, and identity-sensitive edits.
 - Supported quality values are `low`, `medium`, `high`, and `auto`. Use `low` for quick drafts; use `medium` or `high` for final assets.
 - `gpt-image-2` accepts custom sizes when constraints are satisfied: max edge up to 3840 px, both edges multiples of 16 px, long:short ratio no more than 3:1, and total pixels between 655,360 and 8,294,400. Outputs above 2560×1440 are more variable/experimental.
 - `gpt-image-2` automatically processes image inputs at high fidelity; do not set `input_fidelity`.
@@ -24,7 +24,7 @@ This reference summarizes the saved research report at `.hypercore/research/2026
 ## Source map
 
 - OpenAI Image Generation docs: https://developers.openai.com/api/docs/guides/image-generation
-- OpenAI GPT Image prompting guide: https://developers.openai.com/cookbook/examples/multimodal/image-gen-models-prompting-guide
+- OpenAI GPT Image 1.5 prompting guide: https://developers.openai.com/cookbook/examples/multimodal/image-gen-1.5-prompting_guide
 - OpenAI ChatGPT Images 2.0 system card: https://deploymentsafety.openai.com/chatgpt-images-2-0/chatgpt-images-2-0.pdf
 - Baymard Institute product image UX article: https://baymard.com/blog/ux-product-image-categories
 - Nat Currier photorealism guide: https://nat.io/blog/achieving-photorealism-guide

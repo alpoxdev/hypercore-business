@@ -9,6 +9,7 @@ metadata:
 
 @rules/natural-image-workflow.md
 @references/gpt-image-2-research.md
+@references/json-prompt-best-practices.md
 
 # Image Generation
 
@@ -76,8 +77,8 @@ metadata:
 2. **상황을 리서치한다.** 낯선 도메인, 최신 제품, 시각 레퍼런스, 시장, 문화, 장소, 사실 기반 장면이 있으면 프롬프트 작성 전에 집중 리서치를 수행한다. 공식/제품 출처와 최신 시각 레퍼런스를 우선하고, 최종 메모에 출처를 기록한다.
 3. **이미지 작업 유형을 정한다.** `generate`, `edit`, `reference-guided generate`, `batch/variants` 중 하나로 분류한다.
 4. **아트 디렉션 브리프를 작성한다.** job-to-be-done, 시청자가 믿어야 할 내용, 장면, 주제, 카메라/구도, 조명, 재질/질감의 진실성, 제약, avoid 목록을 정의한다.
-5. **요구사항을 영어 JSON 프롬프트로 변환한다.** 아래 스키마를 사용한다. 프롬프트 값은 영어로 유지하고, 사용자가 요청한 정확한 표시 문구는 그대로 보존하며, 가정은 명시적으로 인코딩한다.
-6. **생성 전 JSON 프롬프트를 검수한다.** 유효한 JSON인지, 상황에 구체적인지, 일관적인지, 상충되지 않는지, 안전한지, `gpt-image-2`와 호환되는지 확인한다. 실패 항목이 있으면 이미지 생성 전에 JSON을 수정한다.
+5. **요구사항을 영어 JSON 프롬프트로 변환한다.** 아래 스키마와 `references/json-prompt-best-practices.md`를 사용한다. JSON을 단순 API payload가 아니라 검수 가능한 planning artifact로 취급한다. 프롬프트 값은 영어로 유지하고, 사용자가 요청한 정확한 표시 문구는 그대로 보존하며, 가정은 명시적으로 인코딩한다.
+6. **생성 전 JSON 프롬프트를 검수한다.** JSON을 파싱하고, 필수 필드를 확인하고, 필요 시 source/reference role과 edit invariant를 검증하며, 상황에 구체적인지, 일관적인지, 상충되지 않는지, 안전한지, `gpt-image-2`와 호환되는지 확인한다. 실패 항목이 있으면 이미지 생성 전에 JSON을 수정한다.
 7. **자연스러움 규칙을 적용한다.** `rules/natural-image-workflow.md`를 로드하고, 선택한 촬영/디자인 스토리에 맞는 결함만 추가한다.
 8. **`gpt-image-2`로 생성/편집한다.** 검수된 JSON 프롬프트를 단일 진실 공급원으로 사용한다. 초안은 `quality: low`, 최종 에셋은 `medium` 또는 `high`를 사용한다. 크기는 `gpt-image-2`에 유효해야 하며 `1024x1024`, `1536x1024`, `1024x1536`, 또는 배치 위치에 맞는 16의 배수 크기를 선호한다.
 9. **전달 전 시각 검증을 수행한다.** 물리적 개연성, 조명, 해부학, 재질 반응, 텍스트, 브랜드 적합성, 아티팩트, generic/stock/AI 느낌 여부를 확인한다.
@@ -89,50 +90,77 @@ metadata:
 
 <json_prompt_pipeline>
 
-프롬프트는 먼저 JSON으로 만들어야 한다. 유효한 JSON만 사용한다: 큰따옴표 키/문자열, 주석 없음, trailing comma 없음.
+프롬프트는 먼저 JSON으로 만들어야 한다. 유효한 JSON만 사용한다: 큰따옴표 키/문자열, 주석 없음, trailing comma 없음. JSON은 최종 모델-facing prompt의 검수된 source of truth이며, 단순한 Image API request body가 아니다.
+
+이 구조를 만들거나 변경할 때는 `references/json-prompt-best-practices.md`를 로드한다. Best-practice gate:
+
+- API/output settings와 creative direction을 분리한다.
+- 안정적인 `schema_version`을 사용하고, 검수하기 쉽도록 key order를 유지한다.
+- assumptions, unknowns, source inputs, research anchors를 명시적으로 기록한다.
+- edit/reference-guided generation에서는 각 input의 role과 바뀌면 안 되는 invariant를 적는다.
+- 정확한 표시 문구는 `image_prompt.text.verbatim`에만 넣고, 그 안에서는 사용자가 요청한 언어를 보존한다.
+- `generation_prompt`는 review checklist가 통과된 뒤에만 조립한다.
 
 ```json
 {
+  "schema_version": "1.1",
   "model": "gpt-image-2",
   "task": "generate",
-  "use_case": "landing hero | product context | editorial | social | UI mock | ad | illustration",
-  "output": {
+  "use_case": "landing hero",
+  "generation_settings": {
+    "api_path": "image_api",
     "size": "1536x1024",
     "quality": "medium",
     "format": "png",
-    "destination_intent": "preview | project-bound"
+    "background": "opaque",
+    "destination_intent": "project-bound"
   },
   "user_requirements_summary": "English summary of the user's requirements and inferred constraints.",
+  "assumptions": [
+    "Assumption made because the user did not specify a placement, audience, source image, or brand constraint."
+  ],
+  "source_inputs": [
+    {
+      "id": "image_1",
+      "type": "local_file | url | generated_reference | none",
+      "role": "subject_reference | style_reference | product_reference | background_reference | mask",
+      "path_or_url": "",
+      "must_preserve": [
+        "Identity, geometry, label text, brand color, layout, or lighting invariant from this source."
+      ]
+    }
+  ],
   "audience_and_belief": "Who must believe what after seeing the image.",
   "placement": {
     "surface": "Where the image will be used.",
-    "aspect_ratio_or_safe_zone": "Placement constraints and negative-space needs."
+    "aspect_ratio_or_safe_zone": "Placement constraints, crop tolerance, and negative-space needs."
   },
   "research_anchors": [
     {
-      "claim": "Source-derived visual or factual constraint.",
+      "claim": "Source-derived visual, factual, cultural, product, or market constraint.",
       "source": "URL or local file path"
     }
   ],
   "image_prompt": {
     "primary_request": "The actual image to create, in English.",
-    "capture_or_design_story": "One coherent capture/design story.",
+    "capture_or_design_story": "One coherent capture/design story; do not mix contradictory photo, studio, and illustration modes.",
     "subject": "Main subject and exact attributes.",
-    "scene_context": "Where it happens and why this setting makes sense.",
-    "composition": "Camera position, crop, focal point, and negative space.",
-    "lighting": "One dominant light source; optional secondary source only if needed.",
-    "surface_truth": "Skin/fabric/product/material/environment texture cues.",
+    "scene_context": "Where it happens, why this setting makes sense, and what is outside the frame.",
+    "composition": "Camera position, crop, focal point, perspective, and negative space.",
+    "lighting": "One dominant light source with direction, softness/hardness, and color temperature if relevant.",
+    "surface_truth": "Skin, fabric, product, paper, glass, metal, screen, or environmental texture cues.",
     "natural_imperfections": [
-      "One plausible capture flaw or real-world imperfection.",
-      "Optional second imperfection only if it fits the story."
+      "One plausible capture flaw or real-world imperfection that fits the story.",
+      "Optional second imperfection only if it supports realism rather than becoming an effect."
     ],
     "text": {
       "verbatim": "",
       "placement": "",
-      "typography_notes": ""
+      "typography_notes": "",
+      "text_risk": "none | low | medium | high"
     },
     "must_keep": [
-      "Identity, product proportions, brand colors, factual details, or layout invariants."
+      "Identity, product proportions, brand colors, factual details, layout invariants, or exact source-image details."
     ],
     "avoid": [
       "over-polished AI gloss",
@@ -145,27 +173,56 @@ metadata:
       "watermark"
     ]
   },
+  "edit_plan": null,
   "review_checklist": {
     "valid_json": true,
-    "english_prompt_values": true,
-    "single_coherent_capture_story": true,
-    "gpt_image_2_compatible": true,
+    "schema_fields_complete": true,
+    "english_prompt_values_except_verbatim_text": true,
+    "single_coherent_capture_or_design_story": true,
+    "generation_settings_gpt_image_2_compatible": true,
+    "source_inputs_have_roles_and_invariants": true,
     "specific_to_user_context": true,
-    "no_contradictory_lighting_or_lens_cues": true,
-    "text_constraints_are_verbatim": true,
-    "safety_and_rights_checked": true,
+    "no_contradictory_lighting_lens_or_style_cues": true,
+    "text_constraints_are_verbatim_and_inspectable": true,
+    "safety_rights_and_brand_risks_checked": true,
     "naturalism_checks_encoded": true
   },
-  "generation_prompt": "A concise English prompt assembled from image_prompt after review."
+  "review_notes": {
+    "prompt_strengths": [
+      "Why this prompt is likely to produce a usable image."
+    ],
+    "unresolved_risks": [
+      "Known risk such as exact text, layout precision, brand consistency, factual uncertainty, or likeness rights."
+    ],
+    "iteration_strategy_if_failed": "Change only one dimension next: geometry, lighting, material, text, composition, or edit invariant."
+  },
+  "generation_prompt": "A concise English prompt assembled from image_prompt, source inputs, edit invariants, and constraints after review."
+}
+```
+
+edit/reference-guided 작업에서는 `"edit_plan": null`을 다음 구조로 바꾼다:
+
+```json
+{
+  "change_only": [
+    "Specific object, background, text, garment, lighting, or composition element allowed to change."
+  ],
+  "preserve": [
+    "Identity, pose, camera angle, product geometry, label text, surrounding objects, or layout that must remain unchanged."
+  ],
+  "allowed_drift": "none | minimal | moderate",
+  "mask_or_selection_notes": "How mask/reference boundaries should be interpreted, if applicable."
 }
 ```
 
 프롬프트 검수 규칙:
 
 - `review_checklist.valid_json`이 false이면 무엇보다 먼저 JSON을 고친다.
+- 필수 필드가 비어 있으면 구체적인 assumption으로 채우거나, 그 공백이 non-blocking인 이유를 적는다.
 - 프롬프트에 전달될 값이 영어가 아니면 영어로 번역한다. 단, 사용자가 요청한 실제 표시 문구는 `image_prompt.text.verbatim`에 원문 그대로 보존한다.
 - JSON이 여러 촬영/디자인 스토리를 섞고 있으면, 변형으로 분리하거나 가장 강한 단일 스토리를 선택한 뒤 생성한다.
-- 사실 기반/최신/전문 장면인데 리서치 앵커가 없다면 먼저 리서치하거나, 리서치가 불필요한 이유를 표시한다.
+- 사실 기반/최신/전문 장면인데 `research_anchors`가 없다면 먼저 리서치하거나, 리서치가 불필요한 이유를 표시한다.
+- source image가 있는데 `source_inputs`에 role/invariant가 없다면 생성 전에 추가한다.
 - 모든 review checklist 값이 true이거나, 남은 리스크를 사용자가 명시적으로 수용하기 전에는 생성하지 않는다.
 
 </json_prompt_pipeline>
@@ -176,7 +233,9 @@ metadata:
 
 - [ ] 모델 요구사항을 충족했다: 생성 경로에서 `gpt-image-2`를 사용했거나 명시적으로 지정했다.
 - [ ] 사용자 요구사항을 생성 전에 유효한 영어 JSON 프롬프트로 변환했다.
+- [ ] JSON 프롬프트를 성공적으로 파싱했고 `references/json-prompt-best-practices.md`의 안정적인 schema를 따른다.
 - [ ] 이미지 생성 전에 JSON 프롬프트를 검수하고 수정했다.
+- [ ] reference-guided 또는 edit 작업에는 source-input role, edit invariant, 명시적인 preserve/change-only constraint가 있다.
 - [ ] 이미지 브리프가 상황에 구체적이며 generic style-word soup가 아니다.
 - [ ] 장면이 단순하고 비사실적이라 리서치를 생략한 경우를 제외하고, 리서치를 수행했다.
 - [ ] 프롬프트가 상충되는 조명/렌즈 단서 없이 하나의 일관된 촬영/디자인 스토리를 사용한다.
@@ -190,7 +249,9 @@ metadata:
 <reference_map>
 
 - `rules/natural-image-workflow.md`: AI 티가 덜 나는 맥락 맞춤 이미지 디렉션을 위한 실무 규칙.
-- `references/gpt-image-2-research.md`: 출처 기반 리서치 종합과 링크.
-- `.hypercore/research/2026-04-29-image-generation-naturalism.md`: 재사용 가능한 전체 리서치 보고서.
+- `references/gpt-image-2-research.md`: 출처 기반 `gpt-image-2` 모델 사실과 링크.
+- `references/json-prompt-best-practices.md`: 리서치 기반 JSON prompt schema, review gate, source map.
+- `.hypercore/research/2026-04-29-image-generation-naturalism.md`: 재사용 가능한 naturalism/model 리서치 보고서.
+- `.hypercore/research/2026-04-29-json-prompt-best-practices-for-image-generation.md`: JSON prompt best-practice 리서치 보고서.
 
 </reference_map>

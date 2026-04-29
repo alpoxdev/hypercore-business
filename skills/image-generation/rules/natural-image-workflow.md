@@ -23,10 +23,12 @@ user requirements → English JSON prompt → prompt review → gpt-image-2 gene
 
 Rules:
 
+- Follow the schema and review gates in `references/json-prompt-best-practices.md`.
 - Summarize user requirements in English in `user_requirements_summary`.
+- Keep API/output controls in `generation_settings`, separate from creative direction in `image_prompt`.
 - Keep all prompt-facing JSON values in English.
 - Preserve exact visible text in the original requested language under `image_prompt.text.verbatim`.
-- Put assumptions in the JSON rather than hiding them in prose.
+- Put assumptions, source-input roles, research anchors, and edit invariants in the JSON rather than hiding them in prose.
 - Assemble `generation_prompt` only after the JSON has passed review.
 - If a later iteration changes the image direction, update the JSON and rerun the prompt review before generating again.
 
