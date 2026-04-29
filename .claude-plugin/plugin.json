@@ -1,0 +1,21 @@
+{
+  "name": "hypercore-business",
+  "version": "1.0.0",
+  "description": "Business, marketing, and design agent skills collection for Claude Code, Codex, and Cursor",
+  "author": {
+    "name": "alpoxdev"
+  },
+  "repository": "https://github.com/alpoxdev/hypercore-business",
+  "homepage": "https://github.com/alpoxdev/hypercore-business",
+  "license": "MIT",
+  "keywords": [
+    "claude-code",
+    "skills",
+    "agents",
+    "business",
+    "marketing",
+    "design",
+    "strategy"
+  ],
+  "skills": "./skills/"
+}

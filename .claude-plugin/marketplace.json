@@ -1,0 +1,27 @@
+{
+  "$schema": "https://anthropic.com/claude-code/marketplace.schema.json",
+  "name": "hypercore-business",
+  "description": "Claude Code, Codex, Cursor에서 사용할 수 있는 비즈니스, 마케팅, 디자인 중심 AI 에이전트 스킬 및 에이전트 모음. Vercel Skills 기반.",
+  "owner": {
+    "name": "alpoxdev"
+  },
+  "plugins": [
+    {
+      "name": "hypercore-business",
+      "description": "Claude Code, Codex, Cursor에서 사용할 수 있는 비즈니스, 마케팅, 디자인 중심 AI 에이전트 스킬 및 에이전트 모음",
+      "source": "./",
+      "category": "productivity",
+      "version": "1.0.0",
+      "homepage": "https://github.com/alpoxdev/hypercore-business",
+      "tags": [
+        "skills",
+        "agents",
+        "business",
+        "marketing",
+        "design",
+        "strategy"
+      ]
+    }
+  ],
+  "version": "1.0.0"
+}
