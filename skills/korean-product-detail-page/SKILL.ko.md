@@ -13,6 +13,7 @@ metadata:
 @references/section-templates.ko.md
 @references/image-direction.ko.md
 @references/image-generation-integration.ko.md
+@references/browser-link-research.ko.md
 
 # Korean Product Detail Page
 
@@ -44,6 +45,7 @@ metadata:
 
 - 결과물을 단순 문서가 아니라 구매전환용 커머스 산출물로 취급한다.
 - 사용자가 리서치를 금지하거나 승인된 레퍼런스를 제공하지 않는 한, 작성 전 한국 자료를 조사한다.
+- 사용자가 제품 링크나 레퍼런스 링크를 주면 가능한 경우 가벼운 Chrome DevTools/CDP 우선 경로로 렌더링된 화면, 보이는 텍스트, 스크린샷, 이미지/레이아웃 흐름, 확인 날짜를 먼저 본다. 정적 HTML 파싱은 보조/폴백으로만 사용한다. 이 흐름은 소량 레퍼런스 조사/정보 취득이지 스크래핑이나 우회 자동화가 아니다.
 - 일반 글로벌 UX 글보다 국내 플랫폼 고객센터, 셀러 도구, 국내 디자인 템플릿, 한국 운영자/대행사 자료를 우선한다.
 - 제품/카테고리 정보가 부족하면 안전한 가정을 명시하고 계속 진행한다. 카테고리, 법적 리스크, 제품 정체를 판단할 수 없을 때만 질문한다.
 - 이미지가 포함된 요청이면 브리프에서 멈추지 않는다. 로컬 `skills/image-generation/` 폴더의 `SKILL.md`, `rules/natural-image-workflow.md`, `references/json-prompt-best-practices.md`, `scripts/archive-generated-images.mjs`를 필수 실행 참고로 읽고, English JSON prompt 검수, 생성/편집 실행, 시각 검증, 이미지 아카이브까지 이 스킬의 일부로 수행한다.
@@ -78,12 +80,13 @@ metadata:
 1. 이 `SKILL.ko.md`를 읽어 라우팅과 산출 범위를 확인한다.
 2. `references/research-findings.ko.md`에서 기본 한국 자료 근거와 출처를 확인한다.
 3. `rules/korean-product-detail-page-workflow.ko.md`에서 단계별 제작 워크플로우를 확인한다.
-4. 상세페이지 구조를 고를 때 `references/section-templates.ko.md`를 읽는다.
-5. 이미지/컷 브리프를 만들 때 `references/image-direction.ko.md`를 읽는다.
-6. 실제 생성/편집 이미지 파일 또는 prompt-ready JSON이 필요하면 `references/image-generation-integration.ko.md`를 읽는다.
-7. 실제 이미지 제작 시 `skills/image-generation/SKILL.md`와 통합 가이드에 명시된 로컬 지원 파일을 읽고 생성, 검증, 아카이브까지 계속 진행한다.
-8. SmartStore/Cafe24/Gmarket/Auction 대상 산출물을 마무리하기 전 `rules/platform-compliance.ko.md`를 읽는다.
-9. 이 스킬을 수정한 뒤 `scripts/validate-korean-product-detail-page-skill.mjs`를 실행한다.
+4. 사용자가 URL 또는 기존 제품/레퍼런스 페이지를 제공하면 `references/browser-link-research.ko.md`를 읽는다.
+5. 상세페이지 구조를 고를 때 `references/section-templates.ko.md`를 읽는다.
+6. 이미지/컷 브리프를 만들 때 `references/image-direction.ko.md`를 읽는다.
+7. 실제 생성/편집 이미지 파일 또는 prompt-ready JSON이 필요하면 `references/image-generation-integration.ko.md`를 읽는다.
+8. 실제 이미지 제작 시 `skills/image-generation/SKILL.md`와 통합 가이드에 명시된 로컬 지원 파일을 읽고 생성, 검증, 아카이브까지 계속 진행한다.
+9. SmartStore/Cafe24/Gmarket/Auction 대상 산출물을 마무리하기 전 `rules/platform-compliance.ko.md`를 읽는다.
+10. 이 스킬을 수정한 뒤 `scripts/validate-korean-product-detail-page-skill.mjs`를 실행한다.
 
 </support_file_read_order>
 
@@ -92,7 +95,7 @@ metadata:
 | Phase | Task | Output |
 |---|---|---|
 | 0 | 제품, 카테고리, 구매자, 플랫폼, 보유 에셋, 리스크 확인 | 가정/확인 로그 |
-| 1 | 한국 레퍼런스와 플랫폼 제약 조사 | 출처 기반 브리프 |
+| 1 | 한국 레퍼런스와 플랫폼 제약 조사; 사용자가 준 링크는 가능한 경우 가벼운 Chrome DevTools/CDP 캡처로 확인 | 출처 기반 브리프 |
 | 2 | 상세페이지 퍼널과 섹션 순서 선택 | 섹션 맵 |
 | 3 | 섹션별 한국어 카피 작성 | 카피덱 |
 | 4 | 이미지 컷과 생성/편집 프롬프트 기획 | 이미지 브리프 JSON/Markdown |
@@ -120,6 +123,7 @@ metadata:
 완료를 보고하기 전에 확인한다:
 
 - 새로운/낯선 카테고리에서는 한국 또는 한국 특화 자료를 최소 4개 검토했거나, 기본 리서치 파일을 명시적으로 재사용했다.
+- 사용자가 준 URL은 가능한 경우 가벼운 Chrome DevTools/CDP 경로로 확인했고, 차단/로그인 필요/정적 폴백인 경우 캡처 방법과 불확실성을 표시했다.
 - 섹션 맵에는 의도적으로 생략하지 않는 한 hero, problem/benefit, evidence, usage, detail/spec, FAQ/objection, policy/compliance 블록이 포함된다.
 - 사실, 법률, 기술, 의료, 화장품, 금융, 성능 관련으로 들리는 주장은 인용, 완화, 또는 판매자 확인 필요 표시 중 하나로 처리한다.
 - 이미지 브리프는 목적, 주제, 구도, 텍스트 리스크, 플랫폼 crop/safe zone, generate/edit/use existing 여부를 명시한다.

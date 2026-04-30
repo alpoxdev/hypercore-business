@@ -12,6 +12,7 @@ const required = [
   'references/section-templates.ko.md',
   'references/image-direction.ko.md',
   'references/image-generation-integration.ko.md',
+  'references/browser-link-research.ko.md',
 ];
 
 const koRequired = [
@@ -22,6 +23,7 @@ const koRequired = [
   'references/section-templates.ko.md',
   'references/image-direction.ko.md',
   'references/image-generation-integration.ko.md',
+  'references/browser-link-research.ko.md',
 ];
 
 const imageGenerationRequired = [
@@ -72,6 +74,7 @@ for (const needle of [
   'platform-checklist.md',
   'skills/image-generation/SKILL.md',
   'references/image-generation-integration.ko.md',
+  'references/browser-link-research.ko.md',
 ]) {
   if (!skill.includes(needle)) failures.push(`SKILL.md missing key trigger/contract term: ${needle}`);
 }
@@ -90,8 +93,13 @@ const urlCount = (research.match(/https?:\/\//g) || []).length;
 if (urlCount < 8) failures.push(`Expected at least 8 source URLs in research findings, found ${urlCount}`);
 
 const workflow = readFileSync(join(root, 'rules/korean-product-detail-page-workflow.md'), 'utf8');
-for (const section of ['Research pass', 'Section map', 'Image/cut planning', 'Output packaging']) {
+for (const section of ['Research pass', 'Chrome DevTools/CDP-first link research', 'Section map', 'Image/cut planning', 'Output packaging']) {
   if (!workflow.includes(section)) failures.push(`Workflow missing section: ${section}`);
+}
+
+const browserLinkResearch = readFileSync(join(root, 'references/browser-link-research.ko.md'), 'utf8');
+for (const term of ['DevTools/CDP-first', 'BeautifulSoup', 'CDP', 'webSocketDebuggerUrl', 'static fallback', '소량 레퍼런스 정보 취득', 'https://chromedevtools.github.io/devtools-protocol/']) {
+  if (!browserLinkResearch.includes(term)) failures.push(`Browser link research missing: ${term}`);
 }
 
 const integration = readFileSync(join(root, 'references/image-generation-integration.ko.md'), 'utf8');

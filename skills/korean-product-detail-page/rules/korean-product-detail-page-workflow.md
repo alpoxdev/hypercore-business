@@ -8,6 +8,7 @@ Collect or infer:
 - Buyer: who buys, buying occasion, hesitation, comparison alternatives, Korean search keywords
 - Channel: SmartStore, Cafe24, Coupang-like marketplace, Gmarket/Auction, own mall, social commerce, crowdfunding
 - Assets: product photos, lifestyle photos, logo, brand colors, reviews, test results, manuals, existing product detail page
+- Supplied links: product pages, competitor pages, design references, platform examples, whether they need login/session, and whether lightweight DevTools/CDP review is appropriate
 - Risk: cosmetics/health food/medical/children/electronics/food/legal-sensitive claims
 
 If missing, state assumptions in an `Assumptions` block and continue.
@@ -20,6 +21,16 @@ Run Korean-first searches or use supplied references:
 - Category references: top Korean sellers, domestic templates, agency examples, creator guides
 - Buyer language: Korean reviews, Q&A, community phrasing, Naver shopping style terms when available
 - Compliance: Korean e-commerce product information notice, KC/food/cosmetic warning needs, refund/A/S expectations
+
+For user-supplied links, use lightweight Chrome DevTools/CDP-first link research when available:
+
+1. Open the link in the user-visible Chrome/Edge browser or an existing DevTools/CDP endpoint before trying static HTML parsing. Prefer direct CDP observations over heavier browser automation frameworks.
+2. Capture rendered evidence: URL, access date, screenshot path if captured, visible headline/copy, section order, image rhythm, product proof, and blocked/login-only state.
+3. Use static HTML parsing only as a fallback for public simple pages or to supplement browser observations.
+4. Do not escalate into bypass automation. If a normal user-visible browser cannot show the page, request user-provided screenshots, PDF export, copied text, or approved source materials.
+5. Keep cookies, tokens, profile IDs, CDP endpoints, and browser state files out of deliverables and git.
+
+Read `references/browser-link-research.ko.md` for DevTools/CDP channel priority, capture checklist, profile-browser adapter notes, and safe fallbacks.
 
 Stop when you can justify section order, image cuts, and claim safety with enough evidence.
 
