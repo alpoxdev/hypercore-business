@@ -1,10 +1,10 @@
 ---
 name: image-generation
-description: "[HyperB][Codex Only] Generate or edit context-aware raster images with gpt-image-2 when HyperB work needs realistic, non-stock, non-AI-looking visuals for product, marketing, content, UI, or research-backed scene creation. Use when Codex should convert user requirements into an English JSON prompt, review the prompt before generation, run the Codex image generation path, and validate the output for plausibility, brand fit, artifacts, text accuracy, and saved asset readiness."
+description: "[HyperB][Codex Only] Generate or edit context-aware raster images with gpt-image-2 when HyperB work needs realistic, non-stock, non-AI-looking visuals for product, marketing, content, UI, or research-backed scene creation. Use when Codex should convert user requirements into an English JSON prompt, review the prompt before generation, run the Codex image generation path, validate the output, archive stable image assets, create a local preview.html, and optionally open the preview in a fresh Chrome window."
 compatibility: Codex only; requires Codex image generation capability or an explicit gpt-image-2 API/CLI path.
 metadata:
   author: HyperB
-  version: "0.1.1"
+  version: "0.1.2"
 ---
 
 @rules/natural-image-workflow.md
@@ -49,6 +49,7 @@ Do not use this skill when:
 - If transparent background is needed and `gpt-image-2` cannot provide native transparency in the available path, use an opaque/chroma-key workflow or ask for a requirement change before using another model.
 - Treat the system `imagegen` skill as the execution helper when available; this skill owns the higher-level HyperB research, art direction, and naturalism checks.
 - Artifact archive requirement: after every generation/edit, create `.hypercore/image-generation/<topic-slug>/`, write the reviewed prompt as `prompt.json`, and copy generated outputs from `~/.codex/generated-images` or the returned image path into that folder as `image1.png`, `image2.png`, `image3.png`, ... before reporting completion.
+- Preview requirement: every completed archive must include `.hypercore/image-generation/<topic-slug>/preview.html` generated from the local preview template. When the user wants to inspect the result, or when the task asks to show the result, open that preview in a fresh Google Chrome window/tab with the local helper. If Chrome cannot be opened in the current environment, report the `preview.html` path and the open command instead of hiding the failure.
 
 </execution_contract>
 
@@ -60,6 +61,7 @@ Positive examples:
 - "gpt-image-2로 B2B SaaS 고객 사례용 자연스러운 사무실 사진 느낌 이미지를 생성해줘."
 - "이 제품 설명을 읽고 상황에 맞는 블로그 대표 이미지를 리서치 기반으로 만들어줘."
 - "광고용 이미지를 만들되 스톡 사진처럼 과장되지 않고 실제 촬영한 느낌이 나게 해줘."
+- "이미지를 생성한 다음 preview.html로 저장하고 크롬에서 바로 보여줘."
 
 Negative examples:
 
@@ -85,8 +87,9 @@ Boundary example:
 9. **Validate visually before shipping.** Check physical plausibility, lighting, anatomy, material behavior, text, brand fit, artifacts, and whether it looks generic/stock/AI.
 10. **Iterate narrowly.** Change one failure dimension at a time: geometry, lighting, material, capture artifact, text, or composition. Update and re-review the JSON prompt before the next generation.
 11. **Archive deliberately.** For each image job, choose a descriptive topic slug and create `.hypercore/image-generation/<topic-slug>/`. Save the final reviewed JSON prompt as `.hypercore/image-generation/<topic-slug>/prompt.json`, then copy every generated/edited output from `~/.codex/generated-images` or the image-generation return path into the same folder as `image1.png`, `image2.png`, `image3.png`, ... in generation order. Use `scripts/archive-generated-images.mjs` when local file paths are available. If the returned format is truly `jpeg` or `webp`, keep the real extension instead of lying with `.png`. If the asset must also be used by app code or committed, copy it separately to the project asset path after preserving the `.hypercore/image-generation/<topic-slug>/` archive. Do not leave a referenced asset only in a Codex/global generated-images location.
-12. **Verify the archive.** Before reporting completion, list the archive directory and confirm `prompt.json` plus every expected `imageN.*` file exists.
-13. **Report the prompt and evidence.** Include final archive path(s), model (`gpt-image-2`), quality/size if known, final reviewed JSON prompt/brief, sources used, and any app/public asset copies.
+12. **Create and show the preview.** Ensure the archive contains `preview.html` rendered from `assets/image-preview-template.html`. Use `--open-preview` when the user asked to see the finished result, so a fresh Google Chrome window opens to the local preview. If opening Chrome fails, keep the preview file and include the exact path plus command to open it.
+13. **Verify the archive and preview.** Before reporting completion, list the archive directory and confirm `prompt.json`, `preview.html`, and every expected `imageN.*` file exists.
+14. **Report the prompt and evidence.** Include final archive path(s), preview path, whether Chrome was opened, model (`gpt-image-2`), quality/size if known, final reviewed JSON prompt/brief, sources used, and any app/public asset copies.
 
 </workflow>
 
@@ -98,10 +101,11 @@ When the image-generation path saves files under `~/.codex/generated-images`, ar
 node skills/image-generation/scripts/archive-generated-images.mjs \
   --topic "descriptive topic" \
   --prompt /path/to/reviewed-prompt.json \
-  --images ~/.codex/generated-images/generated-1.png ~/.codex/generated-images/generated-2.png
+  --images ~/.codex/generated-images/generated-1.png ~/.codex/generated-images/generated-2.png \
+  --open-preview
 ```
 
-If the exact generated file paths are not printed but the number of outputs is known, use `--latest <n>` right after generation so the newest generated files are copied into `.hypercore/image-generation/<topic-slug>/` as `image1.*`, `image2.*`, ... . Always inspect the helper output and directory listing before final response.
+The helper writes `preview.html` by default from `assets/image-preview-template.html`. Use `--open-preview` when the finished image should be shown immediately in a fresh Google Chrome window/tab; omit it for non-visual batch runs, CI, or environments without Chrome. If the exact generated file paths are not printed but the number of outputs is known, use `--latest <n>` right after generation so the newest generated files are copied into `.hypercore/image-generation/<topic-slug>/` as `image1.*`, `image2.*`, ... . Always inspect the helper output and directory listing before final response.
 
 </archive_helper>
 
@@ -133,7 +137,8 @@ Load `references/json-prompt-best-practices.md` when creating or changing this s
     "destination_intent": "project-bound",
     "save_path": ".hypercore/image-generation/descriptive-topic/image1.png",
     "archive_dir": ".hypercore/image-generation/descriptive-topic",
-    "prompt_path": ".hypercore/image-generation/descriptive-topic/prompt.json"
+    "prompt_path": ".hypercore/image-generation/descriptive-topic/prompt.json",
+    "preview_html_path": ".hypercore/image-generation/descriptive-topic/preview.html"
   },
   "artifact_archive": {
     "topic": "Human-readable topic for this generation job.",
@@ -142,6 +147,7 @@ Load `references/json-prompt-best-practices.md` when creating or changing this s
     "image_paths": [
       ".hypercore/image-generation/descriptive-topic/image1.png"
     ],
+    "preview_path": ".hypercore/image-generation/descriptive-topic/preview.html",
     "source_generated_images_dir": "~/.codex/generated-images"
   },
   "user_requirements_summary": "English summary of the user's requirements and inferred constraints.",
@@ -273,6 +279,8 @@ Before completion, pass all checks:
 - [ ] Every generation/edit job has a stable archive directory under `.hypercore/image-generation/<topic-slug>/`.
 - [ ] The archive contains the reviewed prompt at `.hypercore/image-generation/<topic-slug>/prompt.json`.
 - [ ] Every generated/edited image has a stable copy in the archive as `image1.png`, `image2.png`, `image3.png`, ... or the matching real extension for non-PNG outputs.
+- [ ] The archive contains `preview.html` generated from `assets/image-preview-template.html`, and it renders the archived images using local relative paths.
+- [ ] If the user asked to see the result, `preview.html` was opened in a fresh Google Chrome window/tab, or the failure and exact open command were reported.
 - [ ] No generated image remains only in `~/.codex/generated-images` or another global/temp Codex location.
 - [ ] Project-bound images that app code must reference are additionally copied to the appropriate tracked/public asset path if needed.
 - [ ] Final response includes saved paths, reviewed JSON prompt or concise prompt summary, sources, and remaining risks if any.
@@ -285,6 +293,7 @@ Before completion, pass all checks:
 - `references/gpt-image-2-research.md`: source-backed `gpt-image-2` model facts and links.
 - `references/json-prompt-best-practices.md`: researched JSON prompt schema, review gates, and source maps.
 - `scripts/archive-generated-images.mjs`: deterministic helper that copies reviewed prompts and generated image files into `.hypercore/image-generation/<topic-slug>/prompt.json` and `imageN.*`.
+- `assets/image-preview-template.html`: local, self-contained preview template rendered as `.hypercore/image-generation/<topic-slug>/preview.html` by the archive helper.
 - `.hypercore/research/2026-04-29-image-generation-naturalism.md`: full naturalism/model research report saved for reuse.
 - `.hypercore/research/2026-04-29-json-prompt-best-practices-for-image-generation.md`: JSON prompt best-practice research report.
 

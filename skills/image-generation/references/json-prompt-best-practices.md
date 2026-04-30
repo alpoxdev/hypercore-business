@@ -8,7 +8,7 @@ Use this reference when converting user requirements into the required English J
 
 The JSON prompt is an inspectable planning artifact, not just an API payload. It should separate:
 
-1. **Generation settings**: model, task, size, quality, format, destination, and canonical save path.
+1. **Generation settings**: model, task, size, quality, format, destination, canonical save path, archive directory, and preview HTML path.
 2. **User intent**: what the user asked for, what was inferred, and what remains unknown.
 3. **Source grounding**: local files, URLs, or reference images used as factual/visual anchors.
 4. **Image direction**: one coherent capture/design story with subject, scene, composition, lighting, materials, text, invariants, and avoid constraints.
@@ -27,7 +27,7 @@ Practical rule for this skill:
 - Keep key order stable so reviews are fast and diffs are meaningful.
 - Treat `schema_version` as a compatibility marker when changing fields.
 - Prefer enums for fields like `task`, `quality`, `format`, and `destination_intent`.
-- Always include `generation_settings.save_path`; default to `.hypercore/image-generation/<descriptive-kebab-case-filename>.png` from the current repository root.
+- Always include `generation_settings.archive_dir`, `generation_settings.save_path`, `generation_settings.prompt_path`, and `generation_settings.preview_html_path`; default to `.hypercore/image-generation/<topic-slug>/...` from the current repository root.
 - If a required field is unknown, write an explicit assumption or `"unknown_but_non_blocking"`; do not silently omit it.
 
 ### 2. Separate API settings from creative direction
@@ -36,7 +36,7 @@ OpenAI image docs separate model/output controls (`model`, `size`, `quality`, `o
 
 Practical rule for this skill:
 
-- Put `model`, `task`, `size`, `quality`, `format`, destination, and `save_path` under `generation_settings` / `output`.
+- Put `model`, `task`, `size`, `quality`, `format`, destination, `archive_dir`, `save_path`, `prompt_path`, and `preview_html_path` under `generation_settings` / `output`.
 - Keep `image_prompt` focused on what the image should depict.
 - For `gpt-image-2`, enforce documented size constraints and remember that transparent backgrounds are not supported by this model in the Image API.
 - Use `quality: "low"` for drafts and `"medium"`/`"high"` for final assets.
@@ -106,6 +106,7 @@ model
 task
 use_case
 generation_settings
+artifact_archive
 user_requirements_summary
 assumptions
 source_inputs

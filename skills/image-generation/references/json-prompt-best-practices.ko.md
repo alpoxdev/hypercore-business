@@ -8,7 +8,7 @@ Last researched: 2026-04-29.
 
 JSON prompt는 단순한 API payload가 아니라 inspectable planning artifact다. 다음을 분리해야 한다:
 
-1. **Generation settings**: model, task, size, quality, format, destination, canonical save path.
+1. **Generation settings**: model, task, size, quality, format, destination, canonical save path, archive directory, preview HTML path.
 2. **User intent**: 사용자가 요청한 것, 추론한 것, 아직 모르는 것.
 3. **Source grounding**: factual/visual anchor로 사용한 local files, URLs, reference images.
 4. **Image direction**: subject, scene, composition, lighting, materials, text, invariants, avoid constraints를 포함한 하나의 coherent capture/design story.
@@ -27,7 +27,7 @@ Practical rule for this skill:
 - review가 빠르고 diff가 의미 있도록 key order를 안정적으로 유지한다.
 - field 변경 시 `schema_version`을 compatibility marker로 사용한다.
 - `task`, `quality`, `format`, `destination_intent` 같은 field에는 enum을 선호한다.
-- 항상 `generation_settings.save_path`를 포함한다. 기본값은 current repository root 기준 `.hypercore/image-generation/<descriptive-kebab-case-filename>.png`다.
+- 항상 `generation_settings.archive_dir`, `generation_settings.save_path`, `generation_settings.prompt_path`, `generation_settings.preview_html_path`를 포함한다. 기본값은 current repository root 기준 `.hypercore/image-generation/<topic-slug>/...`다.
 - required field를 모르면 field를 조용히 생략하지 말고 explicit assumption 또는 `"unknown_but_non_blocking"`을 적는다.
 
 ### 2. API settings와 creative direction을 분리한다
@@ -36,7 +36,7 @@ OpenAI image docs는 model/output control(`model`, `size`, `quality`, `output_fo
 
 Practical rule for this skill:
 
-- `model`, `task`, `size`, `quality`, `format`, destination, `save_path`는 `generation_settings` / `output` 아래에 둔다.
+- `model`, `task`, `size`, `quality`, `format`, destination, `archive_dir`, `save_path`, `prompt_path`, `preview_html_path`는 `generation_settings` / `output` 아래에 둔다.
 - `image_prompt`는 이미지가 무엇을 묘사해야 하는지에 집중한다.
 - `gpt-image-2`에서는 documented size constraint를 지키고, 이 모델이 Image API에서 transparent background를 지원하지 않는다는 점을 기억한다.
 - draft에는 `quality: "low"`, final asset에는 `"medium"`/`"high"`를 사용한다.
@@ -106,6 +106,7 @@ model
 task
 use_case
 generation_settings
+artifact_archive
 user_requirements_summary
 assumptions
 source_inputs

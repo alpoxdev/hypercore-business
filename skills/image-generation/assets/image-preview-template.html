@@ -1,0 +1,191 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>__PAGE_TITLE__</title>
+  <style>
+    :root {
+      color-scheme: light dark;
+      --bg: #0f1115;
+      --panel: #171a21;
+      --panel-2: #20242d;
+      --text: #f4f7fb;
+      --muted: #aab3c2;
+      --border: #343a46;
+      --accent: #8bc5ff;
+      --shadow: 0 24px 70px rgba(0, 0, 0, 0.35);
+    }
+
+    * { box-sizing: border-box; }
+
+    body {
+      margin: 0;
+      min-height: 100vh;
+      background:
+        radial-gradient(circle at top left, rgba(139, 197, 255, 0.22), transparent 34rem),
+        linear-gradient(135deg, #0c0e13 0%, var(--bg) 42%, #17131f 100%);
+      color: var(--text);
+      font: 15px/1.55 ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+    }
+
+    header {
+      padding: 32px clamp(20px, 4vw, 56px) 20px;
+      border-bottom: 1px solid rgba(255, 255, 255, 0.08);
+      background: rgba(15, 17, 21, 0.72);
+      backdrop-filter: blur(18px);
+      position: sticky;
+      top: 0;
+      z-index: 1;
+    }
+
+    main {
+      display: grid;
+      grid-template-columns: minmax(0, 1fr) minmax(320px, 440px);
+      gap: 24px;
+      padding: 28px clamp(20px, 4vw, 56px) 56px;
+    }
+
+    h1 {
+      margin: 0 0 8px;
+      font-size: clamp(24px, 3vw, 42px);
+      line-height: 1.08;
+      letter-spacing: -0.04em;
+    }
+
+    .meta {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 8px 16px;
+      color: var(--muted);
+    }
+
+    .grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+      align-content: start;
+      gap: 22px;
+    }
+
+    figure, aside {
+      margin: 0;
+      border: 1px solid var(--border);
+      border-radius: 24px;
+      background: rgba(23, 26, 33, 0.82);
+      box-shadow: var(--shadow);
+      overflow: hidden;
+    }
+
+    figure img {
+      display: block;
+      width: 100%;
+      height: auto;
+      max-height: 78vh;
+      object-fit: contain;
+      background: repeating-conic-gradient(#1d222b 0 25%, #151922 0 50%) 50% / 28px 28px;
+    }
+
+    figcaption {
+      display: grid;
+      gap: 6px;
+      padding: 14px 16px 16px;
+      color: var(--muted);
+    }
+
+    figcaption strong { color: var(--text); }
+    a { color: var(--accent); text-decoration: none; }
+    a:hover { text-decoration: underline; }
+
+    aside {
+      position: sticky;
+      top: 132px;
+      max-height: calc(100vh - 164px);
+      overflow: auto;
+      padding: 20px;
+    }
+
+    aside h2 {
+      margin: 0 0 14px;
+      font-size: 18px;
+      letter-spacing: -0.02em;
+    }
+
+    pre {
+      margin: 0;
+      padding: 16px;
+      overflow: auto;
+      border-radius: 16px;
+      background: var(--panel-2);
+      color: #dce8ff;
+      font-size: 12px;
+      line-height: 1.45;
+      white-space: pre-wrap;
+      word-break: break-word;
+    }
+
+    .empty {
+      border: 1px dashed var(--border);
+      border-radius: 20px;
+      padding: 28px;
+      color: var(--muted);
+      background: rgba(255, 255, 255, 0.03);
+    }
+
+    @media (max-width: 960px) {
+      header { position: static; }
+      main { grid-template-columns: 1fr; }
+      aside { position: static; max-height: none; }
+    }
+  </style>
+</head>
+<body>
+  <header>
+    <h1 id="title">Image preview</h1>
+    <div class="meta">
+      <span id="slug"></span>
+      <span id="generatedAt"></span>
+      <a id="promptLink" href="prompt.json">prompt.json</a>
+    </div>
+  </header>
+
+  <main>
+    <section class="grid" id="images"></section>
+    <aside>
+      <h2>Reviewed prompt</h2>
+      <pre id="prompt"></pre>
+    </aside>
+  </main>
+
+  <script type="application/json" id="preview-data">__PREVIEW_DATA_JSON__</script>
+  <script>
+    const data = JSON.parse(document.getElementById('preview-data').textContent);
+    document.getElementById('title').textContent = data.topic || 'Image preview';
+    document.getElementById('slug').textContent = data.topic_slug ? `slug: ${data.topic_slug}` : '';
+    document.getElementById('generatedAt').textContent = data.generated_at ? `generated: ${data.generated_at}` : '';
+    document.getElementById('promptLink').href = data.prompt_path || 'prompt.json';
+    document.getElementById('prompt').textContent = JSON.stringify(data.prompt || {}, null, 2);
+
+    const images = document.getElementById('images');
+    if (!data.images || data.images.length === 0) {
+      images.innerHTML = '<div class="empty">No images were archived for this preview.</div>';
+    } else {
+      images.replaceChildren(...data.images.map((image) => {
+        const figure = document.createElement('figure');
+        const img = document.createElement('img');
+        img.src = image.relative_path;
+        img.alt = `Generated image ${image.index}`;
+        img.loading = 'eager';
+
+        const caption = document.createElement('figcaption');
+        const title = document.createElement('strong');
+        title.textContent = `Image ${image.index}: ${image.file_name}`;
+        const projectPath = document.createElement('span');
+        projectPath.textContent = image.project_path;
+        caption.append(title, projectPath);
+        figure.append(img, caption);
+        return figure;
+      }));
+    }
+  </script>
+</body>
+</html>

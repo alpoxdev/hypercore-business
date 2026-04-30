@@ -1,10 +1,10 @@
 ---
 name: image-generation
-description: "[HyperB][Codex Only] HyperB 작업에서 제품, 마케팅, 콘텐츠, UI, 리서치 기반 장면 제작을 위해 현실적이고, 스톡 사진 같지 않고, AI 티가 나지 않는 맥락 맞춤형 래스터 이미지를 gpt-image-2로 생성하거나 편집한다. Codex가 사용자 요구사항을 영어 JSON 프롬프트로 변환하고, 생성 전 프롬프트를 검수한 뒤, Codex 이미지 생성 경로를 실행하고, 결과물을 현실성, 브랜드 적합성, 아티팩트, 텍스트 정확성, 저장 가능한 에셋 상태 기준으로 검증해야 할 때 사용한다."
+description: "[HyperB][Codex Only] HyperB 작업에서 제품, 마케팅, 콘텐츠, UI, 리서치 기반 장면 제작을 위해 현실적이고, 스톡 사진 같지 않고, AI 티가 나지 않는 맥락 맞춤형 래스터 이미지를 gpt-image-2로 생성하거나 편집한다. Codex가 사용자 요구사항을 영어 JSON 프롬프트로 변환하고, 생성 전 프롬프트를 검수한 뒤, Codex 이미지 생성 경로를 실행하고, 결과물을 검증하고, 안정적인 이미지 에셋을 아카이브하고, 로컬 preview.html을 만들고, 필요 시 새 Chrome 창에서 미리보기를 열어야 할 때 사용한다."
 compatibility: Codex 전용; Codex 이미지 생성 기능 또는 명시적인 gpt-image-2 API/CLI 경로가 필요하다.
 metadata:
   author: HyperB
-  version: "0.1.1"
+  version: "0.1.2"
 ---
 
 @rules/natural-image-workflow.ko.md
@@ -49,6 +49,7 @@ metadata:
 - 투명 배경이 필요하지만 사용 가능한 경로에서 `gpt-image-2`가 네이티브 투명 배경을 제공하지 못하면, 불투명/크로마키 워크플로우를 사용하거나 다른 모델 사용 전에 요구사항 변경을 사용자에게 확인한다.
 - 시스템 `imagegen` 스킬을 사용할 수 있으면 실행 helper로 취급한다. 이 스킬은 더 상위 수준의 HyperB 리서치, 아트 디렉션, 자연스러움 검수를 담당한다.
 - 아카이브 요구사항: 생성/편집이 끝날 때마다 `.hypercore/image-generation/<topic-slug>/`를 만들고, 검수된 프롬프트를 `prompt.json`으로 저장한 뒤, `~/.codex/generated-images` 또는 반환된 이미지 경로의 결과물을 같은 폴더에 `image1.png`, `image2.png`, `image3.png`, ... 형식으로 복사한 다음에만 완료를 보고한다.
+- 미리보기 요구사항: 완료된 모든 archive에는 로컬 preview template로 생성한 `.hypercore/image-generation/<topic-slug>/preview.html`이 있어야 한다. 사용자가 결과 확인을 원하거나 결과를 보여 달라고 한 작업에서는 로컬 helper로 해당 preview를 새 Google Chrome 창/탭에서 연다. 현재 환경에서 Chrome을 열 수 없으면 실패를 숨기지 말고 `preview.html` 경로와 open command를 보고한다.
 
 </execution_contract>
 
@@ -60,6 +61,7 @@ metadata:
 - "gpt-image-2로 B2B SaaS 고객 사례용 자연스러운 사무실 사진 느낌 이미지를 생성해줘."
 - "이 제품 설명을 읽고 상황에 맞는 블로그 대표 이미지를 리서치 기반으로 만들어줘."
 - "광고용 이미지를 만들되 스톡 사진처럼 과장되지 않고 실제 촬영한 느낌이 나게 해줘."
+- "이미지를 생성한 다음 preview.html로 저장하고 크롬에서 바로 보여줘."
 
 부정 예시:
 
@@ -85,8 +87,9 @@ metadata:
 9. **전달 전 시각 검증을 수행한다.** 물리적 개연성, 조명, 해부학, 재질 반응, 텍스트, 브랜드 적합성, 아티팩트, generic/stock/AI 느낌 여부를 확인한다.
 10. **좁게 반복한다.** 한 번에 하나의 실패 축만 변경한다: 기하, 조명, 재질, 촬영 아티팩트, 텍스트, 구도. 다음 생성 전에 JSON 프롬프트를 업데이트하고 다시 검수한다.
 11. **의도적으로 아카이브한다.** 각 이미지 작업마다 설명적인 topic slug를 정하고 `.hypercore/image-generation/<topic-slug>/`를 만든다. 최종 검수된 JSON 프롬프트를 `.hypercore/image-generation/<topic-slug>/prompt.json`으로 저장한 뒤, 생성/편집된 모든 출력물을 `~/.codex/generated-images` 또는 이미지 생성 반환 경로에서 같은 폴더로 복사해 생성 순서대로 `image1.png`, `image2.png`, `image3.png`, ...로 저장한다. 로컬 파일 경로를 알 수 있으면 `scripts/archive-generated-images.mjs`를 사용한다. 반환 포맷이 실제로 `jpeg` 또는 `webp`이면 `.png`로 위장하지 말고 실제 확장자를 유지한다. 앱 코드나 커밋 대상 asset으로도 써야 하면 `.hypercore/image-generation/<topic-slug>/` 아카이브를 보존한 뒤 별도 프로젝트 asset 경로로 복사한다. 프로젝트에서 참조하는 에셋을 Codex/global generated-images 위치에만 남겨두지 않는다.
-12. **아카이브를 검증한다.** 완료 보고 전 archive directory를 listing해서 `prompt.json`과 기대한 모든 `imageN.*` 파일이 존재하는지 확인한다.
-13. **프롬프트와 근거를 보고한다.** 최종 archive 경로, 모델(`gpt-image-2`), 품질/크기(알 수 있으면), 최종 검수된 JSON 프롬프트/브리프, 사용한 출처, 앱/public asset 사본 경로를 포함한다.
+12. **미리보기를 만들고 보여준다.** Archive에 `assets/image-preview-template.html`에서 렌더링된 `preview.html`이 있는지 확인한다. 사용자가 완성 결과를 보길 원하면 `--open-preview`를 사용해 새 Google Chrome 창을 로컬 preview로 연다. Chrome 열기에 실패하면 preview 파일은 유지하고 정확한 경로와 열기 command를 포함한다.
+13. **아카이브와 미리보기를 검증한다.** 완료 보고 전 archive directory를 listing해서 `prompt.json`, `preview.html`, 기대한 모든 `imageN.*` 파일이 존재하는지 확인한다.
+14. **프롬프트와 근거를 보고한다.** 최종 archive 경로, preview 경로, Chrome을 열었는지 여부, 모델(`gpt-image-2`), 품질/크기(알 수 있으면), 최종 검수된 JSON 프롬프트/브리프, 사용한 출처, 앱/public asset 사본 경로를 포함한다.
 
 </workflow>
 
@@ -98,10 +101,11 @@ metadata:
 node skills/image-generation/scripts/archive-generated-images.mjs \
   --topic "descriptive topic" \
   --prompt /path/to/reviewed-prompt.json \
-  --images ~/.codex/generated-images/generated-1.png ~/.codex/generated-images/generated-2.png
+  --images ~/.codex/generated-images/generated-1.png ~/.codex/generated-images/generated-2.png \
+  --open-preview
 ```
 
-정확한 생성 파일 경로가 출력되지 않았지만 결과 개수를 알고 있으면, 생성 직후 `--latest <n>`을 사용해 최신 생성 파일을 `.hypercore/image-generation/<topic-slug>/` 안의 `image1.*`, `image2.*`, ...로 복사한다. 최종 응답 전 helper 출력과 directory listing을 반드시 확인한다.
+Helper는 기본적으로 `assets/image-preview-template.html`에서 `preview.html`을 작성한다. 완성 이미지를 즉시 보여줘야 하면 `--open-preview`로 새 Google Chrome 창/탭에서 연다. 시각 확인이 필요 없는 batch, CI, Chrome이 없는 환경에서는 생략한다. 정확한 생성 파일 경로가 출력되지 않았지만 결과 개수를 알고 있으면, 생성 직후 `--latest <n>`을 사용해 최신 생성 파일을 `.hypercore/image-generation/<topic-slug>/` 안의 `image1.*`, `image2.*`, ...로 복사한다. 최종 응답 전 helper 출력과 directory listing을 반드시 확인한다.
 
 </archive_helper>
 
@@ -133,7 +137,8 @@ node skills/image-generation/scripts/archive-generated-images.mjs \
     "destination_intent": "project-bound",
     "save_path": ".hypercore/image-generation/descriptive-topic/image1.png",
     "archive_dir": ".hypercore/image-generation/descriptive-topic",
-    "prompt_path": ".hypercore/image-generation/descriptive-topic/prompt.json"
+    "prompt_path": ".hypercore/image-generation/descriptive-topic/prompt.json",
+    "preview_html_path": ".hypercore/image-generation/descriptive-topic/preview.html"
   },
   "artifact_archive": {
     "topic": "Human-readable topic for this generation job.",
@@ -142,6 +147,7 @@ node skills/image-generation/scripts/archive-generated-images.mjs \
     "image_paths": [
       ".hypercore/image-generation/descriptive-topic/image1.png"
     ],
+    "preview_path": ".hypercore/image-generation/descriptive-topic/preview.html",
     "source_generated_images_dir": "~/.codex/generated-images"
   },
   "user_requirements_summary": "English summary of the user's requirements and inferred constraints.",
@@ -273,6 +279,8 @@ edit/reference-guided 작업에서는 `"edit_plan": null`을 다음 구조로 �
 - [ ] 모든 생성/편집 작업은 `.hypercore/image-generation/<topic-slug>/` 아래 안정적인 archive directory를 갖는다.
 - [ ] archive에는 검수된 프롬프트가 `.hypercore/image-generation/<topic-slug>/prompt.json`으로 저장되어 있다.
 - [ ] 생성/편집된 모든 이미지는 archive 안에 `image1.png`, `image2.png`, `image3.png`, ... 또는 non-PNG 출력의 실제 확장자로 안정적인 사본을 갖는다.
+- [ ] archive에는 `assets/image-preview-template.html`에서 생성된 `preview.html`이 있고, local relative path로 archive 이미지를 렌더링한다.
+- [ ] 사용자가 결과를 보여 달라고 했다면 `preview.html`을 새 Google Chrome 창/탭에서 열었거나, 실패와 정확한 open command를 보고했다.
 - [ ] 생성 이미지가 `~/.codex/generated-images` 또는 다른 Codex global/temp 위치에만 남아 있지 않다.
 - [ ] 앱 코드에서 참조해야 하는 project-bound 이미지는 필요 시 적절한 tracked/public asset 경로로도 복사했다.
 - [ ] 최종 응답에 저장 경로, 검수된 JSON 프롬프트 또는 간결한 프롬프트 요약, 출처, 남은 리스크를 포함했다.
@@ -285,6 +293,7 @@ edit/reference-guided 작업에서는 `"edit_plan": null`을 다음 구조로 �
 - `references/gpt-image-2-research.ko.md`: 출처 기반 `gpt-image-2` 모델 사실과 링크의 한국어 mirror.
 - `references/json-prompt-best-practices.ko.md`: 리서치 기반 JSON prompt schema, review gate, source map의 한국어 mirror.
 - `scripts/archive-generated-images.mjs`: 검수된 prompt와 생성 이미지 파일을 `.hypercore/image-generation/<topic-slug>/prompt.json` 및 `imageN.*`로 복사하는 결정론적 helper.
+- `assets/image-preview-template.html`: archive helper가 `.hypercore/image-generation/<topic-slug>/preview.html`로 렌더링하는 로컬 self-contained preview template.
 - `.hypercore/research/2026-04-29-image-generation-naturalism.md`: 재사용 가능한 naturalism/model 리서치 보고서.
 - `.hypercore/research/2026-04-29-json-prompt-best-practices-for-image-generation.md`: JSON prompt best-practice 리서치 보고서.
 
