@@ -1,0 +1,140 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>__PAGE_TITLE__</title>
+  <style>
+    :root {
+      color-scheme: light dark;
+      --bg: #101217;
+      --panel: #171a21;
+      --panel-2: #222631;
+      --text: #f5f7fb;
+      --muted: #aab3c2;
+      --border: #343b4a;
+      --accent: #9ad4ff;
+      --brand: #6f5cff;
+      --shadow: 0 22px 70px rgba(0,0,0,.34);
+    }
+    * { box-sizing: border-box; }
+    body {
+      margin: 0;
+      min-height: 100vh;
+      background:
+        radial-gradient(circle at 10% 0%, rgba(111,92,255,.28), transparent 32rem),
+        linear-gradient(135deg, #0c0d12, var(--bg) 55%, #15101f);
+      color: var(--text);
+      font: 15px/1.55 ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+    }
+    header {
+      padding: 30px clamp(20px, 4vw, 56px) 18px;
+      border-bottom: 1px solid rgba(255,255,255,.08);
+      background: rgba(16,18,23,.76);
+      backdrop-filter: blur(18px);
+      position: sticky;
+      top: 0;
+      z-index: 1;
+    }
+    main {
+      display: grid;
+      grid-template-columns: minmax(0, 1fr) minmax(320px, 430px);
+      gap: 24px;
+      padding: 28px clamp(20px, 4vw, 56px) 56px;
+    }
+    h1 {
+      margin: 0 0 8px;
+      font-size: clamp(24px, 3vw, 42px);
+      line-height: 1.08;
+      letter-spacing: -.04em;
+    }
+    .meta { display: flex; flex-wrap: wrap; gap: 8px 16px; color: var(--muted); }
+    a { color: var(--accent); text-decoration: none; }
+    a:hover { text-decoration: underline; }
+    .grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(300px, 1fr)); gap: 22px; align-content: start; }
+    figure, aside {
+      margin: 0;
+      border: 1px solid var(--border);
+      border-radius: 24px;
+      background: rgba(23,26,33,.84);
+      box-shadow: var(--shadow);
+      overflow: hidden;
+    }
+    .swatches { display: grid; grid-template-columns: repeat(2, 1fr); gap: 1px; background: var(--border); }
+    .surface { min-height: 220px; display: grid; place-items: center; padding: 36px; }
+    .surface img { display: block; width: min(62%, 220px); height: auto; max-height: 180px; object-fit: contain; }
+    .checker {
+      background: conic-gradient(#d9dee8 25%, #fff 0 50%, #d9dee8 0 75%, #fff 0) 0 0 / 28px 28px;
+    }
+    .white { background: #fff; }
+    .black { background: #05060a; }
+    .brand { background: linear-gradient(135deg, var(--brand), #1cb7ff); }
+    figcaption { display: grid; gap: 7px; padding: 15px 16px 17px; color: var(--muted); }
+    figcaption strong { color: var(--text); }
+    .pill { display: inline-flex; width: fit-content; gap: 6px; align-items: center; border: 1px solid var(--border); border-radius: 999px; padding: 3px 9px; color: #d7ffe6; background: rgba(36,120,74,.16); }
+    aside { position: sticky; top: 132px; max-height: calc(100vh - 164px); overflow: auto; padding: 20px; }
+    aside h2 { margin: 0 0 14px; font-size: 18px; letter-spacing: -.02em; }
+    pre { margin: 0; padding: 16px; overflow: auto; border-radius: 16px; background: var(--panel-2); color: #dce8ff; font-size: 12px; line-height: 1.45; white-space: pre-wrap; word-break: break-word; }
+    .empty { border: 1px dashed var(--border); border-radius: 20px; padding: 28px; color: var(--muted); background: rgba(255,255,255,.03); }
+    @media (max-width: 960px) { header { position: static; } main { grid-template-columns: 1fr; } aside { position: static; max-height: none; } }
+  </style>
+</head>
+<body>
+  <header>
+    <h1 id="title">Logo preview</h1>
+    <div class="meta">
+      <span id="slug"></span>
+      <span id="generatedAt"></span>
+      <a id="promptLink" href="prompt.json">prompt.json</a>
+    </div>
+  </header>
+  <main>
+    <section class="grid" id="logos"></section>
+    <aside>
+      <h2>Reviewed logo brief</h2>
+      <pre id="prompt"></pre>
+    </aside>
+  </main>
+  <script type="application/json" id="preview-data">__PREVIEW_DATA_JSON__</script>
+  <script>
+    const data = JSON.parse(document.getElementById('preview-data').textContent);
+    document.getElementById('title').textContent = data.topic || 'Logo preview';
+    document.getElementById('slug').textContent = data.topic_slug ? `slug: ${data.topic_slug}` : '';
+    document.getElementById('generatedAt').textContent = data.generated_at ? `generated: ${data.generated_at}` : '';
+    document.getElementById('promptLink').href = data.prompt_path || 'prompt.json';
+    document.getElementById('prompt').textContent = JSON.stringify(data.prompt || {}, null, 2);
+
+    const logos = document.getElementById('logos');
+    if (!data.logos || data.logos.length === 0) {
+      logos.innerHTML = '<div class="empty">No logos were archived for this preview.</div>';
+    } else {
+      logos.replaceChildren(...data.logos.map((logo) => {
+        const figure = document.createElement('figure');
+        const swatches = document.createElement('div');
+        swatches.className = 'swatches';
+        ['checker', 'white', 'black', 'brand'].forEach((name) => {
+          const surface = document.createElement('div');
+          surface.className = `surface ${name}`;
+          const img = document.createElement('img');
+          img.src = logo.relative_path;
+          img.alt = `Logo ${logo.index} on ${name} background`;
+          surface.append(img);
+          swatches.append(surface);
+        });
+
+        const caption = document.createElement('figcaption');
+        const title = document.createElement('strong');
+        title.textContent = `Logo ${logo.index}: ${logo.file_name}`;
+        const verify = document.createElement('span');
+        verify.className = 'pill';
+        verify.textContent = logo.png?.transparent_png_verified ? 'transparent PNG verified' : 'transparency not verified';
+        const path = document.createElement('span');
+        path.textContent = logo.project_path;
+        caption.append(title, verify, path);
+        figure.append(swatches, caption);
+        return figure;
+      }));
+    }
+  </script>
+</body>
+</html>
