@@ -34,6 +34,24 @@ For each image, write:
 }
 ```
 
+## Source image extraction and placement QA
+
+원본 상품 이미지를 그대로 Figma에 붙이기 전에 각 컷마다 다음을 기록한다:
+
+- `background_type`: transparent alpha, white studio, gray studio, lifestyle, noisy, unknown
+- `edge_quality`: clean, halo/fringe, jagged, cropped limb/product, needs retouch
+- `placement_decision`: transparent_extraction, matching_plate, full_bleed_crop, masked_card, asset_needed
+- `section_fit`: light section, dark section, premium editorial, proof card, spec table
+- `action`: use as-is, remove background, crop tighter, add tone-matched plate, regenerate/edit via image-maker
+
+Visual rules:
+
+- On dark or premium sections, do not paste a raw white square around a product. Either remove the background to transparent PNG, place it on an intentional light card with balanced padding/radius, or regenerate/edit the product asset.
+- If the original has a white studio background and transparency cannot be produced quickly, use a deliberate plate: matching corner radius, optical padding, caption spacing, and section-aligned color.
+- Product cutouts must be sized to the section rhythm: no tiny floating product, no accidental white border, no harsh square unless the layout uses a clear framed card language.
+- Use `source asset` labels only as small production notes; do not let labels compete with product-page copy.
+- Screenshot every section where source images are placed and fail the layout if a product image looks pasted, mismatched, blurry, haloed, or visually unrelated to the background.
+
 ## Generated image caution
 
 - Prefer no text inside generated images, or only very short Korean text after manual review.
@@ -42,6 +60,8 @@ For each image, write:
 - Product labels, certifications, reviews, and official marks should come from real assets.
 - If editing a real product photo, state what must not change: label, shape, color, scale, packaging.
 - For models, avoid implying real endorsement unless supplied.
+- Downloaded source images are reference/existing assets only; do not count them as generated or edited outputs.
+- Do not use rough AI-looking placeholder silhouettes as final product imagery. If a real image is unavailable, mark the slot `asset-needed` or run the image-maker generation/editing path.
 - For regulated categories, do not visualize medical or impossible effects.
 
 ## Integrate skills/image-maker for actual assets
@@ -54,3 +74,4 @@ When actual image files are required, do not stop at this cut list and do not in
 4. Generate/edit the actual requested images via the available image generation path following `skills/image-maker/SKILL.md`.
 5. Use `skills/image-maker/scripts/archive-generated-images.mjs` or the same archive contract to preserve `.hypercore/image-maker/<topic-slug>/prompt.json` and generated `imageN.*` files.
 6. Copy final images into the 상세페이지 production folder only after archiving.
+7. Verify the final layout screenshot: no text overlap, clipped Korean copy, unreadable tiny labels, or placeholder art presented as final.

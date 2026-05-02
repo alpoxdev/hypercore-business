@@ -103,12 +103,15 @@ DevTools/CDP 채널 우선순위, 캡처 체크리스트, profile browser 어댑
 
 제작 레이아웃은 HTML을 기본값으로 만들지 않는다. 먼저 `figma-frame-spec.json`을 만들거나, Figma file key가 있고 MCP write 도구가 가능하면 Figma frame/layer를 직접 생성한다. Figma 계약은 `references/figma-mcp-output.ko.md`를 읽는다.
 
+이미지를 Figma에 배치하기 전에 이미지별 `image_asset_analysis` 장부를 만든다. `background_type`, `alpha_available`, `edge_quality`, `crop_fit`, `lighting_match`, `section_background`, `placement_decision`, `required_action`을 기록한다. 최종 배치 전 투명 배경 추출, 톤이 맞는 plate, full-bleed crop, masked card, regenerate/edit, asset-needed 중 하나를 선택한다. 어두운/프리미엄 섹션 위의 흰 사각형 product image는 균형 잡힌 카드로 의도한 경우가 아니면 visual QA 실패다.
+
 각 Figma 섹션마다 다음을 명시한다:
 
 - `frame_name`: 안정적인 섹션/레이어 이름
 - `layout_pattern`: image-led, split, card-stack, editorial, table, diagram, FAQ, policy
 - `editable_text_layers`: 수정 가능해야 하는 한국어 카피
 - `image_placeholders`: 생성/편집/기존 이미지 배치
+- `asset_status`: existing/source, generated, edited, asset-needed 중 하나. 다운로드 원본 이미지를 생성 결과로 보고하지 않는다.
 - `export_target`: 섹션 PNG/JPG/PDF 또는 디자인 전용
 
 각 이미지 컷마다 다음을 명시한다:
@@ -122,6 +125,9 @@ DevTools/CDP 채널 우선순위, 캡처 체크리스트, profile browser 어댑
 
 정확한 한국어 문구는 가능하면 생성 이미지 안에 굽지 말고 editable Figma design layer로 남긴다. HTML은 사용자가 명시 요청했거나 검증 필요성이 산출물에 기록된 경우에만 사용한다.
 
+Figma 작업 완료 전에는 screenshot/context를 확인하고 텍스트 겹침, 한국어 잘림, 읽기 어려운 작은 글자, 깨진 spacing, AI틱한 placeholder를 수정한다. 이미지 import가 실패하면 `asset-needed`로 표시하거나 image-maker 생성/편집 경로를 실행한다. 만화형 실루엣이나 조악한 임시 박스를 최종 제품 이미지처럼 두지 않는다.
+또한 모든 source image 배치에서 배경 불일치, 어두운 섹션 위 흰 박스, halo/edge 오염, 어색한 padding, 맞지 않는 border/radius, 제품이 디자인된 것이 아니라 붙여넣은 것처럼 보이는 scale 문제를 검사한다.
+
 ## 8. 실제 이미지 생성/편집
 
 이미지가 요청되면 여기서 멈추지 않고 실제 에셋을 만든다:
@@ -134,6 +140,7 @@ DevTools/CDP 채널 우선순위, 캡처 체크리스트, profile browser 어댑
 6. 결과 이미지를 보고 제품 정확성, 자연스러움, 텍스트, 권리 리스크를 검증한다.
 7. 실패하면 한 축만 좁게 수정해 반복한다.
 8. 최종 이미지를 `.hypercore/image-maker/<topic-slug>/`에 `prompt.json`, `image1.*`, `image2.*` 형식으로 아카이브한다.
+9. 다운로드한 원본 상품 이미지는 reference/existing asset일 뿐 generate/edit 요청을 충족하지 않는다.
 
 ## 9. 산출물 패키징
 

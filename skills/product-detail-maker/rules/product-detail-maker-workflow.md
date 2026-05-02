@@ -1,4 +1,4 @@
-# Korean Product Detail Page Workflow
+# Product Detail Maker Workflow
 
 ## 1. Inputs to extract
 
@@ -106,12 +106,15 @@ Create `figma-frame-spec.json` first, or use Figma MCP write tools directly when
 Read `references/figma-mcp-output.ko.md` for the Figma contract.
 If no Figma file key is available, save Figma-ready spec rather than HTML and record the missing key/tool limitation.
 
+Before placing images in Figma, build an `image_asset_analysis` ledger for each image. Include `background_type`, `alpha_available`, `edge_quality`, `crop_fit`, `lighting_match`, `section_background`, `placement_decision`, and `required_action`. Choose transparent extraction, matching tonal plate, full-bleed crop, masked card, regenerate/edit, or asset-needed before final layout. A raw white product square on a dark or premium section is a visual QA failure unless it is intentionally framed as a balanced card.
+
 For each Figma section, specify:
 
 - `frame_name`: stable section/layer name
 - `layout_pattern`: image-led, split, card-stack, editorial, table, diagram, FAQ, policy
 - `editable_text_layers`: Korean copy that must remain editable
 - `image_placeholders`: generated, edited, or existing image placements
+- `asset_status`: existing/source, generated, edited, or asset-needed; never present downloaded source images as generated outputs
 - `export_target`: section PNG/JPG/PDF or design-only
 
 For each image cut, specify:
@@ -125,6 +128,9 @@ For each image cut, specify:
 
 Prefer exact visible text in editable Figma design layers over generated image text. Use HTML only if the user explicitly requests HTML or a documented validation need requires it.
 
+Before completing Figma work, capture or inspect a screenshot/context and fix text overlap, clipped Korean copy, unreadable small text, broken spacing, and AI-looking placeholder visuals. If image import fails, mark the slot as `asset-needed` or run the image-maker generation/editing path; do not leave cartoon silhouettes or rough placeholders as final product imagery.
+Also inspect every source-image placement for background mismatch, raw white boxes on dark sections, haloed cutout edges, awkward padding, poor border/radius fit, and product scale that feels pasted rather than designed.
+
 ## 8. Actual image generation/editing
 
 When images are requested, continue into real asset production instead of stopping at briefs:
@@ -137,6 +143,7 @@ When images are requested, continue into real asset production instead of stoppi
 6. Inspect the result for product accuracy, naturalism, text, and rights risk.
 7. If a result fails, iterate narrowly on one failure dimension at a time.
 8. Archive final images under `.hypercore/image-maker/<topic-slug>/` as `prompt.json`, `image1.*`, `image2.*`.
+9. Treat downloaded source product images as reference/existing assets only; they do not satisfy a generate/edit request.
 
 ## 9. Output packaging
 

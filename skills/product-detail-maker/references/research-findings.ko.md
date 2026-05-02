@@ -1,6 +1,6 @@
 # 한국형 상세페이지 리서치 요약
 
-Baseline report: `.hypercore/research/2026-04-29-korean-product-detail-page-skill-research.md`
+Baseline report: `.hypercore/research/2026-04-29-product-detail-maker-skill-research.md`
 
 ## 핵심 근거
 

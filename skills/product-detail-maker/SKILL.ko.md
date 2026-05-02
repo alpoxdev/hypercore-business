@@ -1,5 +1,5 @@
 ---
-name: korean-product-detail-page
+name: product-detail-maker
 description: "스마트스토어, 카페24, 쿠팡형 마켓플레이스, 한국형 자사몰, 소셜커머스 셀러를 위해 상세뚝딱(Sang-se)식 빠른 입력·카테고리 템플릿·편집 가능한 Figma MCP 산출을 지향하는 국내 자료 기반 한국형 상품 상세페이지를 전략, 한국어 카피, 카테고리별 섹션 구조, 이미지/컷 기획, 실제 생성·편집 이미지까지 끝-to-end로 만든다. 사용자가 한국형 상세페이지, 스마트스토어/쇼핑몰 상품 상세페이지, 피그마로 수정 가능한 상세페이지, 카테고리별 상세페이지 플레이북, 제품 페이지 카피+비주얼, 이미지 포함 이커머스 상세페이지를 요청할 때 사용하며, 명시 요청 없이는 HTML을 기본 산출물로 만들지 않는다."
 compatibility: 국내 시장/플랫폼 리서치를 위한 라이브 검색, 로컬 파일 작성, 실제 래스터 이미지 생성이 필요할 때 로컬 `skills/image-maker` 스킬 폴더와 함께 동작한다.
 metadata:
@@ -7,7 +7,7 @@ metadata:
   version: "0.1.0"
 ---
 
-@rules/korean-product-detail-page-workflow.ko.md
+@rules/product-detail-maker-workflow.ko.md
 @rules/platform-compliance.ko.md
 @references/research-findings.ko.md
 @references/section-templates.ko.md
@@ -17,7 +17,7 @@ metadata:
 @references/sangse-style-benchmark.ko.md
 @references/figma-mcp-output.ko.md
 
-# Korean Product Detail Page
+# Product Detail Maker
 
 <purpose>
 
@@ -54,6 +54,10 @@ metadata:
 - 일반 글로벌 UX 글보다 국내 플랫폼 고객센터, 셀러 도구, 국내 디자인 템플릿, 한국 운영자/대행사 자료를 우선한다.
 - 제품/카테고리 정보가 부족하면 안전한 가정을 명시하고 계속 진행한다. 카테고리, 법적 리스크, 제품 정체를 판단할 수 없을 때만 질문한다.
 - 이미지가 포함된 요청이면 브리프에서 멈추지 않는다. 로컬 `skills/image-maker/` 폴더가 있으면 preferred 실행 참고로 `SKILL.md`, `rules/natural-image-workflow.md`, `references/json-prompt-best-practices.md`, `scripts/archive-generated-images.mjs`를 읽는다. 해당 폴더가 없으면 사용 가능한 런타임 이미지 생성 skill/tool로 같은 English JSON prompt 검수, 생성/편집 실행, 시각 검증, 이미지 아카이브 계약을 수행하고 fallback을 기록한다.
+- 원본 상품 이미지를 다운로드하는 것은 레퍼런스 수집일 뿐 실제 이미지 생성이 아니다. 사용자가 이미지를 “만들어” 달라고 한 경우 `.hypercore/image-maker/<topic-slug>/`에 생성/편집 이미지가 남기 전에는 완료를 주장하지 않는다. 기존 이미지만 쓰는 경우에는 반드시 existing/source asset으로 표시한다.
+- 각 원본/생성 제품 이미지를 Figma에 넣기 전에 배경, 알파 채널, crop, 조명, 방향, edge 품질, 섹션 배경색을 하나씩 분석한다. 투명 배경 추출, 마스크, 톤이 맞는 이미지 plate를 선택하고, 어두운/프리미엄 섹션에 흰 사각형 product cutout을 그대로 붙이는 산출은 실패로 본다.
+- Figma MCP 산출에서 제품 이미지를 대체한다며 AI틱한 placeholder, 만화형 실루엣, 임시 박스를 최종처럼 제시하지 않는다. 원격 이미지 import가 실패하면 image-maker 경로로 대체 비주얼을 생성/편집하거나, 완료가 아닌 neutral asset-needed block으로 명확히 표시한다.
+- Figma 디자인 완료 전에는 screenshot/context를 확인해 텍스트 겹침, 한국어 잘림, 너무 작은 본문, 깨진 spacing, AI틱한 조악한 시각 요소를 수정한다.
 - 플랫폼/법적 적합성을 최종 법률 승인으로 주장하지 않는다. 항상 제작 체크리스트로 표시한다.
 
 </execution_contract>
@@ -87,7 +91,7 @@ metadata:
 1. 이 `SKILL.ko.md`를 읽어 라우팅과 산출 범위를 확인한다.
 2. `references/research-findings.ko.md`에서 기본 한국 자료 근거와 출처를 확인한다.
 3. 사용자가 상세뚝딱/Sang-se식, 템플릿형, 빠른 AI 상세페이지 생성을 원하면 `references/sangse-style-benchmark.ko.md`를 읽는다.
-4. `rules/korean-product-detail-page-workflow.ko.md`에서 단계별 제작 워크플로우를 확인한다.
+4. `rules/product-detail-maker-workflow.ko.md`에서 단계별 제작 워크플로우를 확인한다.
 5. 사용자가 URL 또는 기존 제품/레퍼런스 페이지를 제공하면 `references/browser-link-research.ko.md`를 읽는다.
 6. 상세페이지 구조를 고를 때 `references/section-templates.ko.md`를 읽는다.
 7. Figma, 피그마, MCP, 편집 가능한 디자인, HTML이 아닌 제작 레이아웃이 필요하면 `references/figma-mcp-output.ko.md`를 읽는다.
@@ -95,7 +99,7 @@ metadata:
 9. 실제 생성/편집 이미지 파일 또는 prompt-ready JSON이 필요하면 `references/image-maker-integration.ko.md`를 읽는다.
 10. 실제 이미지 제작 시 `skills/image-maker/SKILL.md`와 통합 가이드에 명시된 로컬 지원 파일이 있으면 읽고, 없으면 사용 가능한 런타임 이미지 생성 경로로 생성, 검증, 아카이브까지 계속 진행한다.
 11. SmartStore/Cafe24/Gmarket/Auction 대상 산출물을 마무리하기 전 `rules/platform-compliance.ko.md`를 읽는다.
-12. 이 스킬을 수정한 뒤 `scripts/validate-korean-product-detail-page-skill.mjs`를 실행한다.
+12. 이 스킬을 수정한 뒤 `scripts/validate-product-detail-maker-skill.mjs`를 실행한다.
 
 </support_file_read_order>
 
@@ -141,8 +145,11 @@ metadata:
 - 섹션 맵에는 의도적으로 생략하지 않는 한 hero, problem/benefit, evidence, usage, detail/spec, FAQ/objection, policy/compliance 블록이 포함된다.
 - 사실, 법률, 기술, 의료, 화장품, 금융, 성능 관련으로 들리는 주장은 인용, 완화, 또는 판매자 확인 필요 표시 중 하나로 처리한다.
 - 이미지 브리프는 목적, 주제, 구도, 텍스트 리스크, 플랫폼 crop/safe zone, generate/edit/use existing 여부를 명시한다.
+- 모든 이미지 배치는 투명 배경 추출, 톤이 맞는 plate, full-bleed crop, asset-needed 중 하나의 이미지 배경 결정을 포함한다. 어두운/프리미엄 섹션 위의 흰 사각형 원본 이미지 박스는 의도된 프레임 디자인이 아니면 visual QA 실패다.
 - HTML보다 Figma 산출을 우선했다. MCP로 편집 가능한 프레임/레이어를 만들었거나, Figma file key/tool 한계를 기록한 `figma-frame-spec.json`을 저장했다.
 - 이미지가 요청된 경우 `skills/image-maker` JSON prompt 검수, `gpt-image-2` 실행 규칙, 시각 검증, `.hypercore/image-maker/<topic-slug>/` 아카이브까지 완료한 뒤에만 완료를 주장한다.
+- 원본 이미지 다운로드만으로 생성 이미지 완료를 주장하지 않았고, 생성/편집 이미지가 필요하면 실제 파일이 image-maker 아카이브에 존재한다.
+- Figma screenshot/context 검수에서 텍스트 겹침, 한국어 잘림, 읽기 어려운 작은 글자, 최종물처럼 보이는 AI틱한 placeholder가 없다.
 - 대상 채널의 플랫폼 제약과 상품정보제공고시를 확인한다.
 - 모바일에서 읽을 수 있고, 지나치게 긴 단일 이미지로 구성하지 않는다.
 

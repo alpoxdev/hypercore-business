@@ -1,10 +1,10 @@
 # skills/image-maker 통합 실행 가이드
 
-`korean-product-detail-page`는 전략 / 카피 / 컷 기획에서 멈추지 않는다. 사용자가 상세페이지를 “이미지랑 같이” 원하면, 이 스킬이 실제 이미지 생성·편집·검증·아카이브까지 수행한다. 단, 이미지 제작 방식은 새로 만들지 않고 로컬 `skills/image-maker/` 폴더가 있으면 그 검증된 규칙을 우선 적용하고, 없으면 사용 가능한 런타임 이미지 생성 경로에 같은 계약을 적용한다.
+`product-detail-maker`는 전략 / 카피 / 컷 기획에서 멈추지 않는다. 사용자가 상세페이지를 “이미지랑 같이” 또는 “이미지를 만들어” 원하면, 이 스킬이 실제 이미지 생성·편집·검증·아카이브까지 수행한다. 단, 이미지 제작 방식은 새로 만들지 않고 로컬 `skills/image-maker/` 폴더가 있으면 그 검증된 규칙을 우선 적용하고, 없으면 사용 가능한 런타임 이미지 생성 경로에 같은 계약을 적용한다. 원본 상품 이미지를 다운로드하는 것은 source/reference asset 수집일 뿐, 실제 이미지 생성·편집이 아니다.
 
 ## 역할 분리
 
-- `korean-product-detail-page`: 한국형 상세페이지 리서치, 전략, 카피, 섹션 구성, 컷 기획, 이미지 생성 실행 관리, 최종 상세페이지 패키징을 책임진다.
+- `product-detail-maker`: 한국형 상세페이지 리서치, 전략, 카피, 섹션 구성, 컷 기획, 이미지 생성 실행 관리, 최종 상세페이지 패키징을 책임진다.
 - `skills/image-maker`: 실제 이미지 프롬프트 구조, 자연스러움 규칙, `gpt-image-2` 실행 계약, 시각 검증, 아카이브 규칙을 제공하는 로컬 참고/실행 규칙이다.
 
 ## 언제 이 파일을 읽는가
@@ -37,6 +37,14 @@
 8. 실패하면 한 축만 좁게 수정해 다시 생성/편집한다.
 9. 최종 이미지를 `.hypercore/image-maker/<topic-slug>/`에 `prompt.json`, `image1.*`, `image2.*` 형태로 보존한다.
 10. 상세페이지 산출물 폴더가 있으면 아카이브 후 필요한 이미지를 복사하고 경로를 기록한다.
+
+## 다운로드-only 금지
+
+- 제품 URL에서 받은 이미지 파일은 `source_assets/` 또는 상세페이지 작업 폴더의 source/reference로만 취급한다.
+- 사용자가 실제 생성/편집 이미지를 기대한 경우, 다운로드 파일만 저장하고 완료했다고 말하지 않는다.
+- `image_job`이 `generate`, `edit`, `reference-guided generate`, `batch/variants` 중 하나이면 `.hypercore/image-maker/<topic-slug>/prompt.json`과 최소 1개 이상의 생성/편집 결과 이미지가 있어야 한다.
+- Figma MCP의 remote image import 실패는 image-maker 생성을 생략할 이유가 아니다. import 실패 시에는 생성/편집 경로를 실행하거나, 해당 이미지 슬롯을 미완료 `asset-needed`로 표시한다.
+- 기존 상품 사진을 그대로 사용하는 컷은 `image_job: existing asset`으로 표시하고, 생성 이미지처럼 보고하지 않는다.
 
 ## integrated_image_job 형식
 
@@ -95,6 +103,7 @@
 3. 결과를 실제로 시각 검증한다.
 4. `skills/image-maker/scripts/archive-generated-images.mjs`를 사용하거나 동일 규칙으로 `.hypercore/image-maker/<topic-slug>/prompt.json`과 `image1.*`, `image2.*`를 보존한다.
 5. 상세페이지 제작 폴더가 따로 있으면 아카이브 후 필요한 이미지만 복사한다.
+6. 생성 이미지가 아닌 다운로드 source asset과 생성/편집 결과 asset을 최종 보고에서 분리한다.
 
 ## 최종 보고 형식
 

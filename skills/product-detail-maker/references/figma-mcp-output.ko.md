@@ -65,6 +65,24 @@
 6. 생성 이미지에 한국어 긴 문구를 굽지 않는다. 텍스트는 Figma layer로 얹는다.
 7. export는 섹션 단위가 기본이다. 전체 페이지 단일 초장문 이미지는 피한다.
 8. Figma 작업 후 가능하면 screenshot/context를 확인하고, 레이어 누락·텍스트 overflow·모바일 가독성을 점검한다.
+9. Figma screenshot/context에서 한국어 텍스트 겹침, line-height 충돌, clipped text, auto-resize 실패, 카드/이미지 위의 본문 침범이 보이면 완료하지 말고 레이어 폭, font size, line height, section height, spacing을 수정한다.
+10. 실제 이미지가 필요한 위치에 AI틱한 placeholder, 만화형 실루엣, 의미 없는 임시 박스를 최종 산출처럼 두지 않는다. 원격 이미지 import가 실패하면 `asset-needed` 블록으로 명시하거나 `references/image-maker-integration.ko.md`에 따라 실제 생성/편집 이미지를 만든다.
+11. Figma MCP write 도구로 remote image import가 실패했더라도 원본 이미지 다운로드만으로 “이미지 생성 완료”라고 보고하지 않는다. 다운로드 이미지는 source/reference asset이며, 생성·편집 이미지는 image-maker 아카이브에 별도로 남아야 한다.
+12. 제품 이미지를 배치하기 전 각 이미지의 배경/알파/crop/edge/조명/방향을 분석하고, 섹션 배경과 맞는 `placement_decision`을 기록한다. 어두운 섹션 위 흰 사각형 이미지 박스는 의도된 카드 디자인이 아니면 실패다.
+13. 투명 배경이 필요한 컷은 background removal/edit 경로를 우선하고, 불가능하면 섹션 톤과 맞는 plate, mask, padding, radius, caption 위치를 설계한다.
+
+## Figma visual QA gate
+
+완료 전 다음 항목을 통과해야 한다:
+
+- `screenshot/context` 또는 Figma screenshot을 확인했다.
+- 제목, 서브카피, 카드 본문, 가격/옵션 chip, 소재/고시 텍스트가 서로 겹치지 않는다.
+- 한국어 본문은 모바일 860px 폭에서 읽을 수 있고, 12px 이하 장문 본문을 남발하지 않는다.
+- 텍스트 레이어는 `textAutoResize`, 충분한 width/height, 적절한 line-height를 갖는다.
+- 이미지 슬롯은 existing/source, generated, edited, asset-needed 중 하나로 명확히 표시한다.
+- 각 이미지 슬롯은 transparent extraction, matching plate, full-bleed crop, masked card, asset-needed 중 하나의 배경/배치 결정을 가진다.
+- 어두운/프리미엄 배경 위에 흰 product image box가 부자연스럽게 떠 있지 않다.
+- 최종처럼 보이는 조악한 AI placeholder가 없다.
 
 ## HTML 예외 규칙
 

@@ -1,5 +1,5 @@
 ---
-name: korean-product-detail-page
+name: product-detail-maker
 description: "Create research-backed, Sang-se-inspired Korean product detail pages as editable Figma MCP-ready commerce artifacts, with Korean copy, category-specific section strategy, image/cut planning, and optional generated or edited raster assets for SmartStore, Cafe24, Coupang-style marketplaces, Korean D2C stores, and social-commerce sellers. Use when the user asks for a Korean product detail page, SmartStore/shopping-mall product page, Figma-editable detail page, category-specific product page playbook, or image-inclusive e-commerce sales page based on Korean references and platform constraints; do not default to HTML unless explicitly requested."
 compatibility: Works with live web search for Korean market references, local file writing, Figma MCP/write tools for editable detail-page layouts when a Figma file key is available, and the local `skills/image-maker` skill folder when raster assets must be generated.
 metadata:
@@ -7,7 +7,7 @@ metadata:
   version: "0.1.0"
 ---
 
-@rules/korean-product-detail-page-workflow.md
+@rules/product-detail-maker-workflow.md
 @rules/platform-compliance.md
 @references/research-findings.ko.md
 @references/section-templates.ko.md
@@ -17,7 +17,7 @@ metadata:
 @references/sangse-style-benchmark.ko.md
 @references/figma-mcp-output.ko.md
 
-# Korean Product Detail Page
+# Product Detail Maker
 
 <purpose>
 
@@ -56,6 +56,10 @@ Do not use this skill when:
 - Prefer Korean platform help centers, domestic seller tools, domestic design templates, and Korean agency/operator materials over generic global UX articles.
 - When product or category information is incomplete, infer safe assumptions and label them; ask only if the category, legal risk, or product identity is impossible to determine.
 - When the request includes images, continue through actual raster asset generation or editing instead of stopping at briefs. Use the local `skills/image-maker/` folder as the preferred execution reference when it exists: read its `SKILL.md`, `rules/natural-image-workflow.md`, `references/json-prompt-best-practices.md`, and `scripts/archive-generated-images.mjs`. If that folder is absent, use the available runtime image-generation skill/tool with the same English JSON prompt review, generation/edit execution, visual validation, and image archiving contract, and record the fallback.
+- Downloading source product images is reference collection only, not image creation. If the user asked to make images, do not claim completion until generated or edited assets exist in the image-maker archive; if only existing assets are used, label them as existing/source assets.
+- Before placing each source or generated product image into Figma, analyze the image background, alpha channel, crop, lighting, orientation, edge quality, and section background. Use transparent extraction, masking, or a deliberate matching image plate; never paste a raw white-box product cutout into a dark or premium section unless the white plate is an intentional framed design choice.
+- For Figma MCP output, avoid AI-looking placeholder art as a substitute for product imagery. If remote image import fails, either run the image-maker path for replacement visuals or mark the image slot as unfinished with a neutral asset-needed block; do not present cartoon silhouettes as finished product images.
+- Before reporting a Figma design complete, capture or inspect the frame and fix visible text overlap, clipped Korean copy, unreadable small text, broken spacing, and obvious low-quality AI design artifacts.
 - Never claim platform or legal compliance as final legal approval. Mark it as a production checklist.
 
 </execution_contract>
@@ -89,7 +93,7 @@ Boundary example:
 1. Read this `SKILL.md` to confirm routing and output scope.
 2. Read `references/research-findings.ko.md` for baseline Korean-source findings and source links.
 3. Read `references/sangse-style-benchmark.ko.md` when the user asks for Sang-se-like, template-like, or fast AI detail-page generation.
-4. Read `rules/korean-product-detail-page-workflow.md` for the step-by-step production workflow.
+4. Read `rules/product-detail-maker-workflow.md` for the step-by-step production workflow.
 5. Read `references/browser-link-research.ko.md` when the user supplies URLs or existing product/reference pages.
 6. Read `references/section-templates.ko.md` when choosing category-specific product detail page structure.
 7. Read `references/figma-mcp-output.ko.md` when Figma, editable design, MCP output, or non-HTML production layout is requested.
@@ -97,7 +101,7 @@ Boundary example:
 9. Read `references/image-maker-integration.ko.md` when the user wants actual generated/edited image files or prompt-ready JSON.
 10. For real image creation, read `skills/image-maker/SKILL.md` plus the specific local support files named in the integration reference when present; if absent, use the available runtime image-generation path and continue through generation, validation, and archive.
 11. Read `rules/platform-compliance.md` before finalizing any SmartStore/Cafe24/Gmarket/Auction-oriented output.
-12. Use `scripts/validate-korean-product-detail-page-skill.mjs` after editing this skill.
+12. Use `scripts/validate-product-detail-maker-skill.mjs` after editing this skill.
 
 </support_file_read_order>
 
@@ -143,8 +147,11 @@ Before declaring completion:
 - The section map includes hero, problem/benefit, evidence, usage, detail/spec, FAQ/objection, and policy/compliance blocks unless intentionally omitted.
 - Every claim that sounds factual, legal, technical, medical, cosmetic, financial, or performance-related is either cited, softened, or flagged for seller verification.
 - Image briefs specify purpose, subject, composition, text risk, platform crop/safe zone, and whether to generate, edit, or use existing product photos.
+- Every image placement includes an image-background decision: transparent extraction, matching tonal plate, full-bleed crop, or explicit asset-needed; raw white rectangles on dark/premium sections fail visual QA unless intentionally framed.
 - Figma output is preferred over HTML: either MCP-created editable frames/layers are produced or `figma-frame-spec.json` is saved with the missing Figma file key/tool limitation recorded.
 - If images are requested, actual image generation/editing is completed through the `skills/image-maker` JSON prompt review, `gpt-image-2` execution rules, visual validation, and `.hypercore/image-maker/<topic-slug>/` archiving before completion is claimed.
+- Source-image downloads alone are not counted as generated images; generated/edited files must be present when the request asks for image creation.
+- Figma screenshot/context review shows no text overlap, no clipped Korean copy, no unreadable body text, and no AI-looking placeholder art being presented as final.
 - Platform constraints and the Korean product information notice are checked for the target channel.
 - Output is Korean by default, mobile-readable, and avoids one overly long unsegmented image.
 
