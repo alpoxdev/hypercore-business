@@ -98,7 +98,7 @@ Practical rule for this skill:
 
 ## Minimal JSON schema shape
 
-core skill이 canonical example을 소유한다. 이 reference는 required field group을 정의한다:
+`references/prompt-schema.ko.md`가 canonical full example을 소유한다. 이 reference는 required field group을 정의한다:
 
 ```text
 schema_version

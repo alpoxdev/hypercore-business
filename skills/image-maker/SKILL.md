@@ -10,6 +10,7 @@ metadata:
 @rules/natural-image-workflow.md
 @references/gpt-image-2-research.md
 @references/json-prompt-best-practices.md
+@references/prompt-schema.md
 
 # Image Maker
 
@@ -33,6 +34,8 @@ Prefer this skill over generic image generation when the request mentions any of
 Do not use this skill when:
 
 - the desired output is SVG/vector/code-native UI, not a raster image
+- the deliverable is primarily a logo, favicon, app icon, or transparent-background brand mark; route to `logo-maker` instead
+- the user wants a quick generic image-generation run without HyperB research, JSON review, archive, or preview discipline; use `image-generation` or the plain imagegen path instead
 - the user only wants prompt writing and explicitly says not to generate
 - a deterministic edit to an existing local SVG, HTML/CSS, or design-token asset is clearly better
 - the request is only generic web research with no raster-image deliverable
@@ -67,6 +70,8 @@ Negative examples:
 
 - "이 아이콘을 기존 SVG 스타일에 맞게 수정해줘." → edit SVG directly.
 - "이미지 생성은 하지 말고 Midjourney 프롬프트만 써줘." → prompt-writing task only.
+- "투명 배경 로고 PNG를 만들어줘." → use `logo-maker` for logo/favicons/brand marks.
+- "빠르게 아무 이미지나 하나 생성해줘." → use generic `image-generation`/imagegen unless HyperB-grade research, archive, and preview are required.
 
 Boundary example:
 
@@ -80,7 +85,7 @@ Boundary example:
 2. **Research the situation.** For unfamiliar domains, current products, visual references, markets, cultures, places, or factual scenes, run focused research before writing the prompt. Prefer official/product sources and recent visual references; record sources in the final note.
 3. **Pick the image job.** Classify as `generate`, `edit`, `reference-guided generate`, or `batch/variants`.
 4. **Write an art-direction brief.** Define job-to-be-done, viewer belief, scene, subject, camera/composition, lighting, material/texture truth, constraints, and avoid list.
-5. **Convert requirements into an English JSON prompt.** Use the schema below and `references/json-prompt-best-practices.md`. Treat the JSON as an inspectable planning artifact, not just an API payload. Keep prompt-facing values in English, preserve exact requested visible text verbatim, and encode assumptions explicitly.
+5. **Convert requirements into an English JSON prompt.** Use `references/prompt-schema.md` and `references/json-prompt-best-practices.md`. Treat the JSON as an inspectable planning artifact, not just an API payload. Keep prompt-facing values in English, preserve exact requested visible text verbatim, and encode assumptions explicitly.
 6. **Review the JSON prompt before generation.** Parse the JSON, check required fields, confirm source/reference roles and edit invariants when relevant, and verify that it is situation-specific, coherent, non-contradictory, safe, and compatible with `gpt-image-2`. Fix the JSON before generation if any review item fails.
 7. **Apply naturalism rules.** Load `rules/natural-image-workflow.md` and add only the imperfections that fit the chosen capture story.
 8. **Generate/edit with `gpt-image-2`.** Use the reviewed JSON prompt as the source of truth. Use `quality: low` for drafts and `medium` or `high` for final assets. Keep sizes valid for `gpt-image-2`; prefer `1024x1024`, `1536x1024`, `1024x1536`, or a placement-specific multiple-of-16 size.
@@ -122,133 +127,12 @@ Load `references/json-prompt-best-practices.md` when creating or changing this s
 - Put exact visible text only in `image_prompt.text.verbatim`; preserve the user's requested language there.
 - Assemble `generation_prompt` only after the review checklist passes.
 
-```json
-{
-  "schema_version": "1.1",
-  "model": "gpt-image-2",
-  "task": "generate",
-  "use_case": "landing hero",
-  "generation_settings": {
-    "api_path": "image_api",
-    "size": "1536x1024",
-    "quality": "medium",
-    "format": "png",
-    "background": "opaque",
-    "destination_intent": "project-bound",
-    "save_path": ".hypercore/image-maker/descriptive-topic/image1.png",
-    "archive_dir": ".hypercore/image-maker/descriptive-topic",
-    "prompt_path": ".hypercore/image-maker/descriptive-topic/prompt.json",
-    "preview_html_path": ".hypercore/image-maker/descriptive-topic/preview.html"
-  },
-  "artifact_archive": {
-    "topic": "Human-readable topic for this generation job.",
-    "topic_slug": "descriptive-topic",
-    "prompt_path": ".hypercore/image-maker/descriptive-topic/prompt.json",
-    "image_paths": [
-      ".hypercore/image-maker/descriptive-topic/image1.png"
-    ],
-    "preview_path": ".hypercore/image-maker/descriptive-topic/preview.html",
-    "source_generated_images_dir": "~/.codex/generated-images"
-  },
-  "user_requirements_summary": "English summary of the user's requirements and inferred constraints.",
-  "assumptions": [
-    "Assumption made because the user did not specify a placement, audience, source image, or brand constraint."
-  ],
-  "source_inputs": [
-    {
-      "id": "image_1",
-      "type": "local_file | url | generated_reference | none",
-      "role": "subject_reference | style_reference | product_reference | background_reference | mask",
-      "path_or_url": "",
-      "must_preserve": [
-        "Identity, geometry, label text, brand color, layout, or lighting invariant from this source."
-      ]
-    }
-  ],
-  "audience_and_belief": "Who must believe what after seeing the image.",
-  "placement": {
-    "surface": "Where the image will be used.",
-    "aspect_ratio_or_safe_zone": "Placement constraints, crop tolerance, and negative-space needs."
-  },
-  "research_anchors": [
-    {
-      "claim": "Source-derived visual, factual, cultural, product, or market constraint.",
-      "source": "URL or local file path"
-    }
-  ],
-  "image_prompt": {
-    "primary_request": "The actual image to create, in English.",
-    "capture_or_design_story": "One coherent capture/design story; do not mix contradictory photo, studio, and illustration modes.",
-    "subject": "Main subject and exact attributes.",
-    "scene_context": "Where it happens, why this setting makes sense, and what is outside the frame.",
-    "composition": "Camera position, crop, focal point, perspective, and negative space.",
-    "lighting": "One dominant light source with direction, softness/hardness, and color temperature if relevant.",
-    "surface_truth": "Skin, fabric, product, paper, glass, metal, screen, or environmental texture cues.",
-    "natural_imperfections": [
-      "One plausible capture flaw or real-world imperfection that fits the story.",
-      "Optional second imperfection only if it supports realism rather than becoming an effect."
-    ],
-    "text": {
-      "verbatim": "",
-      "placement": "",
-      "typography_notes": "",
-      "text_risk": "none | low | medium | high"
-    },
-    "must_keep": [
-      "Identity, product proportions, brand colors, factual details, layout invariants, or exact source-image details."
-    ],
-    "avoid": [
-      "over-polished AI gloss",
-      "generic stock-photo smiles",
-      "impossible lighting",
-      "waxy skin",
-      "extra fingers",
-      "warped logos",
-      "unreadable text",
-      "watermark"
-    ]
-  },
-  "edit_plan": null,
-  "review_checklist": {
-    "valid_json": true,
-    "schema_fields_complete": true,
-    "english_prompt_values_except_verbatim_text": true,
-    "single_coherent_capture_or_design_story": true,
-    "generation_settings_gpt_image_2_compatible": true,
-    "source_inputs_have_roles_and_invariants": true,
-    "specific_to_user_context": true,
-    "no_contradictory_lighting_lens_or_style_cues": true,
-    "text_constraints_are_verbatim_and_inspectable": true,
-    "safety_rights_and_brand_risks_checked": true,
-    "naturalism_checks_encoded": true
-  },
-  "review_notes": {
-    "prompt_strengths": [
-      "Why this prompt is likely to produce a usable image."
-    ],
-    "unresolved_risks": [
-      "Known risk such as exact text, layout precision, brand consistency, factual uncertainty, or likeness rights."
-    ],
-    "iteration_strategy_if_failed": "Change only one dimension next: geometry, lighting, material, text, composition, or edit invariant."
-  },
-  "generation_prompt": "A concise English prompt assembled from image_prompt, source inputs, edit invariants, and constraints after review."
-}
-```
+Use `references/prompt-schema.md` as the canonical prompt schema. The core review contract is:
 
-For edit/reference-guided jobs, replace `"edit_plan": null` with:
-
-```json
-{
-  "change_only": [
-    "Specific object, background, text, garment, lighting, or composition element allowed to change."
-  ],
-  "preserve": [
-    "Identity, pose, camera angle, product geometry, label text, surrounding objects, or layout that must remain unchanged."
-  ],
-  "allowed_drift": "none | minimal | moderate",
-  "mask_or_selection_notes": "How mask/reference boundaries should be interpreted, if applicable."
-}
-```
+- Required field groups: `schema_version`, `model`, `task`, `use_case`, `generation_settings`, `artifact_archive`, `user_requirements_summary`, `assumptions`, `source_inputs`, `placement`, `research_anchors`, `image_prompt`, `edit_plan`, `review_checklist`, `review_notes`, and `generation_prompt`.
+- Fresh generation may set `edit_plan` to `null`; edit/reference-guided jobs must fill `edit_plan.change_only`, `edit_plan.preserve`, `edit_plan.allowed_drift`, and mask/selection notes when relevant.
+- `source_inputs` must name each reference by role and invariant before generation.
+- `generation_prompt` is assembled only after the review checklist passes.
 
 Prompt review rules:
 
@@ -292,6 +176,7 @@ Before completion, pass all checks:
 - `rules/natural-image-workflow.md`: practical rules for non-AI-looking, context-aware image direction.
 - `references/gpt-image-2-research.md`: source-backed `gpt-image-2` model facts and links.
 - `references/json-prompt-best-practices.md`: researched JSON prompt schema, review gates, and source maps.
+- `references/prompt-schema.md`: canonical full JSON prompt example and edit/reference-guided `edit_plan` shape.
 - `scripts/archive-generated-images.mjs`: deterministic helper that copies reviewed prompts and generated image files into `.hypercore/image-maker/<topic-slug>/prompt.json` and `imageN.*`.
 - `assets/image-preview-template.html`: local, self-contained preview template rendered as `.hypercore/image-maker/<topic-slug>/preview.html` by the archive helper.
 - `.hypercore/research/2026-04-29-image-maker-naturalism.md`: full naturalism/model research report saved for reuse.

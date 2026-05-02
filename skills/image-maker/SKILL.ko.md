@@ -10,6 +10,7 @@ metadata:
 @rules/natural-image-workflow.ko.md
 @references/gpt-image-2-research.ko.md
 @references/json-prompt-best-practices.ko.md
+@references/prompt-schema.ko.md
 
 # Image Maker
 
@@ -32,7 +33,9 @@ metadata:
 
 다음 경우에는 이 스킬을 사용하지 않는다:
 
-- 원하는 출력이 래스터 이미지가 아니라 SVG, 벡터, 코드 기반 UI인 경우
+- 원하는 출력이 래스터 이미지가 아니라 SVG/벡터/코드 기반 UI인 경우
+- 산출물이 주로 로고, favicon, 앱 아이콘, 투명 배경 브랜드 mark인 경우에는 `logo-maker`로 라우팅한다
+- 사용자가 HyperB 리서치, JSON 검수, 아카이브, 미리보기 규율 없이 빠른 일반 이미지 생성을 원하면 `image-generation` 또는 일반 imagegen 경로를 사용한다
 - 사용자가 이미지 생성 없이 프롬프트 작성만 명시적으로 원하는 경우
 - 기존 로컬 SVG, HTML/CSS, 디자인 토큰 에셋을 결정론적으로 수정하는 편이 명확히 더 나은 경우
 - 이미지 생성 산출물 없이 일반 웹 리서치만 필요한 경우
@@ -67,6 +70,8 @@ metadata:
 
 - "이 아이콘을 기존 SVG 스타일에 맞게 수정해줘." → SVG를 직접 수정한다.
 - "이미지 생성은 하지 말고 Midjourney 프롬프트만 써줘." → 프롬프트 작성 작업만 수행한다.
+- "투명 배경 로고 PNG를 만들어줘." → 로고/favicon/브랜드 mark는 `logo-maker`를 사용한다.
+- "빠르게 아무 이미지나 하나 생성해줘." → HyperB급 리서치, 아카이브, preview가 필요하지 않으면 일반 `image-generation`/imagegen을 사용한다.
 
 경계 예시:
 
@@ -80,7 +85,7 @@ metadata:
 2. **상황을 리서치한다.** 낯선 도메인, 최신 제품, 시각 레퍼런스, 시장, 문화, 장소, 사실 기반 장면이 있으면 프롬프트 작성 전에 집중 리서치를 수행한다. 공식/제품 출처와 최신 시각 레퍼런스를 우선하고, 최종 메모에 출처를 기록한다.
 3. **이미지 작업 유형을 정한다.** `generate`, `edit`, `reference-guided generate`, `batch/variants` 중 하나로 분류한다.
 4. **아트 디렉션 브리프를 작성한다.** job-to-be-done, 시청자가 믿어야 할 내용, 장면, 주제, 카메라/구도, 조명, 재질/질감의 진실성, 제약, avoid 목록을 정의한다.
-5. **요구사항을 영어 JSON 프롬프트로 변환한다.** 아래 스키마와 `references/json-prompt-best-practices.ko.md`를 사용한다. JSON을 단순 API payload가 아니라 검수 가능한 planning artifact로 취급한다. 프롬프트 값은 영어로 유지하고, 사용자가 요청한 정확한 표시 문구는 그대로 보존하며, 가정은 명시적으로 인코딩한다.
+5. **요구사항을 영어 JSON 프롬프트로 변환한다.** `references/prompt-schema.ko.md`와 `references/json-prompt-best-practices.ko.md`를 사용한다. JSON을 단순 API payload가 아니라 검수 가능한 planning artifact로 취급한다. 프롬프트 값은 영어로 유지하고, 사용자가 요청한 정확한 표시 문구는 그대로 보존하며, 가정은 명시적으로 인코딩한다.
 6. **생성 전 JSON 프롬프트를 검수한다.** JSON을 파싱하고, 필수 필드를 확인하고, 필요 시 source/reference role과 edit invariant를 검증하며, 상황에 구체적인지, 일관적인지, 상충되지 않는지, 안전한지, `gpt-image-2`와 호환되는지 확인한다. 실패 항목이 있으면 이미지 생성 전에 JSON을 수정한다.
 7. **자연스러움 규칙을 적용한다.** `rules/natural-image-workflow.ko.md`를 로드하고, 선택한 촬영/디자인 스토리에 맞는 결함만 추가한다.
 8. **`gpt-image-2`로 생성/편집한다.** 검수된 JSON 프롬프트를 단일 진실 공급원으로 사용한다. 초안은 `quality: low`, 최종 에셋은 `medium` 또는 `high`를 사용한다. 크기는 `gpt-image-2`에 유효해야 하며 `1024x1024`, `1536x1024`, `1024x1536`, 또는 배치 위치에 맞는 16의 배수 크기를 선호한다.
@@ -122,133 +127,12 @@ Helper는 기본적으로 `assets/image-preview-template.html`에서 `preview.ht
 - 정확한 표시 문구는 `image_prompt.text.verbatim`에만 넣고, 그 안에서는 사용자가 요청한 언어를 보존한다.
 - `generation_prompt`는 review checklist가 통과된 뒤에만 조립한다.
 
-```json
-{
-  "schema_version": "1.1",
-  "model": "gpt-image-2",
-  "task": "generate",
-  "use_case": "landing hero",
-  "generation_settings": {
-    "api_path": "image_api",
-    "size": "1536x1024",
-    "quality": "medium",
-    "format": "png",
-    "background": "opaque",
-    "destination_intent": "project-bound",
-    "save_path": ".hypercore/image-maker/descriptive-topic/image1.png",
-    "archive_dir": ".hypercore/image-maker/descriptive-topic",
-    "prompt_path": ".hypercore/image-maker/descriptive-topic/prompt.json",
-    "preview_html_path": ".hypercore/image-maker/descriptive-topic/preview.html"
-  },
-  "artifact_archive": {
-    "topic": "Human-readable topic for this generation job.",
-    "topic_slug": "descriptive-topic",
-    "prompt_path": ".hypercore/image-maker/descriptive-topic/prompt.json",
-    "image_paths": [
-      ".hypercore/image-maker/descriptive-topic/image1.png"
-    ],
-    "preview_path": ".hypercore/image-maker/descriptive-topic/preview.html",
-    "source_generated_images_dir": "~/.codex/generated-images"
-  },
-  "user_requirements_summary": "English summary of the user's requirements and inferred constraints.",
-  "assumptions": [
-    "Assumption made because the user did not specify a placement, audience, source image, or brand constraint."
-  ],
-  "source_inputs": [
-    {
-      "id": "image_1",
-      "type": "local_file | url | generated_reference | none",
-      "role": "subject_reference | style_reference | product_reference | background_reference | mask",
-      "path_or_url": "",
-      "must_preserve": [
-        "Identity, geometry, label text, brand color, layout, or lighting invariant from this source."
-      ]
-    }
-  ],
-  "audience_and_belief": "Who must believe what after seeing the image.",
-  "placement": {
-    "surface": "Where the image will be used.",
-    "aspect_ratio_or_safe_zone": "Placement constraints, crop tolerance, and negative-space needs."
-  },
-  "research_anchors": [
-    {
-      "claim": "Source-derived visual, factual, cultural, product, or market constraint.",
-      "source": "URL or local file path"
-    }
-  ],
-  "image_prompt": {
-    "primary_request": "The actual image to create, in English.",
-    "capture_or_design_story": "One coherent capture/design story; do not mix contradictory photo, studio, and illustration modes.",
-    "subject": "Main subject and exact attributes.",
-    "scene_context": "Where it happens, why this setting makes sense, and what is outside the frame.",
-    "composition": "Camera position, crop, focal point, perspective, and negative space.",
-    "lighting": "One dominant light source with direction, softness/hardness, and color temperature if relevant.",
-    "surface_truth": "Skin, fabric, product, paper, glass, metal, screen, or environmental texture cues.",
-    "natural_imperfections": [
-      "One plausible capture flaw or real-world imperfection that fits the story.",
-      "Optional second imperfection only if it supports realism rather than becoming an effect."
-    ],
-    "text": {
-      "verbatim": "",
-      "placement": "",
-      "typography_notes": "",
-      "text_risk": "none | low | medium | high"
-    },
-    "must_keep": [
-      "Identity, product proportions, brand colors, factual details, layout invariants, or exact source-image details."
-    ],
-    "avoid": [
-      "over-polished AI gloss",
-      "generic stock-photo smiles",
-      "impossible lighting",
-      "waxy skin",
-      "extra fingers",
-      "warped logos",
-      "unreadable text",
-      "watermark"
-    ]
-  },
-  "edit_plan": null,
-  "review_checklist": {
-    "valid_json": true,
-    "schema_fields_complete": true,
-    "english_prompt_values_except_verbatim_text": true,
-    "single_coherent_capture_or_design_story": true,
-    "generation_settings_gpt_image_2_compatible": true,
-    "source_inputs_have_roles_and_invariants": true,
-    "specific_to_user_context": true,
-    "no_contradictory_lighting_lens_or_style_cues": true,
-    "text_constraints_are_verbatim_and_inspectable": true,
-    "safety_rights_and_brand_risks_checked": true,
-    "naturalism_checks_encoded": true
-  },
-  "review_notes": {
-    "prompt_strengths": [
-      "Why this prompt is likely to produce a usable image."
-    ],
-    "unresolved_risks": [
-      "Known risk such as exact text, layout precision, brand consistency, factual uncertainty, or likeness rights."
-    ],
-    "iteration_strategy_if_failed": "Change only one dimension next: geometry, lighting, material, text, composition, or edit invariant."
-  },
-  "generation_prompt": "A concise English prompt assembled from image_prompt, source inputs, edit invariants, and constraints after review."
-}
-```
+`references/prompt-schema.ko.md`를 canonical prompt schema로 사용한다. Core review contract는 다음과 같다:
 
-edit/reference-guided 작업에서는 `"edit_plan": null`을 다음 구조로 바꾼다:
-
-```json
-{
-  "change_only": [
-    "Specific object, background, text, garment, lighting, or composition element allowed to change."
-  ],
-  "preserve": [
-    "Identity, pose, camera angle, product geometry, label text, surrounding objects, or layout that must remain unchanged."
-  ],
-  "allowed_drift": "none | minimal | moderate",
-  "mask_or_selection_notes": "How mask/reference boundaries should be interpreted, if applicable."
-}
-```
+- 필수 field group: `schema_version`, `model`, `task`, `use_case`, `generation_settings`, `artifact_archive`, `user_requirements_summary`, `assumptions`, `source_inputs`, `placement`, `research_anchors`, `image_prompt`, `edit_plan`, `review_checklist`, `review_notes`, `generation_prompt`.
+- 새 생성 작업에서는 `edit_plan`을 `null`로 둘 수 있다. edit/reference-guided 작업에서는 `edit_plan.change_only`, `edit_plan.preserve`, `edit_plan.allowed_drift`, 그리고 필요 시 mask/selection note를 채운다.
+- `source_inputs`는 생성 전에 각 reference의 role과 invariant를 명명해야 한다.
+- `generation_prompt`는 review checklist가 통과된 뒤에만 조립한다.
 
 프롬프트 검수 규칙:
 
@@ -292,6 +176,7 @@ edit/reference-guided 작업에서는 `"edit_plan": null`을 다음 구조로 �
 - `rules/natural-image-workflow.ko.md`: AI 티가 덜 나는 맥락 맞춤 이미지 디렉션을 위한 한국어 실무 규칙.
 - `references/gpt-image-2-research.ko.md`: 출처 기반 `gpt-image-2` 모델 사실과 링크의 한국어 mirror.
 - `references/json-prompt-best-practices.ko.md`: 리서치 기반 JSON prompt schema, review gate, source map의 한국어 mirror.
+- `references/prompt-schema.ko.md`: full JSON prompt example과 edit/reference-guided `edit_plan` 구조의 한국어 mirror.
 - `scripts/archive-generated-images.mjs`: 검수된 prompt와 생성 이미지 파일을 `.hypercore/image-maker/<topic-slug>/prompt.json` 및 `imageN.*`로 복사하는 결정론적 helper.
 - `assets/image-preview-template.html`: archive helper가 `.hypercore/image-maker/<topic-slug>/preview.html`로 렌더링하는 로컬 self-contained preview template.
 - `.hypercore/research/2026-04-29-image-maker-naturalism.md`: 재사용 가능한 naturalism/model 리서치 보고서.
