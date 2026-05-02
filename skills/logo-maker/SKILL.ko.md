@@ -27,7 +27,7 @@ metadata:
 - 생성/편집된 이미지에서 투명 배경 PNG 로고 export
 - generic AI emblem 또는 stock icon처럼 보이지 않아야 하는 로고 생성
 
-주요 산출물이 장면/사진/일러스트/마케팅 이미지가 아니라 로고/마크라면 `image-maker`보다 이 스킬을 우선한다.
+주요 산출물이 장면/사진/일러스트/마케팅 이미지가 아니라 로고/마크라면 `image-maker` 또는 범용 `image-generation` workflow보다 이 스킬을 우선한다.
 
 다음 경우에는 이 스킬을 사용하지 않는다:
 
@@ -44,7 +44,7 @@ metadata:
 - 모델 기본값: 프로젝트 `image-maker` contract와 일치하고 사용 가능하면 `gpt-image-2`를 사용한다. 이후 사용자 지시가 있으면 그 지시를 따른다.
 - 프롬프트 파이프라인 요구사항: 원본 사용자 문구에서 바로 생성하지 않는다. 항상 `사용자 요구사항 → 영어 JSON 로고 브리프 → 브리프 검수 → 생성/편집 → 투명 PNG 검증`을 거친다.
 - 투명 PNG hard requirement: 최종 산출물은 반드시 Codex 이미지 경로에서 native transparent background로 생성/export된 `.png` 파일이어야 한다. 흰색, 검은색, checkerboard, 단색, chroma-key 배경은 최종 로고 에셋으로 인정하지 않는다.
-- Native transparency 요구사항: 이미지 생성 설정과 model-facing prompt 양쪽에서 transparent output을 먼저 요청한다. Node script, chroma-key cleanup, background-removal 후처리를 첫 경로로 쓰지 않는다. 결과가 RGB 또는 채워진 배경이면 성공으로 받아들이지 말고 brief/prompt/settings를 다듬어 재생성한다.
+- Native transparency 요구사항: 이미지 생성 설정과 model-facing prompt 양쪽에서 transparent output을 먼저 요청한다. Node script, chroma-key cleanup, background-removal 후처리를 첫 경로로 쓰지 않는다. 결과가 RGB 또는 채워진 배경이면 성공으로 받아들이지 말고 brief/prompt/settings를 다듬어 재생성한다. Regenerate instead of postprocessing; Node script나 background-removal을 투명화 해결책으로 삼지 않는다.
 - Success ladder 요구사항: 검증된 transparent PNG가 생길 때까지 반복한다. Native transparent Codex generation을 먼저 시도하고, 반복해서 RGB/filled background가 나오며 로고가 단순 geometric mark로 표현 가능하면 deterministic RGBA fallback renderer를 사용한 뒤 `prompt.json`과 최종 보고에 fallback 경로를 명시한다.
 - 아카이브 요구사항: 완료된 모든 로고 작업은 `.hypercore/logo-maker/<topic-slug>/`를 만들고, 검수된 브리프를 `prompt.json`으로 저장하고, 최종 로고 파일을 `logo1.png`, `logo2.png`, `logo3.png`, ...로 복사하고, `preview.html`을 생성하고, 모든 파일을 검증해야 한다.
 - 미리보기 요구사항: 사용자가 결과를 보여 달라고 하면 local helper로 생성된 `preview.html`을 새 Google Chrome 창/탭에서 연다. Chrome을 열 수 없으면 preview path와 정확한 command를 보고한다.
@@ -67,7 +67,7 @@ metadata:
 
 경계 예시:
 
-- "브랜드 이미지를 만들어줘." 원하는 산출물이 투명 PNG 로고/마크이면 이 스킬을 사용하고, hero visual 또는 campaign scene이면 `image-maker`를 사용한다.
+- "브랜드 이미지를 만들어줘." 원하는 산출물이 투명 PNG 로고/마크이면 이 스킬을 사용하고, hero visual 또는 campaign scene이면 `image-maker` 또는 `image-generation`을 사용한다.
 
 </trigger_examples>
 
@@ -91,7 +91,7 @@ metadata:
 
 <archive_helper>
 
-Archive helper는 선택 사항이지만 verification과 preview에는 권장된다. Native Codex transparent generation 또는 명시적 deterministic fallback에서 final PNG가 나온 뒤 사용한다:
+Archive helper는 선택 사항이지만 verification과 preview에는 권장된다. 이 helper는 file copying/preview only와 alpha evidence용이며 generator나 background-removal 경로가 아니다. Native Codex transparent generation 또는 명시적 deterministic fallback에서 final PNG가 나온 뒤 사용한다:
 
 ```bash
 node skills/logo-maker/scripts/archive-logo-assets.mjs \
@@ -125,13 +125,130 @@ node skills/logo-maker/scripts/render-simple-logo-rgba.mjs \
 
 </fallback_renderer>
 
+<json_logo_brief>
+
+로고 브리프는 유효한 JSON이어야 한다: double-quoted keys/strings, comments 없음, trailing commas 없음. JSON key는 도구/검증 계약이므로 영어 그대로 유지하고, prompt-facing creative value도 영어로 작성한다.
+
+```json
+{
+  "schema_version": "1.0",
+  "model": "gpt-image-2",
+  "task": "new logo",
+  "use_case": "brand mark",
+  "generation_settings": {
+    "api_path": "image_api",
+    "size": "1024x1024",
+    "quality": "medium",
+    "format": "png",
+    "background": "transparent",
+    "transparent_background": true,
+    "destination_intent": "project-bound",
+    "archive_dir": ".hypercore/logo-maker/descriptive-logo-topic",
+    "save_paths": [
+      ".hypercore/logo-maker/descriptive-logo-topic/logo1.png"
+    ],
+    "prompt_path": ".hypercore/logo-maker/descriptive-logo-topic/prompt.json",
+    "preview_html_path": ".hypercore/logo-maker/descriptive-logo-topic/preview.html"
+  },
+  "logo_archive": {
+    "topic": "Human-readable topic for this logo job.",
+    "topic_slug": "descriptive-logo-topic",
+    "prompt_path": ".hypercore/logo-maker/descriptive-logo-topic/prompt.json",
+    "logo_paths": [
+      ".hypercore/logo-maker/descriptive-logo-topic/logo1.png"
+    ],
+    "preview_path": ".hypercore/logo-maker/descriptive-logo-topic/preview.html",
+    "transparent_png_required": true
+  },
+  "user_requirements_summary": "English summary of the user's requirements and inferred constraints.",
+  "assumptions": [
+    "Assumption made because the user did not specify brand tone, symbol, color, usage surface, or text constraints."
+  ],
+  "source_inputs": [
+    {
+      "id": "reference_1",
+      "type": "local_file | url | generated_reference | none",
+      "role": "existing_logo | brand_reference | style_reference | competitor_reference | color_reference",
+      "path_or_url": "",
+      "must_preserve": [
+        "Brand name, symbol idea, color, geometry, or typography invariant from this source."
+      ]
+    }
+  ],
+  "brand_context": {
+    "name": "Brand or product name.",
+    "domain": "What the brand/product does.",
+    "audience": "Who should recognize or trust it.",
+    "personality": ["clear", "modern", "credible"]
+  },
+  "placement": {
+    "primary_surface": "website header | app icon | favicon | social avatar | deck | product UI",
+    "safe_zone": "Centered mark with padding; must remain readable at small sizes.",
+    "backgrounds_to_test": ["transparent checkerboard", "white", "black", "brand color"]
+  },
+  "logo_prompt": {
+    "mark_type": "symbol | wordmark | combination mark | monogram | badge | app icon",
+    "primary_request": "The logo to create, in English.",
+    "symbol_concept": "One clear visual metaphor, not a collage of unrelated symbols.",
+    "composition": "Centered, balanced, flat logo asset on transparent background; isolated mark only, no background layer.",
+    "style_direction": "Minimal, scalable, vector-like raster output; no scene or mockup.",
+    "color_palette": "Exact or inferred colors and contrast notes.",
+    "typography": "Letterform style if text is included; avoid unreadable microtext.",
+    "text": {
+      "verbatim": "",
+      "placement": "",
+      "text_risk": "none | low | medium | high"
+    },
+    "must_keep": [
+      "Required brand name, geometry, colors, symbol, or reference invariants."
+    ],
+    "avoid": [
+      "background fill",
+      "white box",
+      "checkerboard pattern baked into the image",
+      "chroma-key background",
+      "mockup scene",
+      "drop shadow as background crutch",
+      "generic globe/rocket/leaf unless requested",
+      "AI emblem clutter",
+      "warped text",
+      "watermark",
+      "trademark-confusing similarity"
+    ]
+  },
+  "review_checklist": {
+    "valid_json": true,
+    "schema_fields_complete": true,
+    "transparent_png_required": true,
+    "native_transparent_generation_requested": true,
+    "single_clear_logo_concept": true,
+    "works_without_background": true,
+    "small_size_legibility_considered": true,
+    "text_constraints_are_verbatim_and_inspectable": true,
+    "trademark_similarity_risk_checked": true
+  },
+  "review_notes": {
+    "prompt_strengths": [
+      "Why this brief should produce a usable logo."
+    ],
+    "unresolved_risks": [
+      "Known risk such as exact text, trademark similarity, brand ambiguity, or small-size legibility."
+    ],
+    "iteration_strategy_if_failed": "Change only one dimension next: symbol, geometry, typography, color, transparency, or crop."
+  },
+  "generation_prompt": "A concise English prompt assembled from logo_prompt and constraints after review. Explicitly request a native transparent-background PNG logo asset with no background fill, no white square, no checkerboard, no mockup, and no scene."
+}
+```
+
+</json_logo_brief>
+
 <validation>
 
 완료 전 다음 검사를 모두 통과한다:
 
 - [ ] 요청이 일반 이미지 scene이 아니라 logo/mark 작업으로 올바르게 route되었다.
 - [ ] 사용자 요구사항을 생성/편집 전에 유효한 영어 JSON logo brief로 변환했다.
-- [ ] Brief가 `format: png`, `background: transparent`, native transparent Codex image generation을 첫 경로로 명시한다.
+- [ ] Brief가 `format: png`, `background: transparent`, Native transparency, Codex-generated transparent PNG, native transparent Codex image generation을 첫 경로로 명시한다.
 - [ ] Model-facing prompt가 isolated transparent-background PNG logo, no background fill, white box, checkerboard, chroma-key, mockup, scene을 명시한다.
 - [ ] RGB, fully opaque RGBA, filled-background, checkerboard, chroma-key, mockup, non-PNG 시도는 거부하고 반복했다.
 - [ ] Native generation이 반복 실패했다면 deterministic RGBA fallback은 simple geometric mark에만 사용했고 `prompt.json`에 명시했다.

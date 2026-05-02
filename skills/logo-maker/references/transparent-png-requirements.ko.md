@@ -5,7 +5,7 @@
 ## Output contract
 
 - 최종 로고 파일은 `.png` 확장자와 PNG encoding을 사용해야 한다.
-- Native Codex transparent generation이 첫 경로다: 실행 경로에서 지원하면 `generation_settings.format`을 `png`, `generation_settings.background`를 `transparent`, `generation_settings.transparent_background`를 `true`로 설정한다.
+- Native Codex transparent generation이 첫 경로다: 실행 경로에서 지원하면 `generation_settings.format`을 `png`, `generation_settings.background`를 `transparent`, `generation_settings.transparent_background`를 `true`로 설정한다. 최종 transparency는 Node scripts로 만드는 것이 아니며, helper scripts는 transparency를 만드는 mechanism이 아니다.
 - Model-facing prompt에는 isolated logo mark, transparent background, PNG output, no background fill, no white square, no checkerboard pattern, no chroma-key background, no mockup, no scene을 명시해야 한다.
 - RGB PNG, fully opaque RGBA PNG, white/black/colored square, baked-in checkerboard, chroma-key background는 실패한 시도이며 최종 deliverable이 아니다.
 - Native 시도가 반복 실패하고 로고가 simple geometric mark로 표현 가능하면 deterministic RGBA fallback renderer를 사용하고 `prompt.json`에 `generation_settings.api_path: "deterministic_rgba_fallback"`을 명시한다.
@@ -15,7 +15,7 @@
 1. 검수된 JSON logo brief를 작성한다.
 2. Native transparent PNG settings와 강한 anti-background prompt wording으로 생성한다.
 3. 반환된 PNG를 `file`과 alpha-pixel check로 검사한다.
-4. Alpha가 없거나 fully opaque이면 brief/prompt/settings를 다듬어 재생성한다.
+4. Alpha가 없거나 fully opaque이면 brief/prompt/settings를 다듬어 재생성한다. Cleanup이나 background-removal postprocessing을 성공으로 보지 않는다.
 5. Native가 반복 실패하면 simple geometric mark에 한해 `scripts/render-simple-logo-rgba.mjs`를 사용한다.
 6. `scripts/archive-logo-assets.mjs` 또는 동등한 evidence로 archive한다.
 7. `preview.html`을 열고 checkerboard, white, black, brand-color surface에서 검사한다.

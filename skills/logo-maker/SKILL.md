@@ -27,7 +27,7 @@ Use this skill when the user wants Codex to create, iterate, adapt, or prepare a
 - transparent-background PNG logo exports from a generated or edited image
 - logo generation that should not look like a generic AI emblem or stock icon
 
-Prefer this skill over `image-maker` when the primary deliverable is a logo/mark rather than a scene, photo, illustration, or marketing image.
+Prefer this skill over `image-maker` or broad `image-generation` workflows when the primary deliverable is a logo/mark rather than a scene, photo, illustration, or marketing image.
 
 Do not use this skill when:
 
@@ -44,7 +44,7 @@ Do not use this skill when:
 - Model default: use `gpt-image-2` when available and consistent with the project `image-maker` contract, unless the user explicitly changes the image model/path in a later instruction.
 - Prompt pipeline requirement: do not generate directly from raw user wording. Always pass through `user requirements → English JSON logo brief → brief review → Codex transparent-background PNG generation/edit → visual transparency check`.
 - Transparent PNG hard requirement: final deliverables must be `.png` files generated/exported by the Codex image path with a native transparent background. A white, black, checkerboard, solid color, or chroma-key background is not acceptable as the final logo asset.
-- Native transparency requirement: request transparent output in the image generation settings and in the model-facing prompt. Do not rely on Node scripts, chroma-key cleanup, or background-removal postprocessing as the first path. If a result comes back RGB or with a filled background, refine the brief/prompt/settings and regenerate before accepting it.
+- Native transparency requirement: request transparent output in the image generation settings and in the model-facing prompt. Do not rely on Node scripts, chroma-key cleanup, or background-removal postprocessing as the first path. If a result comes back RGB or with a filled background, refine the brief/prompt/settings and regenerate before accepting it. Regenerate instead of postprocessing; background removal is not the transparency solution.
 - Success ladder requirement: keep looping until a verified transparent PNG exists. Try native transparent Codex generation first; if repeated native attempts still return RGB/filled backgrounds and the logo can be represented as a simple geometric mark, use the deterministic RGBA fallback renderer, then disclose the fallback path in `prompt.json` and the final report.
 - Archive requirement: every completed logo job must create `.hypercore/logo-maker/<topic-slug>/`, save the reviewed brief as `prompt.json`, copy final logo files as `logo1.png`, `logo2.png`, `logo3.png`, ..., create `preview.html`, and verify all files before completion.
 - Preview requirement: when the user asks to see the result, open the generated `preview.html` in a fresh Google Chrome window/tab with the local helper. If Chrome cannot open, report the preview path and exact command.
@@ -67,7 +67,7 @@ Negative examples:
 
 Boundary example:
 
-- "브랜드 이미지를 만들어줘." If the desired output is a logo/mark with transparent PNG deliverables, use this skill; if it is a hero visual or campaign scene, use `image-maker`.
+- "브랜드 이미지를 만들어줘." If the desired output is a logo/mark with transparent PNG deliverables, use this skill; if it is a hero visual or campaign scene, use `image-maker` or `image-generation`.
 
 </trigger_examples>
 
@@ -91,7 +91,7 @@ Boundary example:
 
 <archive_helper>
 
-The archive helper is optional but recommended for verification and preview. Use it after a final PNG exists from either native Codex transparent generation or the explicit deterministic fallback:
+The archive helper is optional but recommended for verification and preview. It is for file copying/preview only, plus alpha evidence; it is not a generator and not a background-removal path. Use it after a final PNG exists from either native Codex transparent generation or the explicit deterministic fallback:
 
 ```bash
 node skills/logo-maker/scripts/archive-logo-assets.mjs \

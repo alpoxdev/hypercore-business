@@ -5,7 +5,7 @@ The logo-maker final deliverable is always a verified transparent-background PNG
 ## Output contract
 
 - Final logo files must use `.png` extension and PNG encoding.
-- Native Codex transparent generation is the first path: set `generation_settings.format` to `png`, `generation_settings.background` to `transparent`, and `generation_settings.transparent_background` to `true` when the execution path supports it.
+- Native Codex transparent generation is the first path: set `generation_settings.format` to `png`, `generation_settings.background` to `transparent`, and `generation_settings.transparent_background` to `true` when the execution path supports it. Final transparency is not created by Node scripts; helper scripts are not the mechanism for producing transparency.
 - The model-facing prompt must explicitly say: isolated logo mark, transparent background, PNG output, no background fill, no white square, no checkerboard pattern, no chroma-key background, no mockup, and no scene.
 - RGB PNG, fully opaque RGBA PNG, white/black/colored square, baked-in checkerboard, or chroma-key backgrounds are failed attempts, not final deliverables.
 - If native attempts repeatedly fail and the logo can be represented as a simple geometric mark, use the deterministic RGBA fallback renderer and disclose `generation_settings.api_path: "deterministic_rgba_fallback"` in `prompt.json`.
@@ -15,7 +15,7 @@ The logo-maker final deliverable is always a verified transparent-background PNG
 1. Write the reviewed JSON logo brief.
 2. Generate with native transparent PNG settings and strict anti-background prompt wording.
 3. Inspect the returned PNG with `file` and an alpha-pixel check.
-4. If alpha is missing or fully opaque, refine the brief/prompt/settings and regenerate.
+4. If alpha is missing or fully opaque, refine the brief/prompt/settings and regenerate; do not treat cleanup or background-removal postprocessing as success.
 5. After repeated native failures, use `scripts/render-simple-logo-rgba.mjs` only for simple geometric marks.
 6. Archive with `scripts/archive-logo-assets.mjs` or equivalent evidence.
 7. Open `preview.html` and inspect checkerboard, white, black, and brand-color surfaces.
