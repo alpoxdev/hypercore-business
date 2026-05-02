@@ -22,6 +22,19 @@ description: "[Hyper] 일론 머스크 역할극이 아니라 공개적으로 �
 
 </purpose>
 
+<run_contract>
+
+- Intent: 구체적인 의사결정을 기본 원리에서 해체하고 decision-grade 리포트를 만듭니다.
+- Scope: `.hypercore/elon-musk/[topic-slug]/flow.json`, `research.md`, `assumptions.md`, `redesign.md`, `execution.md`를 책임집니다.
+- Authority: 사용자/프로젝트 지시가 공개 Musk 사례, 경쟁사, 기존 관행보다 우선합니다.
+- Evidence: 추천에 영향을 주는 현재 사실은 출처를 남기고, 그렇지 않은 주장은 assumption 또는 unknown으로 표시합니다.
+- Tools: 필요한 경우에만 로컬 파일과 가벼운 조사를 사용하며, 특정 런타임/모델/병렬 에이전트를 요구하지 않습니다.
+- Output: 다중 파일 리포트를 저장하고 thesis, bottleneck, metric, next test, safety caveat를 보이게 둡니다.
+- Verification: 완료 전 [rules/validation.md](rules/validation.md)의 checklist를 실행합니다.
+- Stop condition: 모든 파일이 존재하고 `flow.json`이 `completed`이며 남은 unknown이 테스트나 source question으로 전환되면 종료합니다.
+
+</run_contract>
+
 <when_to_use>
 
 사용하세요:

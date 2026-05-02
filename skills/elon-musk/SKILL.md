@@ -22,6 +22,19 @@ description: "[Hyper] Apply Musk-style first-principles frameworks—not persona
 
 </purpose>
 
+<run_contract>
+
+- Intent: deconstruct a concrete decision from fundamentals and produce a decision-grade report.
+- Scope: own `.hypercore/elon-musk/[topic-slug]/flow.json`, `research.md`, `assumptions.md`, `redesign.md`, and `execution.md`.
+- Authority: user/project instructions outrank public Musk examples, competitors, and existing conventions.
+- Evidence: use cited current facts when they affect the recommendation; otherwise label claims as assumptions or unknowns.
+- Tools: use local files and lightweight research only when needed; do not require special runtimes, models, or parallel agents.
+- Output: save the multi-file report and keep the thesis, bottleneck, metric, next test, and safety caveat visible.
+- Verification: run the validation checklist in [rules/validation.md](rules/validation.md) before finishing.
+- Stop condition: finish when all files exist, `flow.json` is `completed`, and unresolved unknowns have tests or source questions.
+
+</run_contract>
+
 <when_to_use>
 
 Use this skill when:
