@@ -27,7 +27,7 @@ metadata:
 - 생성/편집된 이미지에서 투명 배경 PNG 로고 export
 - generic AI emblem 또는 stock icon처럼 보이지 않아야 하는 로고 생성
 
-주요 산출물이 장면/사진/일러스트/마케팅 이미지가 아니라 로고/마크라면 `image-generation`보다 이 스킬을 우선한다.
+주요 산출물이 장면/사진/일러스트/마케팅 이미지가 아니라 로고/마크라면 `image-maker`보다 이 스킬을 우선한다.
 
 다음 경우에는 이 스킬을 사용하지 않는다:
 
@@ -41,7 +41,7 @@ metadata:
 <execution_contract>
 
 - Codex 전용: Codex 이미지 생성/편집 기능 또는 프로젝트 승인 image path를 사용한다.
-- 모델 기본값: 프로젝트 image-generation contract와 일치하고 사용 가능하면 `gpt-image-2`를 사용한다. 이후 사용자 지시가 있으면 그 지시를 따른다.
+- 모델 기본값: 프로젝트 `image-maker` contract와 일치하고 사용 가능하면 `gpt-image-2`를 사용한다. 이후 사용자 지시가 있으면 그 지시를 따른다.
 - 프롬프트 파이프라인 요구사항: 원본 사용자 문구에서 바로 생성하지 않는다. 항상 `사용자 요구사항 → 영어 JSON 로고 브리프 → 브리프 검수 → 생성/편집 → 투명 PNG 검증`을 거친다.
 - 투명 PNG hard requirement: 최종 산출물은 반드시 Codex 이미지 경로에서 native transparent background로 생성/export된 `.png` 파일이어야 한다. 흰색, 검은색, checkerboard, 단색, chroma-key 배경은 최종 로고 에셋으로 인정하지 않는다.
 - Native transparency 요구사항: 이미지 생성 설정과 model-facing prompt 양쪽에서 transparent output을 먼저 요청한다. Node script, chroma-key cleanup, background-removal 후처리를 첫 경로로 쓰지 않는다. 결과가 RGB 또는 채워진 배경이면 성공으로 받아들이지 말고 brief/prompt/settings를 다듬어 재생성한다.
@@ -67,7 +67,7 @@ metadata:
 
 경계 예시:
 
-- "브랜드 이미지를 만들어줘." 원하는 산출물이 투명 PNG 로고/마크이면 이 스킬을 사용하고, hero visual 또는 campaign scene이면 `image-generation`을 사용한다.
+- "브랜드 이미지를 만들어줘." 원하는 산출물이 투명 PNG 로고/마크이면 이 스킬을 사용하고, hero visual 또는 campaign scene이면 `image-maker`를 사용한다.
 
 </trigger_examples>
 

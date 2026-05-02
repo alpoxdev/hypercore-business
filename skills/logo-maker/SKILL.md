@@ -27,7 +27,7 @@ Use this skill when the user wants Codex to create, iterate, adapt, or prepare a
 - transparent-background PNG logo exports from a generated or edited image
 - logo generation that should not look like a generic AI emblem or stock icon
 
-Prefer this skill over `image-generation` when the primary deliverable is a logo/mark rather than a scene, photo, illustration, or marketing image.
+Prefer this skill over `image-maker` when the primary deliverable is a logo/mark rather than a scene, photo, illustration, or marketing image.
 
 Do not use this skill when:
 
@@ -41,10 +41,10 @@ Do not use this skill when:
 <execution_contract>
 
 - Codex only: use Codex image generation/editing capability or the project-approved image path.
-- Model default: use `gpt-image-2` when available and consistent with the project image-generation contract, unless the user explicitly changes the image model/path in a later instruction.
+- Model default: use `gpt-image-2` when available and consistent with the project `image-maker` contract, unless the user explicitly changes the image model/path in a later instruction.
 - Prompt pipeline requirement: do not generate directly from raw user wording. Always pass through `user requirements → English JSON logo brief → brief review → Codex transparent-background PNG generation/edit → visual transparency check`.
 - Transparent PNG hard requirement: final deliverables must be `.png` files generated/exported by the Codex image path with a native transparent background. A white, black, checkerboard, solid color, or chroma-key background is not acceptable as the final logo asset.
-- Native transparency requirement: request transparent output in the image-generation settings and in the model-facing prompt. Do not rely on Node scripts, chroma-key cleanup, or background-removal postprocessing as the first path. If a result comes back RGB or with a filled background, refine the brief/prompt/settings and regenerate before accepting it.
+- Native transparency requirement: request transparent output in the image generation settings and in the model-facing prompt. Do not rely on Node scripts, chroma-key cleanup, or background-removal postprocessing as the first path. If a result comes back RGB or with a filled background, refine the brief/prompt/settings and regenerate before accepting it.
 - Success ladder requirement: keep looping until a verified transparent PNG exists. Try native transparent Codex generation first; if repeated native attempts still return RGB/filled backgrounds and the logo can be represented as a simple geometric mark, use the deterministic RGBA fallback renderer, then disclose the fallback path in `prompt.json` and the final report.
 - Archive requirement: every completed logo job must create `.hypercore/logo-maker/<topic-slug>/`, save the reviewed brief as `prompt.json`, copy final logo files as `logo1.png`, `logo2.png`, `logo3.png`, ..., create `preview.html`, and verify all files before completion.
 - Preview requirement: when the user asks to see the result, open the generated `preview.html` in a fresh Google Chrome window/tab with the local helper. If Chrome cannot open, report the preview path and exact command.
@@ -67,7 +67,7 @@ Negative examples:
 
 Boundary example:
 
-- "브랜드 이미지를 만들어줘." If the desired output is a logo/mark with transparent PNG deliverables, use this skill; if it is a hero visual or campaign scene, use `image-generation`.
+- "브랜드 이미지를 만들어줘." If the desired output is a logo/mark with transparent PNG deliverables, use this skill; if it is a hero visual or campaign scene, use `image-maker`.
 
 </trigger_examples>
 
@@ -78,7 +78,7 @@ Boundary example:
 3. **Load logo rules.** Use `rules/logo-design-workflow.md` for logo-specific simplicity, scalability, silhouette, typography, and anti-generic checks.
 4. **Write an English JSON logo brief.** Use the schema below. Keep prompt-facing creative values in English while preserving exact brand/name text verbatim in `logo_prompt.text.verbatim`.
 5. **Review the brief before generation.** Parse the JSON, check required fields, verify a coherent mark type, confirm `format: png` and `background: transparent`, and ensure text/brand constraints are inspectable.
-6. **Generate/edit native transparent PNG candidates.** Use the reviewed `generation_prompt` as source of truth and request transparent-background PNG output directly in the Codex image-generation path. The prompt must say the logo is an isolated mark on transparent background, with no background fill, no white square, no checkerboard pattern, no mockup, and no scene.
+6. **Generate/edit native transparent PNG candidates.** Use the reviewed `generation_prompt` as source of truth and request transparent-background PNG output directly in the Codex image generation path. The prompt must say the logo is an isolated mark on transparent background, with no background fill, no white square, no checkerboard pattern, no mockup, and no scene.
 7. **Inspect alpha and iterate.** Run `file` plus an alpha-pixel check on the returned PNG. If it is RGB, fully opaque RGBA, filled-background, checkerboard, chroma-key, mockup scene, or non-PNG, mark the attempt failed, refine the JSON brief/prompt/settings, and regenerate.
 8. **Fallback only after native attempts fail.** If native transparent generation repeatedly fails but the requested logo is a simple geometric mark, render a deterministic transparent RGBA fallback with `scripts/render-simple-logo-rgba.mjs`, then archive and disclose that this fallback produced the final transparent PNG. Do not use this fallback to hide a failed photoreal/logo-generation result; it is only for clean geometric logo assets.
 9. **Validate as a logo.** Check silhouette at small sizes, legibility, uniqueness, brand fit, geometry, text accuracy, edge cleanliness, and whether it works on light/dark/checkerboard backgrounds.

@@ -11,8 +11,10 @@ const required = [
   'references/research-findings.ko.md',
   'references/section-templates.ko.md',
   'references/image-direction.ko.md',
-  'references/image-generation-integration.ko.md',
+  'references/image-maker-integration.ko.md',
   'references/browser-link-research.ko.md',
+  'references/sangse-style-benchmark.ko.md',
+  'references/figma-mcp-output.ko.md',
 ];
 
 const koRequired = [
@@ -22,15 +24,17 @@ const koRequired = [
   'references/research-findings.ko.md',
   'references/section-templates.ko.md',
   'references/image-direction.ko.md',
-  'references/image-generation-integration.ko.md',
+  'references/image-maker-integration.ko.md',
   'references/browser-link-research.ko.md',
+  'references/sangse-style-benchmark.ko.md',
+  'references/figma-mcp-output.ko.md',
 ];
 
-const imageGenerationRequired = [
-  'skills/image-generation/SKILL.md',
-  'skills/image-generation/rules/natural-image-workflow.md',
-  'skills/image-generation/references/json-prompt-best-practices.md',
-  'skills/image-generation/scripts/archive-generated-images.mjs',
+const optionalImageGenerationReferences = [
+  'skills/image-maker/SKILL.md',
+  'skills/image-maker/rules/natural-image-workflow.md',
+  'skills/image-maker/references/json-prompt-best-practices.md',
+  'skills/image-maker/scripts/archive-generated-images.mjs',
 ];
 
 const failures = [];
@@ -40,9 +44,7 @@ for (const file of required) {
 for (const file of koRequired) {
   if (!existsSync(join(root, file))) failures.push(`Missing Korean localized file: ${file}`);
 }
-for (const file of imageGenerationRequired) {
-  if (!existsSync(join(repoRoot, file))) failures.push(`Missing local image-generation reference: ${file}`);
-}
+const missingOptionalImageGeneration = optionalImageGenerationReferences.filter((file) => !existsSync(join(repoRoot, file)));
 
 const skill = readFileSync(join(root, 'SKILL.md'), 'utf8');
 const lineCount = skill.split('\n').length;
@@ -72,9 +74,11 @@ for (const needle of [
   'image-generation',
   'Korean product information notice',
   'platform-checklist.md',
-  'skills/image-generation/SKILL.md',
-  'references/image-generation-integration.ko.md',
+  'skills/image-maker/SKILL.md',
+  'references/image-maker-integration.ko.md',
   'references/browser-link-research.ko.md',
+  'references/sangse-style-benchmark.ko.md',
+  'references/figma-mcp-output.ko.md',
 ]) {
   if (!skill.includes(needle)) failures.push(`SKILL.md missing key trigger/contract term: ${needle}`);
 }
@@ -84,7 +88,7 @@ if (!skill.includes('Final user-facing product-page copy') || !skill.includes('m
 }
 
 const skillKo = readFileSync(join(root, 'SKILL.ko.md'), 'utf8');
-for (const needle of ['한국형 상세페이지', '실제 이미지 생성', 'skills/image-generation/SKILL.md', 'rules/korean-product-detail-page-workflow.ko.md', 'platform-compliance.ko.md']) {
+for (const needle of ['한국형 상세페이지', '실제 이미지 생성', 'skills/image-maker/SKILL.md', 'rules/korean-product-detail-page-workflow.ko.md', 'platform-compliance.ko.md']) {
   if (!skillKo.includes(needle)) failures.push(`SKILL.ko.md missing key Korean term/reference: ${needle}`);
 }
 
@@ -93,7 +97,7 @@ const urlCount = (research.match(/https?:\/\//g) || []).length;
 if (urlCount < 8) failures.push(`Expected at least 8 source URLs in research findings, found ${urlCount}`);
 
 const workflow = readFileSync(join(root, 'rules/korean-product-detail-page-workflow.md'), 'utf8');
-for (const section of ['Research pass', 'Chrome DevTools/CDP-first link research', 'Section map', 'Image/cut planning', 'Output packaging']) {
+for (const section of ['Research pass', 'Chrome DevTools/CDP-first link research', 'Category playbook', 'Section map', 'Figma layout and Image/cut planning', 'Output packaging']) {
   if (!workflow.includes(section)) failures.push(`Workflow missing section: ${section}`);
 }
 
@@ -102,12 +106,27 @@ for (const term of ['DevTools/CDP-first', 'BeautifulSoup', 'CDP', 'webSocketDebu
   if (!browserLinkResearch.includes(term)) failures.push(`Browser link research missing: ${term}`);
 }
 
-const integration = readFileSync(join(root, 'references/image-generation-integration.ko.md'), 'utf8');
-for (const term of ['skills/image-generation/SKILL.md', 'natural-image-workflow.md', 'json-prompt-best-practices.md', 'archive-generated-images.mjs', 'gpt-image-2', '실제 이미지 생성', '아카이브']) {
+const integration = readFileSync(join(root, 'references/image-maker-integration.ko.md'), 'utf8');
+for (const term of ['skills/image-maker/SKILL.md', 'natural-image-workflow.md', 'json-prompt-best-practices.md', 'archive-generated-images.mjs', 'gpt-image-2', '실제 이미지 생성', '아카이브']) {
   if (!integration.includes(term)) failures.push(`Image-generation integration missing: ${term}`);
 }
 for (const stale of ['image-generation-handoff.ko.md', 'handoff artifact', 'hands off', 'owns final']) {
   if (skill.includes(stale) || integration.includes(stale)) failures.push(`Stale handoff wording remains: ${stale}`);
+}
+
+const sangse = readFileSync(join(root, 'references/sangse-style-benchmark.ko.md'), 'utf8');
+for (const term of ['Sang-se', 'Figma', '복제하지 않는다', '카테고리', '블록 라이브러리']) {
+  if (!sangse.includes(term)) failures.push(`Sang-se benchmark missing: ${term}`);
+}
+
+const figmaMcp = readFileSync(join(root, 'references/figma-mcp-output.ko.md'), 'utf8');
+for (const term of ['Figma MCP', 'figma-frame-spec.json', 'HTML', 'editable text layer', 'file key']) {
+  if (!figmaMcp.includes(term)) failures.push(`Figma MCP output guide missing: ${term}`);
+}
+
+const sectionTemplates = readFileSync(join(root, 'references/section-templates.ko.md'), 'utf8');
+for (const term of ['Beauty', 'Food', 'Fashion', 'Electronics', 'Baby', 'Digital', 'category_playbook']) {
+  if (!sectionTemplates.includes(term)) failures.push(`Section templates missing category playbook term: ${term}`);
 }
 
 const compliance = readFileSync(join(root, 'rules/platform-compliance.md'), 'utf8');
@@ -124,4 +143,7 @@ if (failures.length) {
 console.log('korean-product-detail-page skill validation passed');
 console.log(`SKILL.md lines: ${lineCount}`);
 console.log(`Research URLs: ${urlCount}`);
+if (missingOptionalImageGeneration.length) {
+  console.log(`Optional image-generation local folder not present; integration guide will use available runtime image generation path: ${missingOptionalImageGeneration.length} missing optional files`);
+}
 console.log('Korean .ko.md coverage: passed');

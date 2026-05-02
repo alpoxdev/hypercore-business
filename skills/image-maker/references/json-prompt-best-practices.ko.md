@@ -27,7 +27,7 @@ Practical rule for this skill:
 - review가 빠르고 diff가 의미 있도록 key order를 안정적으로 유지한다.
 - field 변경 시 `schema_version`을 compatibility marker로 사용한다.
 - `task`, `quality`, `format`, `destination_intent` 같은 field에는 enum을 선호한다.
-- 항상 `generation_settings.archive_dir`, `generation_settings.save_path`, `generation_settings.prompt_path`, `generation_settings.preview_html_path`를 포함한다. 기본값은 current repository root 기준 `.hypercore/image-generation/<topic-slug>/...`다.
+- 항상 `generation_settings.archive_dir`, `generation_settings.save_path`, `generation_settings.prompt_path`, `generation_settings.preview_html_path`를 포함한다. 기본값은 current repository root 기준 `.hypercore/image-maker/<topic-slug>/...`다.
 - required field를 모르면 field를 조용히 생략하지 말고 explicit assumption 또는 `"unknown_but_non_blocking"`을 적는다.
 
 ### 2. API settings와 creative direction을 분리한다

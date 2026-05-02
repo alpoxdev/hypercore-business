@@ -42,13 +42,13 @@ For each image, write:
 - For models, avoid implying real endorsement unless supplied.
 - For regulated categories, do not visualize medical or impossible effects.
 
-## Integrate skills/image-generation for actual assets
+## Integrate skills/image-maker for actual assets
 
-When actual image files are required, do not stop at this cut list and do not invent a parallel image workflow. Read `references/image-generation-integration.ko.md`, then use the local `skills/image-generation/` folder as the execution reference while this skill continues through generation:
+When actual image files are required, do not stop at this cut list and do not invent a parallel image workflow. Read `references/image-maker-integration.ko.md`, then use the local `skills/image-maker/` folder as the execution reference when present; if absent, use the available runtime image generation path while this skill continues through generation:
 
-1. Convert selected cut briefs into the `skills/image-generation` English JSON prompt pipeline.
+1. Convert selected cut briefs into the `skills/image-maker` English JSON prompt pipeline.
 2. Keep Korean visible text in `image_prompt.text.verbatim` only.
-3. Use `skills/image-generation/rules/natural-image-workflow.md` for naturalism and visual validation.
-4. Generate/edit the actual requested images via the available image generation path following `skills/image-generation/SKILL.md`.
-5. Use `skills/image-generation/scripts/archive-generated-images.mjs` or the same archive contract to preserve `.hypercore/image-generation/<topic-slug>/prompt.json` and generated `imageN.*` files.
+3. Use `skills/image-maker/rules/natural-image-workflow.md` for naturalism and visual validation.
+4. Generate/edit the actual requested images via the available image generation path following `skills/image-maker/SKILL.md`.
+5. Use `skills/image-maker/scripts/archive-generated-images.mjs` or the same archive contract to preserve `.hypercore/image-maker/<topic-slug>/prompt.json` and generated `imageN.*` files.
 6. Copy final images into the 상세페이지 production folder only after archiving.

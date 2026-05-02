@@ -1,8 +1,8 @@
-# gpt-image-2 Research Notes for HyperB Image Generation
+# gpt-image-2 Research Notes for HyperB Image Maker
 
 Last researched: 2026-04-29.
 
-This reference summarizes the saved research report at `.hypercore/research/2026-04-29-image-generation-naturalism.md`.
+This reference summarizes the saved research report at `.hypercore/research/2026-04-29-image-maker-naturalism.md`.
 
 ## Operational facts
 

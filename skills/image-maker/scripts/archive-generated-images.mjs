@@ -9,13 +9,13 @@ const IMAGE_EXTENSIONS = new Set(['.png', '.jpg', '.jpeg', '.webp']);
 
 function printUsage() {
   console.error(`Usage:
-  node skills/image-generation/scripts/archive-generated-images.mjs \\
+  node skills/image-maker/scripts/archive-generated-images.mjs \\
     --topic "descriptive topic" \\
     --prompt path/to/reviewed-prompt.json \\
     --images ~/.codex/generated-images/file1.png ~/.codex/generated-images/file2.png
 
 Options:
-  --topic <text>       Required. Creates .hypercore/image-generation/<topic-slug>/
+  --topic <text>       Required. Creates .hypercore/image-maker/<topic-slug>/
   --prompt <path>      Required. Reviewed JSON prompt to write as prompt.json.
   --images <paths...>  Generated image files to archive as image1.png, image2.png...
   --latest <n>         Alternative to --images: copy newest n image files from --from-dir.
@@ -23,7 +23,7 @@ Options:
   --repo-root <path>   Repository root. Default: current working directory.
   --no-preview         Do not write preview.html.
   --open-preview       Open preview.html in a fresh Google Chrome window after writing it.
-  --template <path>    Preview HTML template. Default: skills/image-generation/assets/image-preview-template.html
+  --template <path>    Preview HTML template. Default: skills/image-maker/assets/image-preview-template.html
 `);
 }
 
@@ -41,7 +41,7 @@ function slugify(input) {
     .toLowerCase()
     .replace(/[^a-z0-9가-힣]+/g, '-')
     .replace(/^-+|-+$/g, '')
-    .slice(0, 80) || 'image-generation';
+    .slice(0, 80) || 'image-maker';
 }
 
 function parseArgs(argv) {
@@ -125,7 +125,7 @@ function safeJsonForHtml(data) {
 }
 
 function defaultTemplatePath(repoRoot) {
-  return path.join(repoRoot, 'skills', 'image-generation', 'assets', 'image-preview-template.html');
+  return path.join(repoRoot, 'skills', 'image-maker', 'assets', 'image-preview-template.html');
 }
 
 function createPreviewHtml({ repoRoot, destDir, topic, topicSlug, prompt, savedImages, templatePath }) {
@@ -202,7 +202,7 @@ function main() {
   const fromDir = path.resolve(expandHome(opts.fromDir));
   const promptPath = path.resolve(expandHome(opts.prompt));
   const topicSlug = slugify(opts.topic);
-  const destDir = path.join(repoRoot, '.hypercore', 'image-generation', topicSlug);
+  const destDir = path.join(repoRoot, '.hypercore', 'image-maker', topicSlug);
   const imageSources = opts.images.length
     ? opts.images.map((filePath) => path.resolve(expandHome(filePath)))
     : newestImages(fromDir, opts.latest);

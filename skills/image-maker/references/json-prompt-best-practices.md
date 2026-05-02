@@ -1,4 +1,4 @@
-# JSON Prompt Best Practices for HyperB Image Generation
+# JSON Prompt Best Practices for HyperB Image Maker
 
 Last researched: 2026-04-29.
 
@@ -27,7 +27,7 @@ Practical rule for this skill:
 - Keep key order stable so reviews are fast and diffs are meaningful.
 - Treat `schema_version` as a compatibility marker when changing fields.
 - Prefer enums for fields like `task`, `quality`, `format`, and `destination_intent`.
-- Always include `generation_settings.archive_dir`, `generation_settings.save_path`, `generation_settings.prompt_path`, and `generation_settings.preview_html_path`; default to `.hypercore/image-generation/<topic-slug>/...` from the current repository root.
+- Always include `generation_settings.archive_dir`, `generation_settings.save_path`, `generation_settings.prompt_path`, and `generation_settings.preview_html_path`; default to `.hypercore/image-maker/<topic-slug>/...` from the current repository root.
 - If a required field is unknown, write an explicit assumption or `"unknown_but_non_blocking"`; do not silently omit it.
 
 ### 2. Separate API settings from creative direction

@@ -18,3 +18,20 @@ Baseline report: `.hypercore/research/2026-04-29-korean-product-detail-page-skil
 ## Reuse rule
 
 Use this baseline for generic Korean detail-page work. For a specific product category, add fresh category-specific Korean sources before finalizing claims or image direction.
+
+## 2026-05-02 Sang-se/Figma/category update
+
+Update report: `.hypercore/research/2026-05-02-sangse-figma-category-detail-page-skill-research.md`
+
+- 상세뚝딱(Sang-se)은 제품 정보 입력, 템플릿 선택, 생성 버튼이라는 빠른 3단계 흐름과 업종·스타일별 템플릿, Figma 기반 수정 가능성, PNG/JPG/PDF export를 강조한다. Source: https://www.sang-se.com/
+- 이 스킬은 상세뚝딱의 브랜드/캐릭터/카피/샘플 디자인을 복제하지 않고, 빠른 입력·카테고리/스타일 템플릿·재사용 블록·Figma editable layer·export-ready workflow 같은 운영 패턴만 벤치마크한다. Source: https://www.sang-se.com/
+- 카페24 에디봇은 이미지 자동 분류/배치와 상품 카테고리·색상 인식, 필요한 정보 추천을 제공한다. 따라서 상세페이지 스킬도 제품 단위 카피만 쓰지 말고 먼저 카테고리 플레이북을 선택해야 한다. Source: https://support.cafe24.com/hc/ko/articles/7738920902041-%EC%97%90%EB%94%94%EB%B4%87
+- 카페24 에디봇핏은 자주 올리는 카테고리 상품 정보 템플릿, 디자인, 국가별 번역, 착용정보/상세정보/사이즈정보/텍스트 순서 변경을 지원한다. 이는 카테고리별 정보 블록과 editable text layer를 분리해야 한다는 근거다. Source: https://support.cafe24.com/hc/ko/articles/25214194458777-%ED%8E%B8%EC%A7%91-%EB%A7%88%EC%8A%A4%ED%84%B0%ED%95%98%EA%B8%B0
+- 카페24 에디봇 전시관은 식품/베이커리, 패션의류, 패션잡화, 생활용품, 스포츠레저 같은 제품군과 심플한/화려한/로맨틱/기능성 같은 스타일을 함께 분류한다. Source: https://edibot.cafe24.com/
+- 쿠팡 패션 대표 이미지 가이드는 본문 상세 이미지와 별도로 대표 이미지 기준을 둔다. 흰 배경, 실제 촬영 사진, 1개 제품, 텍스트/로고/장식 제거, 상품 크기 95% 같은 조건은 대표 이미지와 상세본문 컷을 분리 설계해야 한다는 근거다. Source: https://imgs.coupangcdn.com/image/partner/documents/2016/04/11/18/4/5f388006-edea-4c7a-8ab0-1c6c33e564c8.pdf
+- 식약처는 식품의 질병 예방·치료 효능 표방, 화장품의 의학적 효능·피부 손상 복구·다이어트·발모 표현, 가짜 체험단 후기 등을 온라인 불법유통 신고 대상으로 안내한다. 카테고리별 claim guard가 필요하다. Source: https://www.mfds.go.kr/wpge/m_661/de010410l001.do
+- 전기/전자 카테고리는 KC 마크, 인증번호, 모델명, 제조자/수입업체명, 제조년월, 국내 A/S 연락처, 주의경고 문구 등 표시사항 검증이 중요하다. Source: https://customer.ktl.re.kr/web/contents/K101010200.do
+
+## Category reuse rule
+
+For generic requests, reuse this baseline plus the 2026-05-02 update. For category-specific requests, choose a category playbook from `references/section-templates.ko.md` and add fresh Korean/category sources before finalizing factual claims, regulated wording, or image direction.

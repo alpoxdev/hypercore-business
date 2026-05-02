@@ -2,7 +2,7 @@
 
 Last researched: 2026-04-29.
 
-이 reference는 `.hypercore/research/2026-04-29-image-generation-naturalism.md`에 저장된 리서치 보고서를 요약한다.
+이 reference는 `.hypercore/research/2026-04-29-image-maker-naturalism.md`에 저장된 리서치 보고서를 요약한다.
 
 ## Operational facts
 
