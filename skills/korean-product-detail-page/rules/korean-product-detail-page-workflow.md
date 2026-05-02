@@ -101,7 +101,10 @@ Adapt section order for category; read `references/section-templates.ko.md` for 
 
 ## 7. Figma layout and Image/cut planning
 
-For the production layout, do not default to HTML. Create `figma-frame-spec.json` first, or use Figma MCP write tools directly when a Figma file key is available. Read `references/figma-mcp-output.ko.md` for the Figma contract.
+For the production layout, do not default to HTML.
+Create `figma-frame-spec.json` first, or use Figma MCP write tools directly when a Figma file key is available.
+Read `references/figma-mcp-output.ko.md` for the Figma contract.
+If no Figma file key is available, save Figma-ready spec rather than HTML and record the missing key/tool limitation.
 
 For each Figma section, specify:
 

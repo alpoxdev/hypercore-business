@@ -14,6 +14,8 @@ metadata:
 @references/image-direction.ko.md
 @references/image-maker-integration.ko.md
 @references/browser-link-research.ko.md
+@references/sangse-style-benchmark.ko.md
+@references/figma-mcp-output.ko.md
 
 # Korean Product Detail Page
 
@@ -84,14 +86,16 @@ metadata:
 
 1. 이 `SKILL.ko.md`를 읽어 라우팅과 산출 범위를 확인한다.
 2. `references/research-findings.ko.md`에서 기본 한국 자료 근거와 출처를 확인한다.
-3. `rules/korean-product-detail-page-workflow.ko.md`에서 단계별 제작 워크플로우를 확인한다.
-4. 사용자가 URL 또는 기존 제품/레퍼런스 페이지를 제공하면 `references/browser-link-research.ko.md`를 읽는다.
-5. 상세페이지 구조를 고를 때 `references/section-templates.ko.md`를 읽는다.
-6. 이미지/컷 브리프를 만들 때 `references/image-direction.ko.md`를 읽는다.
-7. 실제 생성/편집 이미지 파일 또는 prompt-ready JSON이 필요하면 `references/image-maker-integration.ko.md`를 읽는다.
-8. 실제 이미지 제작 시 `skills/image-maker/SKILL.md`와 통합 가이드에 명시된 로컬 지원 파일이 있으면 읽고, 없으면 사용 가능한 런타임 이미지 생성 경로로 생성, 검증, 아카이브까지 계속 진행한다.
-9. SmartStore/Cafe24/Gmarket/Auction 대상 산출물을 마무리하기 전 `rules/platform-compliance.ko.md`를 읽는다.
-10. 이 스킬을 수정한 뒤 `scripts/validate-korean-product-detail-page-skill.mjs`를 실행한다.
+3. 사용자가 상세뚝딱/Sang-se식, 템플릿형, 빠른 AI 상세페이지 생성을 원하면 `references/sangse-style-benchmark.ko.md`를 읽는다.
+4. `rules/korean-product-detail-page-workflow.ko.md`에서 단계별 제작 워크플로우를 확인한다.
+5. 사용자가 URL 또는 기존 제품/레퍼런스 페이지를 제공하면 `references/browser-link-research.ko.md`를 읽는다.
+6. 상세페이지 구조를 고를 때 `references/section-templates.ko.md`를 읽는다.
+7. Figma, 피그마, MCP, 편집 가능한 디자인, HTML이 아닌 제작 레이아웃이 필요하면 `references/figma-mcp-output.ko.md`를 읽는다.
+8. 이미지/컷 브리프를 만들 때 `references/image-direction.ko.md`를 읽는다.
+9. 실제 생성/편집 이미지 파일 또는 prompt-ready JSON이 필요하면 `references/image-maker-integration.ko.md`를 읽는다.
+10. 실제 이미지 제작 시 `skills/image-maker/SKILL.md`와 통합 가이드에 명시된 로컬 지원 파일이 있으면 읽고, 없으면 사용 가능한 런타임 이미지 생성 경로로 생성, 검증, 아카이브까지 계속 진행한다.
+11. SmartStore/Cafe24/Gmarket/Auction 대상 산출물을 마무리하기 전 `rules/platform-compliance.ko.md`를 읽는다.
+12. 이 스킬을 수정한 뒤 `scripts/validate-korean-product-detail-page-skill.mjs`를 실행한다.
 
 </support_file_read_order>
 
@@ -99,14 +103,16 @@ metadata:
 
 | Phase | Task | Output |
 |---|---|---|
-| 0 | 제품, 카테고리, 구매자, 플랫폼, 보유 에셋, 리스크 확인 | 가정/확인 로그 |
+| 0 | 제품, 카테고리, 구매자, 플랫폼, 보유 에셋, 리스크, Figma MCP 사용 가능 여부 확인 | 가정/확인 로그 |
 | 1 | 한국 레퍼런스와 플랫폼 제약 조사; 사용자가 준 링크는 가능한 경우 가벼운 Chrome DevTools/CDP 캡처로 확인 | 출처 기반 브리프 |
-| 2 | 상세페이지 퍼널과 섹션 순서 선택 | 섹션 맵 |
-| 3 | 섹션별 한국어 카피 작성 | 카피덱 |
-| 4 | 이미지 컷과 생성/편집 프롬프트 기획 | 이미지 브리프 JSON/Markdown |
-| 5 | `skills/image-maker` 규칙으로 요청 이미지 생성/편집, 시각 검증, 아카이브 | 생성 이미지 아카이브 + prompt JSON |
-| 6 | 상품정보제공고시, 배송, 교환, A/S, 주의사항, 플랫폼 체크 | 컴플라이언스 체크리스트 |
-| 7 | 제작용 산출물 패키징 | 파일, 생성 에셋, 최종 구조화 답변 |
+| 2 | 카테고리 플레이북과 디자인 톤/템플릿 패턴 선택; 요청 시 Sang-se 벤치마크 패턴 반영 | 카테고리 + 스타일 계획 |
+| 3 | 상세페이지 퍼널과 섹션 순서 선택 | 섹션 맵 |
+| 4 | 섹션별 한국어 카피 작성 | 카피덱 |
+| 5 | 편집 가능한 Figma 프레임/레이어와 이미지 컷/생성·편집 프롬프트 기획 | Figma frame spec + 이미지 브리프 JSON/Markdown |
+| 6 | Figma file key/MCP 경로가 있으면 편집 가능한 Figma frame을 만들고, 없으면 HTML 대신 Figma-ready spec 저장 | Figma node ID 또는 `figma-frame-spec.json` |
+| 7 | `skills/image-maker` 규칙으로 요청 이미지 생성/편집, 시각 검증, 아카이브 | 생성 이미지 아카이브 + prompt JSON |
+| 8 | 상품정보제공고시, 배송, 교환, A/S, 주의사항, 플랫폼 체크 | 컴플라이언스 체크리스트 |
+| 9 | 제작용 산출물 패키징 | 파일, 생성 에셋, Figma 참조, 최종 구조화 답변 |
 
 </workflow>
 
@@ -116,6 +122,8 @@ metadata:
 
 - `detail-page-brief.md`: 타깃, 오퍼, 주장, 섹션 순서, 가정, 인용 출처
 - `copydeck.ko.md`: 최종 한국어 헤드라인, 본문, 라벨, CTA, FAQ
+- `figma-frame-spec.json`: 편집 가능한 Figma page/frame/layer 계획, 카테고리 템플릿 선택, 디자인 토큰, export 대상
+- Figma MCP write 도구와 file key가 있으면 생성된 Figma page/frame/node ID
 - `image-briefs.json`: 섹션별 이미지/컷 요구사항과 prompt-ready 가이드
 - `image-prompts/` 또는 `.hypercore/image-maker/<topic-slug>/prompt.json`: 이미지 생성 요청 시 검수된 English JSON prompt
 - 이미지 생성 요청 시 `.hypercore/image-maker/<topic-slug>/` 아래 보존된 `imageN.*` 파일

@@ -37,6 +37,8 @@ For each image, write:
 ## Generated image caution
 
 - Prefer no text inside generated images, or only very short Korean text after manual review.
+- Mark text risk high for any generated raster image that contains visible copy.
+- When Figma output is requested, keep exact Korean copy as an editable Figma text layer.
 - Product labels, certifications, reviews, and official marks should come from real assets.
 - If editing a real product photo, state what must not change: label, shape, color, scale, packaging.
 - For models, avoid implying real endorsement unless supplied.

@@ -88,7 +88,17 @@ if (!skill.includes('Final user-facing product-page copy') || !skill.includes('m
 }
 
 const skillKo = readFileSync(join(root, 'SKILL.ko.md'), 'utf8');
-for (const needle of ['한국형 상세페이지', '실제 이미지 생성', 'skills/image-maker/SKILL.md', 'rules/korean-product-detail-page-workflow.ko.md', 'platform-compliance.ko.md']) {
+for (const needle of [
+  '한국형 상세페이지',
+  '실제 이미지 생성',
+  'Figma MCP',
+  'figma-frame-spec.json',
+  'references/sangse-style-benchmark.ko.md',
+  'references/figma-mcp-output.ko.md',
+  'skills/image-maker/SKILL.md',
+  'rules/korean-product-detail-page-workflow.ko.md',
+  'platform-compliance.ko.md',
+]) {
   if (!skillKo.includes(needle)) failures.push(`SKILL.ko.md missing key Korean term/reference: ${needle}`);
 }
 
@@ -144,6 +154,6 @@ console.log('korean-product-detail-page skill validation passed');
 console.log(`SKILL.md lines: ${lineCount}`);
 console.log(`Research URLs: ${urlCount}`);
 if (missingOptionalImageGeneration.length) {
-  console.log(`Optional image-generation local folder not present; integration guide will use available runtime image generation path: ${missingOptionalImageGeneration.length} missing optional files`);
+  console.log(`Optional image-maker local folder not present; integration guide will use available runtime image generation path: ${missingOptionalImageGeneration.length} missing optional files`);
 }
 console.log('Korean .ko.md coverage: passed');
