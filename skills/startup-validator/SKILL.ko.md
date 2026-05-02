@@ -114,6 +114,19 @@ description: "[Hyper] 스타트업/제품 아이디어를 evidence ladder, confi
 
 </document_shape>
 
+<flow_tracking>
+
+실행 시작 시 `flow.json`을 작성하고 각 phase가 끝날 때 갱신합니다. 자세한 schema는 [references/flow-schema.md](references/flow-schema.md)를 봅니다.
+
+| Phase | Output file | Completion signal |
+|---|---|---|
+| `frame` | `thesis.md` | target customer, current alternative, hypotheses, evidence inventory가 존재 |
+| `score` | `thiel-scores.md` | 7Q raw score에 confidence와 score-change evidence가 포함 |
+| `pmf` | `pmf-forces.md` | JTBD/PMF forces와 customer-pull signals가 평가됨 |
+| `verdict` | `verdict.md` | verdict, next 7-day validation sprint, kill criteria가 명시됨 |
+
+</flow_tracking>
+
 <workflow>
 
 | Phase | Task | Output file |
