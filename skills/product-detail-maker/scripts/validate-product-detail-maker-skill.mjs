@@ -8,6 +8,13 @@ const required = [
   'SKILL.md',
   'rules/product-detail-maker-workflow.md',
   'rules/platform-compliance.md',
+  'references/research-findings.md',
+  'references/section-templates.md',
+  'references/image-direction.md',
+  'references/image-maker-integration.md',
+  'references/browser-link-research.md',
+  'references/sangse-style-benchmark.md',
+  'references/figma-mcp-output.md',
   'references/research-findings.ko.md',
   'references/section-templates.ko.md',
   'references/image-direction.ko.md',
@@ -55,15 +62,51 @@ const markdownFiles = [
   'SKILL.md',
   'rules/product-detail-maker-workflow.md',
   'rules/platform-compliance.md',
+  'references/research-findings.md',
+  'references/section-templates.md',
+  'references/image-direction.md',
+  'references/image-maker-integration.md',
+  'references/browser-link-research.md',
+  'references/sangse-style-benchmark.md',
+  'references/figma-mcp-output.md',
 ];
 for (const file of markdownFiles) {
   const koFile = file === 'SKILL.md' ? 'SKILL.ko.md' : file.replace(/\.md$/, '.ko.md');
   if (!existsSync(join(root, koFile))) failures.push(`Missing .ko.md counterpart for ${file}: ${koFile}`);
 }
 
+for (const file of koRequired) {
+  const englishFile = file === 'SKILL.ko.md' ? 'SKILL.md' : file.replace(/\.ko\.md$/, '.md');
+  if (!existsSync(join(root, englishFile))) failures.push(`Missing English counterpart for ${file}: ${englishFile}`);
+}
+
 for (const file of markdownFiles) {
   const content = readFileSync(join(root, file), 'utf8');
   if (/[가-힣]/.test(content)) failures.push(`Non-.ko.md file contains Hangul; keep English docs English: ${file}`);
+}
+
+for (const file of ['SKILL.md', 'SKILL.ko.md']) {
+  const content = readFileSync(join(root, file), 'utf8');
+  for (const tag of [
+    '<output_language>',
+    '</output_language>',
+    '<purpose>',
+    '</purpose>',
+    '<routing_rule>',
+    '</routing_rule>',
+    '<instruction_contract>',
+    '</instruction_contract>',
+    '<trigger_examples>',
+    '</trigger_examples>',
+    '<support_file_read_order>',
+    '</support_file_read_order>',
+    '<workflow>',
+    '</workflow>',
+    '<validation>',
+    '</validation>',
+  ]) {
+    if (!content.includes(tag)) failures.push(`${file} missing canonical contract tag: ${tag}`);
+  }
 }
 
 const positiveExamples = [...skill.matchAll(/^- "(.+)"/gm)].map((m) => m[1]);

@@ -9,6 +9,13 @@ metadata:
 
 @rules/product-detail-maker-workflow.md
 @rules/platform-compliance.md
+@references/research-findings.md
+@references/section-templates.md
+@references/image-direction.md
+@references/image-maker-integration.md
+@references/browser-link-research.md
+@references/sangse-style-benchmark.md
+@references/figma-mcp-output.md
 @references/research-findings.ko.md
 @references/section-templates.ko.md
 @references/image-direction.ko.md
@@ -43,6 +50,18 @@ Do not use this skill when:
 - the target is clearly an overseas marketplace-only page such as Amazon US, unless the user asks for a Korean-localized adaptation
 
 </routing_rule>
+
+<output_language>
+
+Final user-facing product-page copy, visible detail-page text, copydeck content, and normal report prose must be in Korean unless the user explicitly requests another output language. Internal operator instructions in this English file stay English. Image-model creative prompts stay English because `skills/image-maker` requires English JSON prompt values. Korean legal, platform, and commerce terms may remain in Korean where exact seller-facing wording matters.
+
+</output_language>
+
+<instruction_contract>
+
+Follow the production contract below as binding instructions. Preserve the Figma MCP-ready default, the no-default-HTML rule, Korean user-facing commerce output, browser-link research, image-maker integration, and the requirement that requested image work continues through actual raster generation or editing rather than stopping at briefs or downloaded source assets.
+
+</instruction_contract>
 
 <execution_contract>
 
@@ -91,14 +110,14 @@ Boundary example:
 <support_file_read_order>
 
 1. Read this `SKILL.md` to confirm routing and output scope.
-2. Read `references/research-findings.ko.md` for baseline Korean-source findings and source links.
-3. Read `references/sangse-style-benchmark.ko.md` when the user asks for Sang-se-like, template-like, or fast AI detail-page generation.
+2. Read `references/research-findings.md` for the English navigation map, then `references/research-findings.ko.md` for baseline Korean-source findings and source links.
+3. Read `references/sangse-style-benchmark.md` first, then `references/sangse-style-benchmark.ko.md` when the user asks for Sang-se-like, template-like, or fast AI detail-page generation.
 4. Read `rules/product-detail-maker-workflow.md` for the step-by-step production workflow.
-5. Read `references/browser-link-research.ko.md` when the user supplies URLs or existing product/reference pages.
-6. Read `references/section-templates.ko.md` when choosing category-specific product detail page structure.
-7. Read `references/figma-mcp-output.ko.md` when Figma, editable design, MCP output, or non-HTML production layout is requested.
-8. Read `references/image-direction.ko.md` when producing image/cut briefs.
-9. Read `references/image-maker-integration.ko.md` when the user wants actual generated/edited image files or prompt-ready JSON.
+5. Read `references/browser-link-research.md` first, then `references/browser-link-research.ko.md` when the user supplies URLs or existing product/reference pages.
+6. Read `references/section-templates.md` first, then `references/section-templates.ko.md` when choosing category-specific product detail page structure.
+7. Read `references/figma-mcp-output.md` first, then `references/figma-mcp-output.ko.md` when Figma, editable design, MCP output, or non-HTML production layout is requested.
+8. Read `references/image-direction.md` first, then `references/image-direction.ko.md` when producing image/cut briefs.
+9. Read `references/image-maker-integration.md` first, then `references/image-maker-integration.ko.md` when the user wants actual generated/edited image files or prompt-ready JSON.
 10. For real image creation, read `skills/image-maker/SKILL.md` plus the specific local support files named in the integration reference when present; if absent, use the available runtime image-generation path and continue through generation, validation, and archive.
 11. Read `rules/platform-compliance.md` before finalizing any SmartStore/Cafe24/Gmarket/Auction-oriented output.
 12. Use `scripts/validate-product-detail-maker-skill.mjs` after editing this skill.

@@ -44,6 +44,18 @@ metadata:
 
 </routing_rule>
 
+<output_language>
+
+최종 사용자-facing 상세페이지 카피, 화면에 보이는 텍스트, copydeck, 일반 보고 문장은 사용자가 다른 언어를 명시하지 않는 한 한국어로 작성한다. 이미지 모델에 전달하는 창작 프롬프트는 `skills/image-maker` 계약에 따라 English JSON 값을 사용하되, 실제 노출 한국어 문구는 별도 필드나 Figma editable text layer로 보존한다.
+
+</output_language>
+
+<instruction_contract>
+
+아래 제작 계약은 필수 지침이다. Figma MCP-ready 기본값, HTML 비기본 원칙, 한국어 커머스 산출물, browser-link research, image-maker 통합, 실제 래스터 생성/편집 요구사항을 약화하지 않는다. 사용자가 이미지를 요청하면 브리프나 원본 다운로드에서 멈추지 말고 생성/편집, 시각 검증, 아카이브까지 진행한다.
+
+</instruction_contract>
+
 <execution_contract>
 
 - 결과물을 단순 문서가 아니라 구매전환용 커머스 산출물로 취급한다.
