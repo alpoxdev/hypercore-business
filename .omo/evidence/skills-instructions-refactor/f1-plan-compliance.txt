@@ -1,0 +1,106 @@
+recommendation: APPROVE
+verdict: confirmed
+blockers: []
+
+originalIntent: F1 plan compliance audit for .omo/plans/skills-instructions-refactor.md.
+desiredOutcome: Verify tasks 1-8 are checked only after required evidence exists; compare each acceptance criterion against .omo/evidence/skills-instructions-refactor/; do not modify skills or plan; do not stage or commit.
+userOutcomeReview: PASS. The plan marks tasks 1-8 checked, the required F1 evidence files exist, and the evidence content supports the task acceptance criteria.
+
+scopeNotes:
+- Read local repo artifacts only: AGENTS.md, .omo/plans/skills-instructions-refactor.md, .omo/evidence/skills-instructions-refactor/*, skills/* files needed for read-only acceptance checks.
+- Did not read global/home skills/config, per repo AGENTS.md and user instruction.
+- Did not modify skills, plan, git index, commits, or global state.
+- Wrote only this file: .omo/evidence/skills-instructions-refactor/f1-plan-compliance.txt.
+- Applied anti-slop/programming review criteria directly from prompt context: no evidence-only tautology blocker found; F1 used artifact content checks, validator JSON parsing, and current file contract checks rather than filename presence alone.
+
+checkedArtifactPaths:
+- .omo/plans/skills-instructions-refactor.md
+- .omo/evidence/skills-instructions-refactor/validation-green.json
+- .omo/evidence/skills-instructions-refactor/scope-boundary.txt
+- .omo/evidence/skills-instructions-refactor/adversarial-classes.json
+- .omo/evidence/skills-instructions-refactor/regression-product-detail-and-scripts.txt
+- .omo/evidence/skills-instructions-refactor/task-1-validator-red.stdout
+- .omo/evidence/skills-instructions-refactor/task-2-genius-green.txt
+- .omo/evidence/skills-instructions-refactor/task-3-elon-green.txt
+- .omo/evidence/skills-instructions-refactor/task-4-startup-green.txt
+- .omo/evidence/skills-instructions-refactor/task-5-image-green.txt
+- .omo/evidence/skills-instructions-refactor/task-6-logo-green.txt
+- .omo/evidence/skills-instructions-refactor/task-7-product-validator.txt
+- .omo/evidence/skills-instructions-refactor/task-8-cleanup-receipt.txt
+- .omo/evidence/skills-instructions-refactor/validation-red.json
+- .omo/evidence/skills-instructions-refactor/task-1-red-schema.txt
+- .omo/evidence/skills-instructions-refactor/task-1-node-check.txt
+- .omo/evidence/skills-instructions-refactor/task-1-adversarial-classes.txt
+- .omo/evidence/skills-instructions-refactor/task-2-genius-red.txt
+- .omo/evidence/skills-instructions-refactor/task-2-validator-after-genius.stdout
+- .omo/evidence/skills-instructions-refactor/task-2-cleanup.txt
+- .omo/evidence/skills-instructions-refactor/task-3-elon-red.txt
+- .omo/evidence/skills-instructions-refactor/task-3-cleanup.txt
+- .omo/evidence/skills-instructions-refactor/task-4-startup-red.txt
+- .omo/evidence/skills-instructions-refactor/task-4-cleanup.txt
+- .omo/evidence/skills-instructions-refactor/task-5-image-red.txt
+- .omo/evidence/skills-instructions-refactor/task-5-cleanup.txt
+- .omo/evidence/skills-instructions-refactor/task-6-logo-red.txt
+- .omo/evidence/skills-instructions-refactor/task-6-cleanup.txt
+- .omo/evidence/skills-instructions-refactor/task-7-product-red.txt
+- .omo/evidence/skills-instructions-refactor/task-7-product-green.txt
+- .omo/evidence/skills-instructions-refactor/task-7-cleanup.txt
+- .omo/evidence/skills-instructions-refactor/task-8-validation-green-check.txt
+- .omo/evidence/skills-instructions-refactor/task-8-adversarial-check.txt
+
+requiredFileExistence:
+- PASS validation-green.json
+- PASS scope-boundary.txt
+- PASS adversarial-classes.json
+- PASS regression-product-detail-and-scripts.txt
+- PASS task-1-validator-red.stdout
+- PASS task-2-genius-green.txt
+- PASS task-3-elon-green.txt
+- PASS task-4-startup-green.txt
+- PASS task-5-image-green.txt
+- PASS task-6-logo-green.txt
+- PASS task-7-product-validator.txt
+- PASS task-8-cleanup-receipt.txt
+
+planCheckboxes:
+- PASS task 1 checked
+- PASS task 2 checked
+- PASS task 3 checked
+- PASS task 4 checked
+- PASS task 5 checked
+- PASS task 6 checked
+- PASS task 7 checked
+- PASS task 8 checked
+
+orderingEvidence:
+- PASS plan file mtime 2026-07-01T20:31:30.586Z is after task-8 cleanup evidence mtime 2026-07-01T19:34:22.303Z.
+- PASS task 2 RED mtime precedes GREEN mtime.
+- PASS task 3 RED mtime precedes GREEN mtime.
+- PASS task 4 RED mtime precedes GREEN mtime.
+- PASS task 5 RED mtime precedes GREEN mtime.
+- PASS task 6 RED mtime precedes GREEN mtime.
+- PASS task 7 RED mtime precedes GREEN mtime.
+
+taskAcceptanceReview:
+- PASS Task 1: skills/validate-skills.mjs exists; node --check evidence exists; task-1-validator-red.stdout records EXPECTED RED; validation-red.json has success=false, output_language missing diagnostic, and 6 script commands; adversarial-classes.json covers prompt-injection-source-boundary and dirty-worktree-scope.
+- PASS Task 2: task-2-genius-red.txt exists; task-2-genius-green.txt contains canonical tag and preserved output contract proof; current English and Korean SKILL files contain required tags; output data-surface terms are preserved; task-2-validator-after-genius.stdout reports no genius-thinking canonical misses; cleanup receipt exists.
+- PASS Task 3: task-3-elon-red.txt exists; task-3-elon-green.txt contains canonical tag and guardrail/output proof; current English and Korean SKILL files contain required tags; non-impersonation and .hypercore/elon-musk output terms are preserved; cleanup receipt exists.
+- PASS Task 4: task-4-startup-red.txt exists; task-4-startup-green.txt contains canonical tag and validation-contract proof; current English and Korean SKILL files contain required tags; evidence ladder, scoring, verdict, and output terms are preserved; cleanup receipt exists.
+- PASS Task 5: task-5-image-red.txt exists; task-5-image-green.txt contains canonical tag and media-contract proof; current English and Korean SKILL files contain required tags; gpt-image-2, JSON prompt, archive helper, preview, and prompt path terms are preserved; cleanup receipt exists.
+- PASS Task 6: task-6-logo-red.txt exists; task-6-logo-green.txt contains canonical tag and alpha-contract proof; current English and Korean SKILL files contain required tags; transparent PNG, native alpha, archive helper, RGBA fallback, and transparent pixel terms are preserved; cleanup receipt exists.
+- PASS Task 7: task-7-product-red.txt exists; task-7-product-green.txt contains canonical tag and bilingual-reference proof; current English and Korean SKILL files contain required tags; seven English references and seven Korean references exist; task-7-product-validator.txt reports product-detail validator pass and node --check exit 0; cleanup receipt exists.
+- PASS Task 8: validation-green.json has success=true and zero canonical/support/bilingual/line-budget failures; task-8-validation-green-check.txt reports PASS; regression-product-detail-and-scripts.txt reports product-detail validator pass and syntax aggregate exit 0; scope-boundary.txt reports PASS; task-8-adversarial-check.txt reports overall adversarial PASS; task-8-cleanup-receipt.txt reports no staged files.
+
+readOnlyVerificationCommandsRun:
+- rg -n "^- \\[[x ]\\] [1-8]\\." .omo/plans/skills-instructions-refactor.md
+- rg --files .omo/evidence/skills-instructions-refactor
+- node --check skills/validate-skills.mjs
+- node --check skills/product-detail-maker/scripts/validate-product-detail-maker-skill.mjs
+- git diff --name-only
+- git diff --cached --name-only
+- read-only Node audit: 109/109 checks passed
+
+exactEvidenceGaps:
+- none
+
+F1 APPROVE

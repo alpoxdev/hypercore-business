@@ -1,0 +1,26 @@
+{
+  "task": 3,
+  "skill": "elon-musk",
+  "classes": [
+    {
+      "id": "prompt-injection-source-boundary",
+      "status": "covered",
+      "note": "Skill keeps user/project instructions above public Musk examples, competitor conventions, and retrieved facts; current facts require citations or assumption labels; no support files were edited."
+    },
+    {
+      "id": "dirty-worktree-scope",
+      "status": "covered",
+      "note": "Only skills/elon-musk/SKILL.md, skills/elon-musk/SKILL.ko.md, and task-3 evidence files are intended writes; shared untracked validator/evidence from other tasks was not staged, reverted, or overwritten."
+    },
+    {
+      "id": "stale-state",
+      "status": "covered",
+      "note": "flow.json resume behavior and .hypercore/elon-musk/[topic-slug] output files were preserved; existing folders remain the source for run resumption."
+    },
+    {
+      "id": "misleading-success-output",
+      "status": "covered",
+      "note": "GREEN evidence checks both canonical tag presence/forbidden tag absence and preserved guardrail/output terms, instead of relying on prose success text alone."
+    }
+  ]
+}

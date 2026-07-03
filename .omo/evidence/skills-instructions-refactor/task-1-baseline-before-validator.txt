@@ -1,0 +1,6 @@
+skills/elon-musk/SKILL.md: missing <output_language>, </output_language>, <routing_rule>, </routing_rule>, <instruction_contract>, </instruction_contract>, <trigger_examples>, </trigger_examples>, <support_file_read_order>, </support_file_read_order>
+skills/genius-thinking/SKILL.md: missing <output_language>, </output_language>, <purpose>, </purpose>, <routing_rule>, </routing_rule>, <instruction_contract>, </instruction_contract>, <trigger_examples>, </trigger_examples>, <support_file_read_order>, </support_file_read_order>, <workflow>, </workflow>, <validation>, </validation>
+skills/image-maker/SKILL.md: missing <output_language>, </output_language>, <instruction_contract>, </instruction_contract>, <support_file_read_order>, </support_file_read_order>
+skills/logo-maker/SKILL.md: missing <output_language>, </output_language>, <instruction_contract>, </instruction_contract>, <support_file_read_order>, </support_file_read_order>
+skills/product-detail-maker/SKILL.md: missing <output_language>, </output_language>, <instruction_contract>, </instruction_contract>
+skills/startup-validator/SKILL.md: missing <output_language>, </output_language>, <routing_rule>, </routing_rule>, <instruction_contract>, </instruction_contract>, <trigger_examples>, </trigger_examples>, <support_file_read_order>, </support_file_read_order>

@@ -1,0 +1,1 @@
+{"missing":["<output_language>","<instruction_contract>","browser-link-research.md","figma-mcp-output.md","image-direction.md","image-maker-integration.md","research-findings.md","sangse-style-benchmark.md","section-templates.md"]}

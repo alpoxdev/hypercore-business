@@ -1,0 +1,5 @@
+scenario: syntax check for validator CLI
+invocation: node --check skills/validate-skills.mjs
+exit_code: 0
+binary_observable: exit_code == 0
+captured_artifact_path: .omo/evidence/skills-instructions-refactor/task-1-node-check.txt

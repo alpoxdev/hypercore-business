@@ -1,0 +1,79 @@
+{
+  "type": "DoneClaim",
+  "task": 7,
+  "skill": "product-detail-maker",
+  "status": "done",
+  "changedFiles": [
+    "skills/product-detail-maker/SKILL.md",
+    "skills/product-detail-maker/SKILL.ko.md",
+    "skills/product-detail-maker/references/browser-link-research.md",
+    "skills/product-detail-maker/references/figma-mcp-output.md",
+    "skills/product-detail-maker/references/image-direction.md",
+    "skills/product-detail-maker/references/image-maker-integration.md",
+    "skills/product-detail-maker/references/research-findings.md",
+    "skills/product-detail-maker/references/sangse-style-benchmark.md",
+    "skills/product-detail-maker/references/section-templates.md",
+    "skills/product-detail-maker/scripts/validate-product-detail-maker-skill.mjs"
+  ],
+  "notChanged": [
+    "other skill folders",
+    "skills/validate-skills.mjs",
+    ".omo/plans/skills-instructions-refactor.md",
+    "global/home files",
+    ".gitignore"
+  ],
+  "successCriteria": [
+    {
+      "scenario": "RED baseline before edit proves missing canonical output/instruction tags and English reference counterparts",
+      "invocation": "bash -lc 'mkdir -p .omo/evidence/skills-instructions-refactor; if node -e ... > .omo/evidence/skills-instructions-refactor/task-7-product-red.txt 2>&1; then echo \"FAIL unexpected pass\"; exit 1; else echo \"PASS expected red\"; fi'",
+      "binaryObservable": "wrapper command exited 0 after expected inner failure",
+      "artifact": ".omo/evidence/skills-instructions-refactor/task-7-product-red.txt"
+    },
+    {
+      "scenario": "canonical tags present in both product-detail SKILL files",
+      "invocation": "bash -lc 'node -e ... > .omo/evidence/skills-instructions-refactor/task-7-product-green.txt'",
+      "binaryObservable": "exit 0; artifact contains product-detail-maker canonical tags ok",
+      "artifact": ".omo/evidence/skills-instructions-refactor/task-7-product-green.txt"
+    },
+    {
+      "scenario": "seven bilingual reference pairs exist",
+      "invocation": "bash -lc 'node -e ... >> .omo/evidence/skills-instructions-refactor/task-7-product-green.txt'",
+      "binaryObservable": "exit 0; artifact contains product-detail bilingual references ok",
+      "artifact": ".omo/evidence/skills-instructions-refactor/task-7-product-green.txt"
+    },
+    {
+      "scenario": "product-detail validator preserves Korean content checks plus Figma/image-maker/browser-link regressions and new bilingual counterpart checks",
+      "invocation": "bash -lc 'node skills/product-detail-maker/scripts/validate-product-detail-maker-skill.mjs > .omo/evidence/skills-instructions-refactor/task-7-product-validator.txt 2>&1 && node -e ... >> .omo/evidence/skills-instructions-refactor/task-7-product-validator.txt'",
+      "binaryObservable": "exit 0; artifact contains product-detail-maker skill validation passed and PASS product-detail-maker",
+      "artifact": ".omo/evidence/skills-instructions-refactor/task-7-product-validator.txt"
+    },
+    {
+      "scenario": "validator script syntax check",
+      "invocation": "bash -lc 'node --check skills/product-detail-maker/scripts/validate-product-detail-maker-skill.mjs >> .omo/evidence/skills-instructions-refactor/task-7-product-validator.txt 2>&1'",
+      "binaryObservable": "exit 0; artifact contains node --check exit 0 marker",
+      "artifact": ".omo/evidence/skills-instructions-refactor/task-7-product-validator.txt"
+    },
+    {
+      "scenario": "adversarial review notes recorded",
+      "invocation": "manual evidence file written under task-7 scope",
+      "binaryObservable": "nonempty artifact verified with wc -c",
+      "artifact": ".omo/evidence/skills-instructions-refactor/task-7-adversarial-notes.txt"
+    },
+    {
+      "scenario": "cleanup and scope receipt",
+      "invocation": "bash -lc '{ echo \"$ git diff --name-only -- skills/product-detail-maker .omo/evidence/skills-instructions-refactor\"; git diff --name-only -- skills/product-detail-maker .omo/evidence/skills-instructions-refactor; echo \"$ git status --short -- skills/product-detail-maker .omo/evidence/skills-instructions-refactor\"; git status --short -- skills/product-detail-maker .omo/evidence/skills-instructions-refactor; } >> .omo/evidence/skills-instructions-refactor/task-7-cleanup.txt'",
+      "binaryObservable": "exit 0; artifact lists scoped modified and untracked task files",
+      "artifact": ".omo/evidence/skills-instructions-refactor/task-7-cleanup.txt"
+    }
+  ],
+  "adversarialClasses": [
+    "prompt-injection-source-boundary",
+    "dirty-worktree-scope",
+    "stale-state",
+    "misleading-success-output",
+    "Korean-content-regression"
+  ],
+  "evidenceRoot": ".omo/evidence/skills-instructions-refactor",
+  "staged": false,
+  "committed": false
+}

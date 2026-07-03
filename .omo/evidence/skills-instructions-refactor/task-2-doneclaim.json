@@ -1,0 +1,54 @@
+{
+  "type": "DoneClaim",
+  "task": "Task 2 - genius-thinking skill contract normalization",
+  "status": "done",
+  "changed_files": [
+    "skills/genius-thinking/SKILL.md",
+    "skills/genius-thinking/SKILL.ko.md"
+  ],
+  "evidence": [
+    {
+      "scenario": "RED before edit catches exact missing canonical tags",
+      "invocation": "bash -lc 'mkdir -p .omo/evidence/skills-instructions-refactor; if node -e ... > .omo/evidence/skills-instructions-refactor/task-2-genius-red.txt 2>&1; then ...; else ...; fi'",
+      "binary_observable": "exit_code=0; artifact contains missing <output_language>, <purpose>, <routing_rule>, <instruction_contract>, <trigger_examples>, <support_file_read_order>, <workflow>, and <validation> tags plus PASS expected missing tags",
+      "artifact": ".omo/evidence/skills-instructions-refactor/task-2-genius-red.txt"
+    },
+    {
+      "scenario": "GREEN canonical tags exist in English and Korean skill files",
+      "invocation": "bash -lc 'node -e ... > .omo/evidence/skills-instructions-refactor/task-2-genius-green.txt'",
+      "binary_observable": "exit_code=0; artifact contains genius-thinking canonical tags ok",
+      "artifact": ".omo/evidence/skills-instructions-refactor/task-2-genius-green.txt"
+    },
+    {
+      "scenario": "GREEN preserves ideation output data surface",
+      "invocation": "bash -lc 'node -e ... >> .omo/evidence/skills-instructions-refactor/task-2-genius-green.txt'",
+      "binary_observable": "exit_code=0; artifact contains genius-thinking preserved output contract and PASS genius-thinking",
+      "artifact": ".omo/evidence/skills-instructions-refactor/task-2-genius-green.txt"
+    },
+    {
+      "scenario": "Validator after genius-thinking has no canonical misses for genius-thinking",
+      "invocation": "bash -lc 'node skills/validate-skills.mjs --json > .omo/evidence/skills-instructions-refactor/task-2-validator-after-genius.stdout 2> .omo/evidence/skills-instructions-refactor/task-2-validator-after-genius.stderr || true; node -e ... >> .omo/evidence/skills-instructions-refactor/task-2-validator-after-genius.stdout'",
+      "binary_observable": "exit_code=0; artifact contains no genius-thinking canonical misses",
+      "artifact": ".omo/evidence/skills-instructions-refactor/task-2-validator-after-genius.stdout"
+    },
+    {
+      "scenario": "Cleanup receipt records scoped diff and adversarial notes",
+      "invocation": "bash -lc '{ echo ...; git diff --name-only -- skills/genius-thinking .omo/evidence/skills-instructions-refactor; git status --short -- skills/genius-thinking .omo/evidence/skills-instructions-refactor; } >> .omo/evidence/skills-instructions-refactor/task-2-cleanup.txt'",
+      "binary_observable": "exit_code=0; artifact lists only skills/genius-thinking/SKILL.md, skills/genius-thinking/SKILL.ko.md, and task-scoped evidence for this work; adversarial notes cover prompt-injection/source-boundary, dirty worktree/scope, stale state, and misleading success output",
+      "artifact": ".omo/evidence/skills-instructions-refactor/task-2-cleanup.txt"
+    }
+  ],
+  "preserved_contract": [
+    "differentiated ideation",
+    ".hypercore/genius-thinking/[topic-slug]",
+    "flow.json phase tracking and resume behavior",
+    "framework selection",
+    "10+ ideas",
+    "Do not present near-duplicate ideas"
+  ],
+  "scope_notes": [
+    "No commit or staging performed.",
+    "No other skill folder intentionally edited by this task.",
+    "The validator command may report unrelated in-progress skill folders, but the filtered genius-thinking canonical check passed."
+  ]
+}

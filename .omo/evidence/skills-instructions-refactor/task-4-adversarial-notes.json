@@ -1,0 +1,33 @@
+{
+  "task": 4,
+  "skill": "startup-validator",
+  "status": "covered",
+  "classes": [
+    {
+      "id": "prompt-injection-source-boundary",
+      "status": "covered",
+      "note": "Task 4 edits were limited to canonical instruction structure in SKILL.md and SKILL.ko.md. Support files, external sources, global/home files, and generated startup outputs were not edited or treated as authority."
+    },
+    {
+      "id": "dirty-worktree-scope",
+      "status": "covered",
+      "note": "Initial status showed unrelated untracked .omo/ and skills/validate-skills.mjs. This task touched only skills/startup-validator/SKILL.md, skills/startup-validator/SKILL.ko.md, and task-4-* evidence files."
+    },
+    {
+      "id": "stale-state",
+      "status": "covered",
+      "note": "Task 4 plan section and current startup-validator files were read immediately before RED capture and editing. RED was captured before modifying the two owned skill files."
+    },
+    {
+      "id": "misleading-success-output",
+      "status": "covered",
+      "note": "GREEN was not inferred from command exit alone. The recorded checks assert exact canonical tags, absence of <when_to_use>, and preservation of evidence ladder, confidence-adjusted verdict, output files, and kill criteria."
+    }
+  ],
+  "evidence": {
+    "red": ".omo/evidence/skills-instructions-refactor/task-4-startup-red.txt",
+    "green": ".omo/evidence/skills-instructions-refactor/task-4-startup-green.txt",
+    "scenarioGreen": ".omo/evidence/skills-instructions-refactor/task-4-startup-scenario-green.txt",
+    "cleanup": ".omo/evidence/skills-instructions-refactor/task-4-cleanup.txt"
+  }
+}

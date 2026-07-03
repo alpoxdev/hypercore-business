@@ -1,0 +1,3 @@
+logo-maker canonical tags ok
+logo-maker preserved alpha contract
+PASS logo-maker

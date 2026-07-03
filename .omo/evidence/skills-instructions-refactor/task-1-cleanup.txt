@@ -1,0 +1,33 @@
+cleanup: no long-running process, no tmux/browser/server started; no commit/stage
+note: .omo/ remains visible as untracked evidence/state and is intentional.
+
+scenario: Task 1 cleanup and dirty worktree scope status
+captured_artifact_path: .omo/evidence/skills-instructions-refactor/task-1-cleanup.txt
+
+$ git status --short --untracked-files=all
+?? .omo/boulder.json
+?? .omo/drafts/skills-instructions-refactor.md
+?? .omo/evidence/skills-instructions-refactor-gate-review.md
+?? .omo/evidence/skills-instructions-refactor/adversarial-classes.json
+?? .omo/evidence/skills-instructions-refactor/task-1-adversarial-classes.txt
+?? .omo/evidence/skills-instructions-refactor/task-1-baseline-before-validator.txt
+?? .omo/evidence/skills-instructions-refactor/task-1-cleanup.txt
+?? .omo/evidence/skills-instructions-refactor/task-1-done-claim.json
+?? .omo/evidence/skills-instructions-refactor/task-1-node-check.txt
+?? .omo/evidence/skills-instructions-refactor/task-1-red-schema.txt
+?? .omo/evidence/skills-instructions-refactor/task-1-review-rerun.stderr
+?? .omo/evidence/skills-instructions-refactor/task-1-review-rerun.stdout
+?? .omo/evidence/skills-instructions-refactor/task-1-validator-red.stderr
+?? .omo/evidence/skills-instructions-refactor/task-1-validator-red.stdout
+?? .omo/evidence/skills-instructions-refactor/validation-red.json
+?? .omo/plans/skills-instructions-refactor.md
+?? .omo/start-work/ledger.jsonl
+?? .omo/ulw-loop/019f1ef1-a778-7050-8fda-4740917f5eb6/brief.md
+?? .omo/ulw-loop/019f1ef1-a778-7050-8fda-4740917f5eb6/goals.json
+?? .omo/ulw-loop/019f1ef1-a778-7050-8fda-4740917f5eb6/ledger.jsonl
+?? skills/validate-skills.mjs
+
+$ git diff --name-only
+
+$ git diff -- .gitignore
+assertion: git diff -- .gitignore produced no output after removing only the .omo/ line.

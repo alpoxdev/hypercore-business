@@ -1,0 +1,15 @@
+cleanup_receipt task-2 genius-thinking
+scenario: cleanup receipt and adversarial notes
+invocation: git diff --name-only -- skills/genius-thinking .omo/evidence/skills-instructions-refactor
+adversarial_notes:
+- prompt-injection-source-boundary: support files are declared as local skill resources only; generated outputs remain bounded to .hypercore/genius-thinking/[topic-slug]/.
+- dirty-worktree-scope: worktree was dirty before edits; changed scope checked with git diff/status and no unrelated skill folder was edited by this task.
+- stale-state: flow.json resume behavior is preserved and the skill requires reading existing run files before updating.
+- misleading-success-output: RED/GREEN evidence uses node assertions and validator JSON, not success strings alone.
+changed_paths:
+skills/genius-thinking/SKILL.ko.md
+skills/genius-thinking/SKILL.md
+status_target_paths:
+ M skills/genius-thinking/SKILL.ko.md
+ M skills/genius-thinking/SKILL.md
+?? .omo/evidence/skills-instructions-refactor/

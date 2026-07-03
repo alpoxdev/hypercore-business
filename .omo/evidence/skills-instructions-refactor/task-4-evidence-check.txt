@@ -1,0 +1,8 @@
+nonempty .omo/evidence/skills-instructions-refactor/task-4-startup-red.txt
+nonempty .omo/evidence/skills-instructions-refactor/task-4-startup-green.txt
+nonempty .omo/evidence/skills-instructions-refactor/task-4-startup-scenario-green.txt
+nonempty .omo/evidence/skills-instructions-refactor/task-4-cleanup.txt
+nonempty .omo/evidence/skills-instructions-refactor/task-4-adversarial-notes.json
+nonempty .omo/evidence/skills-instructions-refactor/task-4-done-claim.json
+nonempty .omo/evidence/skills-instructions-refactor/task-4-evidence-check.txt
+json and adversarial notes ok

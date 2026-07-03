@@ -1,0 +1,13 @@
+Surface: parsed validator JSON contract
+Invocation: node skills/validate-skills.mjs --json > .omo/evidence/skills-instructions-refactor/validation-green.stdout 2> .omo/evidence/skills-instructions-refactor/validation-green.stderr
+Invocation: node parser persisted stdout JSON to .omo/evidence/skills-instructions-refactor/validation-green.json
+Validation JSON equals stdout JSON: true
+Verdict: PASS
+{
+  "success": true,
+  "missingCanonicalTags": 0,
+  "supportLinkFindings": 0,
+  "bilingualPairErrors": 0,
+  "scriptCommandFindings": 0,
+  "lineBudgetViolations": 0
+}

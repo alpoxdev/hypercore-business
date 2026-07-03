@@ -1,0 +1,2 @@
+{"file":"skills/genius-thinking/SKILL.md","missing":["<output_language>","</output_language>","<purpose>","</purpose>","<routing_rule>","</routing_rule>","<instruction_contract>","</instruction_contract>","<trigger_examples>","</trigger_examples>","<support_file_read_order>","</support_file_read_order>","<workflow>","</workflow>","<validation>","</validation>"]}
+PASS expected missing tags

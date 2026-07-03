@@ -1,0 +1,2 @@
+{"file":"skills/elon-musk/SKILL.md","lines":193,"hasRunContract":true,"hasWhenToUse":true,"hasInstructionContract":false,"hasRoutingRule":false,"hasOutputLanguage":false}
+{"file":"skills/elon-musk/SKILL.ko.md","lines":180,"hasRunContract":true,"hasWhenToUse":true,"hasInstructionContract":false,"hasRoutingRule":false,"hasOutputLanguage":false}

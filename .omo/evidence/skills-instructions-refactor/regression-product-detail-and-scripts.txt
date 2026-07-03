@@ -1,0 +1,20 @@
+Surface: CLI regression and Node syntax checks
+Invocation: node skills/product-detail-maker/scripts/validate-product-detail-maker-skill.mjs
+product-detail-maker skill validation passed
+SKILL.md lines: 178
+Research URLs: 20
+Korean .ko.md coverage: passed
+Exit: 0
+
+Invocation: find skills -name '*.mjs' -print | sort; node --check <each>
+Invocation: node --check skills/image-maker/scripts/archive-generated-images.mjs
+Exit: 0
+Invocation: node --check skills/logo-maker/scripts/archive-logo-assets.mjs
+Exit: 0
+Invocation: node --check skills/logo-maker/scripts/render-simple-logo-rgba.mjs
+Exit: 0
+Invocation: node --check skills/product-detail-maker/scripts/validate-product-detail-maker-skill.mjs
+Exit: 0
+Invocation: node --check skills/validate-skills.mjs
+Exit: 0
+Syntax aggregate exit: 0

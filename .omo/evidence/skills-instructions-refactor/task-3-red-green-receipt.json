@@ -1,0 +1,21 @@
+{
+  "task": 3,
+  "artifacts": [
+    {
+      "file": ".omo/evidence/skills-instructions-refactor/task-3-elon-red.txt",
+      "bytes": 829
+    },
+    {
+      "file": ".omo/evidence/skills-instructions-refactor/task-3-elon-green.txt",
+      "bytes": 28
+    },
+    {
+      "file": ".omo/evidence/skills-instructions-refactor/task-3-shape-before.txt",
+      "bytes": 345
+    },
+    {
+      "file": ".omo/evidence/skills-instructions-refactor/task-3-adversarial-notes.json",
+      "bytes": 1140
+    }
+  ]
+}

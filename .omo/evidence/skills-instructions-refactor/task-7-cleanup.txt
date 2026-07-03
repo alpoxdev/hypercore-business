@@ -1,0 +1,32 @@
+$ git diff --name-only -- skills/product-detail-maker .omo/evidence/skills-instructions-refactor
+skills/product-detail-maker/SKILL.ko.md
+skills/product-detail-maker/SKILL.md
+skills/product-detail-maker/scripts/validate-product-detail-maker-skill.mjs
+$ git status --short -- skills/product-detail-maker .omo/evidence/skills-instructions-refactor
+ M skills/product-detail-maker/SKILL.ko.md
+ M skills/product-detail-maker/SKILL.md
+ M skills/product-detail-maker/scripts/validate-product-detail-maker-skill.mjs
+?? .omo/evidence/skills-instructions-refactor/
+?? skills/product-detail-maker/references/browser-link-research.md
+?? skills/product-detail-maker/references/figma-mcp-output.md
+?? skills/product-detail-maker/references/image-direction.md
+?? skills/product-detail-maker/references/image-maker-integration.md
+?? skills/product-detail-maker/references/research-findings.md
+?? skills/product-detail-maker/references/sangse-style-benchmark.md
+?? skills/product-detail-maker/references/section-templates.md
+$ git diff --name-only -- skills/product-detail-maker .omo/evidence/skills-instructions-refactor
+skills/product-detail-maker/SKILL.ko.md
+skills/product-detail-maker/SKILL.md
+skills/product-detail-maker/scripts/validate-product-detail-maker-skill.mjs
+$ git status --short -- skills/product-detail-maker .omo/evidence/skills-instructions-refactor
+ M skills/product-detail-maker/SKILL.ko.md
+ M skills/product-detail-maker/SKILL.md
+ M skills/product-detail-maker/scripts/validate-product-detail-maker-skill.mjs
+?? .omo/evidence/skills-instructions-refactor/
+?? skills/product-detail-maker/references/browser-link-research.md
+?? skills/product-detail-maker/references/figma-mcp-output.md
+?? skills/product-detail-maker/references/image-direction.md
+?? skills/product-detail-maker/references/image-maker-integration.md
+?? skills/product-detail-maker/references/research-findings.md
+?? skills/product-detail-maker/references/sangse-style-benchmark.md
+?? skills/product-detail-maker/references/section-templates.md

@@ -1,0 +1,3 @@
+genius-thinking canonical tags ok
+genius-thinking preserved output contract
+PASS genius-thinking

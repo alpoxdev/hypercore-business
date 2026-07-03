@@ -1,0 +1,2 @@
+product-detail-maker canonical tags ok
+product-detail bilingual references ok

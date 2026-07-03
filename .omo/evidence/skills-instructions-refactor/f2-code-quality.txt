@@ -1,0 +1,59 @@
+F2 APPROVE
+
+# F2 Code Quality Review
+
+Scope:
+- Repository: /Users/alpox/Desktop/dev/kood/hypercore-business
+- Reviewed validator/scripts and instruction diffs for idioms, dead checks, suppressed failures, and weakened validation.
+- Write constraint honored: this report is the only file written.
+- No staging or commit performed.
+
+Skill-perspective check:
+- `remove-ai-slops` and `programming` skill files were not loaded because repo AGENTS.md and the user request prohibit reading global/home skills/config.
+- Applied the documented criteria from the prompt/context instead.
+- Result: no violations found. No deletion-only tests, tautological tests, implementation-mirroring tests, untyped escape hatches, needless abstraction, brittle prompt tests, or unnecessary production parsing/normalization were identified in the reviewed diff.
+
+Commands and evidence:
+- `node --check skills/validate-skills.mjs`: passed with no output.
+- `git diff -- skills/validate-skills.mjs skills/product-detail-maker/scripts/validate-product-detail-maker-skill.mjs`: inspected. Normal `git diff` shows only `skills/product-detail-maker/scripts/validate-product-detail-maker-skill.mjs` because `skills/validate-skills.mjs` is currently untracked.
+- `git diff --no-index /dev/null skills/validate-skills.mjs`: inspected the untracked top-level validator as a new-file diff.
+- `node --check skills/product-detail-maker/scripts/validate-product-detail-maker-skill.mjs`: passed with no output.
+- `node skills/product-detail-maker/scripts/validate-product-detail-maker-skill.mjs`: passed; output reported product-detail-maker validation passed, `SKILL.md` lines 178, research URLs 20, Korean coverage passed.
+- `git diff --check`: passed with no output.
+- Read-only mirror of `skills/validate-skills.mjs` structural checks: 6 canonical skill files, 0 missing tags, 0 bilingual errors, 0 line violations, 0 missing scripts, 65 support references, 0 missing support links.
+- Newly referenced product-detail support files and other support-file additions were checked for existence; no missing paths were found.
+
+Changed/untracked files inspected:
+- `skills/validate-skills.mjs` (untracked, inspected via no-index diff and numbered source)
+- `skills/product-detail-maker/scripts/validate-product-detail-maker-skill.mjs`
+- `skills/elon-musk/SKILL.md`, `skills/elon-musk/SKILL.ko.md`
+- `skills/genius-thinking/SKILL.md`, `skills/genius-thinking/SKILL.ko.md`
+- `skills/image-maker/SKILL.md`, `skills/image-maker/SKILL.ko.md`
+- `skills/logo-maker/SKILL.md`, `skills/logo-maker/SKILL.ko.md`
+- `skills/product-detail-maker/SKILL.md`, `skills/product-detail-maker/SKILL.ko.md`
+- `skills/startup-validator/SKILL.md`, `skills/startup-validator/SKILL.ko.md`
+- Untracked English product-detail reference maps under `skills/product-detail-maker/references/*.md`
+
+Review notes:
+- `skills/validate-skills.mjs` is intentionally structural: it validates canonical tags, support references, bilingual counterparts, line budgets, and script existence, then exits nonzero on validation failure. The script command list is explicitly reported as a regression surface and is not presented as executed validation.
+- The top-level validator writes evidence when executed, so I did not run its body under the user's single-file write constraint. I used `node --check`, source inspection, no-index diff inspection, and a read-only structural mirror instead.
+- `skills/product-detail-maker/scripts/validate-product-detail-maker-skill.mjs` strengthens validation by requiring English reference counterparts, checking Korean-to-English counterpart coverage, enforcing canonical tags on both SKILL files, and retaining existing failure accumulation plus nonzero exit behavior.
+- Instruction diffs add canonical sections, output-language contracts, support-file read order, and validation wrappers without removing existing validation obligations. The product-detail-maker changes preserve the Figma/MCP default, no-default-HTML rule, Korean commerce output, browser-link research, image-maker integration, and actual raster generation/editing requirements.
+
+Findings by severity:
+
+CRITICAL:
+- None.
+
+HIGH:
+- None.
+
+MEDIUM:
+- None.
+
+LOW:
+- None.
+
+Code quality status: CLEAR
+Recommendation: APPROVE
+Blockers: []

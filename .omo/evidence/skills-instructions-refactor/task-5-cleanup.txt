@@ -1,0 +1,44 @@
+cleanup_receipt
+2026년  7월  1일 수요일 19시 20분 35초 UTC
+$ git diff --name-only -- skills/image-maker .omo/evidence/skills-instructions-refactor
+skills/image-maker/SKILL.ko.md
+skills/image-maker/SKILL.md
+$ git status --short -- skills/image-maker/SKILL.md skills/image-maker/SKILL.ko.md .omo/evidence/skills-instructions-refactor/task-5-image-red.txt .omo/evidence/skills-instructions-refactor/task-5-image-green.txt .omo/evidence/skills-instructions-refactor/task-5-validator-after-image.stdout .omo/evidence/skills-instructions-refactor/task-5-validator-after-image.stderr .omo/evidence/skills-instructions-refactor/task-5-validator-image-scope.txt .omo/evidence/skills-instructions-refactor/task-5-adversarial-notes.json .omo/evidence/skills-instructions-refactor/task-5-cleanup.txt
+ M skills/image-maker/SKILL.ko.md
+ M skills/image-maker/SKILL.md
+?? .omo/evidence/skills-instructions-refactor/task-5-adversarial-notes.json
+?? .omo/evidence/skills-instructions-refactor/task-5-cleanup.txt
+?? .omo/evidence/skills-instructions-refactor/task-5-image-green.txt
+?? .omo/evidence/skills-instructions-refactor/task-5-image-red.txt
+?? .omo/evidence/skills-instructions-refactor/task-5-validator-after-image.stderr
+?? .omo/evidence/skills-instructions-refactor/task-5-validator-after-image.stdout
+?? .omo/evidence/skills-instructions-refactor/task-5-validator-image-scope.txt
+
+evidence_fix_cleanup_receipt
+timestamp_utc: 2026-07-01T19:25:55Z
+command: node skills/validate-skills.mjs --json
+source_json: .omo/evidence/skills-instructions-refactor/validation-green.json
+status: image-maker canonical tag findings 0; support-link findings 0; line-budget findings 0
+skill_edits_this_pass: none
+commit_or_stage_this_pass: none
+runtime_process_this_pass: none
+changed_files_this_pass:
+- .omo/evidence/skills-instructions-refactor/task-5-validator-image-scope.txt
+- .omo/evidence/skills-instructions-refactor/task-5-done-claim.json
+- .omo/evidence/skills-instructions-refactor/task-5-cleanup.txt
+cleanup_receipt_final
+2026년  7월  1일 수요일 19시 21분 39초 UTC
+$ git diff --name-only -- skills/image-maker .omo/evidence/skills-instructions-refactor
+skills/image-maker/SKILL.ko.md
+skills/image-maker/SKILL.md
+$ git status --short -- skills/image-maker/SKILL.md skills/image-maker/SKILL.ko.md .omo/evidence/skills-instructions-refactor/task-5-image-red.txt .omo/evidence/skills-instructions-refactor/task-5-image-green.txt .omo/evidence/skills-instructions-refactor/task-5-validator-after-image.stdout .omo/evidence/skills-instructions-refactor/task-5-validator-after-image.stderr .omo/evidence/skills-instructions-refactor/task-5-validator-image-scope.txt .omo/evidence/skills-instructions-refactor/task-5-adversarial-notes.json .omo/evidence/skills-instructions-refactor/task-5-cleanup.txt .omo/evidence/skills-instructions-refactor/task-5-done-claim.json
+ M skills/image-maker/SKILL.ko.md
+ M skills/image-maker/SKILL.md
+?? .omo/evidence/skills-instructions-refactor/task-5-adversarial-notes.json
+?? .omo/evidence/skills-instructions-refactor/task-5-cleanup.txt
+?? .omo/evidence/skills-instructions-refactor/task-5-done-claim.json
+?? .omo/evidence/skills-instructions-refactor/task-5-image-green.txt
+?? .omo/evidence/skills-instructions-refactor/task-5-image-red.txt
+?? .omo/evidence/skills-instructions-refactor/task-5-validator-after-image.stderr
+?? .omo/evidence/skills-instructions-refactor/task-5-validator-after-image.stdout
+?? .omo/evidence/skills-instructions-refactor/task-5-validator-image-scope.txt
