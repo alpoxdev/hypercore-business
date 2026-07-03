@@ -13,22 +13,56 @@ description: "[Hyper] Generate and prioritize differentiated ideas for stuck pro
 
 > Combine a small number of validated innovation frameworks to generate diverse options and rank them with explicit reasoning. Organize results as a multi-file folder for future reference.
 
-## When to use
+<output_language>
+Default to the user's requested language. If no language is specified, write user-facing outputs in English while preserving machine-readable filenames, JSON keys, phase names, and paths exactly as documented.
+</output_language>
 
-### Positive triggers
+<purpose>
+Generate and prioritize differentiated ideas for stuck product, strategy, or innovation problems when ordinary brainstorming would produce shallow or interchangeable options.
+</purpose>
 
-- `Generate differentiated AI education ideas for working professionals.`
-- `Rethink customer acquisition for a startup that keeps repeating generic SaaS tactics.`
-- `Find bold product directions for a healthcare app that looks interchangeable with competitors.`
+<routing_rule>
+Use this skill when the user needs broad, differentiated ideation plus prioritization for a product, strategy, market, or innovation challenge. Do not use it for simple summarization, random idea lists without ranking, final decision review among already-strong options, or implementation planning after the idea has already been chosen.
+</routing_rule>
 
-### Out of scope
+<instruction_contract>
+| Field | Contract |
+|---|---|
+| Intent | Turn a stuck or generic opportunity into a diverse, ranked set of ideas. |
+| Scope | Reframe the challenge, select 2-3 fitting innovation frameworks, generate 10+ ideas, and prioritize the strongest options. |
+| Authority | Create or update only the run folder under `.hypercore/genius-thinking/[topic-slug]/`; do not modify unrelated project files. |
+| Evidence | Separate observed evidence, user-provided facts, and inference in the analysis and prioritization. |
+| Tools | Read the required support files in the order below; use parallel ideation only when it materially improves diversity. |
+| Loop | Track phase progress in `flow.json`, resume from the last incomplete phase, and do not restart completed phases. |
+| Output | Save `frameworks.md`, `analysis.md`, `ideas.md`, `priorities.md`, and completed `flow.json` under `.hypercore/genius-thinking/[topic-slug]/`. |
+| Verification | Check framework fit, idea diversity, non-duplication, evidence-backed ranking, and next cheap tests before finishing. |
+| Stop condition | Stop when all output files exist, `flow.json` is completed, and the prioritized idea set is ready for user review. |
+</instruction_contract>
 
-- `Summarize these existing product ideas without adding new ones.`
-- `Give me ten random ideas with no prioritization or rationale.`
+<trigger_examples>
 
-### Boundary case
+| Type | Example | Expected routing |
+|---|---|---|
+| Positive | `Generate differentiated AI education ideas for working professionals.` | Trigger this skill. |
+| Positive | `Rethink customer acquisition for a startup that keeps repeating generic SaaS tactics.` | Trigger this skill. |
+| Positive | `Find bold product directions for a healthcare app that looks interchangeable with competitors.` | Trigger this skill. |
+| Negative | `Summarize these existing product ideas without adding new ones.` | Do not trigger; summarize instead. |
+| Negative | `Give me ten random ideas with no prioritization or rationale.` | Do not trigger unless prioritization and reasoning are accepted. |
+| Boundary | `We already have three strong options and only need a final decision.` | Use decision review unless the real problem is weak idea generation or reframing. |
 
-- `We already have three strong options and only need a final decision.` Use a decision review unless the real problem is weak idea generation or reframing.
+</trigger_examples>
+
+<support_file_read_order>
+
+1. Read `rules/execution-rules.md` before creating or updating the run folder so side effects stay limited to the documented output path.
+2. Read `rules/output-discipline.md` before drafting outputs so the report remains concrete, structured, and evidence-aware.
+3. Read `references/formula-guide.md` when selecting frameworks and checking idea diversity.
+4. Read `references/output-template.md` before writing `frameworks.md`, `analysis.md`, `ideas.md`, or `priorities.md`.
+5. Read `references/flow-schema.md` before creating, updating, or resuming from `flow.json`.
+
+</support_file_read_order>
+
+<workflow>
 
 ## Required inputs
 
@@ -113,7 +147,9 @@ Parallel ideation is optional. Use it only when it materially improves coverage.
 
 Use the full report and idea format in [references/output-template.md](references/output-template.md).
 
-## Validation
+</workflow>
+
+<validation>
 
 - Do not force hard character quotas.
 - Do not dump framework trivia that does not change the answer.
@@ -121,3 +157,5 @@ Use the full report and idea format in [references/output-template.md](reference
 - Do not prioritize ideas without naming the assumption and next cheap test.
 - All output files must be saved under `.hypercore/genius-thinking/[topic-slug]/`.
 - `flow.json` status must be set to `completed`.
+
+</validation>

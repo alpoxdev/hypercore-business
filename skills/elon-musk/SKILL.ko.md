@@ -14,6 +14,12 @@ description: "[Hyper] 일론 머스크 역할극이 아니라 공개적으로 �
 
 > 제1원칙으로 문제를 다시 짓습니다. 이 스킬은 일론 머스크를 흉내 내는 스킬이 아니라, 공개적으로 알려진 사고 프레임워크를 작업 도구로 적용하는 스킬입니다.
 
+<output_language>
+
+사용자가 별도로 요청하지 않으면 최종 답변과 생성 리포트 파일은 사용자의 언어로 작성합니다.
+
+</output_language>
+
 <purpose>
 
 - 진짜 제약과 복사된 관행, 검증되지 않은 믿음을 분리합니다.
@@ -22,7 +28,7 @@ description: "[Hyper] 일론 머스크 역할극이 아니라 공개적으로 �
 
 </purpose>
 
-<run_contract>
+<instruction_contract>
 
 - Intent: 구체적인 의사결정을 기본 원리에서 해체하고 decision-grade 리포트를 만듭니다.
 - Scope: `.hypercore/elon-musk/[topic-slug]/flow.json`, `research.md`, `assumptions.md`, `redesign.md`, `execution.md`를 책임집니다.
@@ -33,9 +39,9 @@ description: "[Hyper] 일론 머스크 역할극이 아니라 공개적으로 �
 - Verification: 완료 전 [rules/validation.md](rules/validation.md)의 checklist를 실행합니다.
 - Stop condition: 모든 파일이 존재하고 `flow.json`이 `completed`이며 남은 unknown이 테스트나 source question으로 전환되면 종료합니다.
 
-</run_contract>
+</instruction_contract>
 
-<when_to_use>
+<routing_rule>
 
 사용하세요:
 
@@ -56,6 +62,10 @@ description: "[Hyper] 일론 머스크 역할극이 아니라 공개적으로 �
 - 스타트업 점수화와 준비도 평가는 `startup-validator`.
 - 제약 분석 없는 열린 아이디어 발산은 `genius-thinking`.
 - 자료 조사와 비교 분석이 주목적이면 `research`.
+
+</routing_rule>
+
+<trigger_examples>
 
 긍정 예시:
 
@@ -79,7 +89,18 @@ React hook 버그를 고쳐줘
 # 가정 해체를 명시하지 않았다면 startup-validator로 라우팅합니다.
 ```
 
-</when_to_use>
+</trigger_examples>
+
+<support_file_read_order>
+
+1. 다중 파일 실행을 시작하거나 재개하기 전에 [rules/execution.md](rules/execution.md)를 읽습니다.
+2. 가정 분류 또는 The Algorithm 적용 전에 [references/frameworks.md](references/frameworks.md)를 읽습니다.
+3. 돌파 옵션 생성 전에 [rules/idea-generation.md](rules/idea-generation.md)를 읽습니다.
+4. `redesign.md`와 `execution.md` 작성 전에 [rules/report-synthesis.md](rules/report-synthesis.md)를 읽습니다.
+5. `flow.json` 생성 또는 갱신 전에 [references/flow-schema.md](references/flow-schema.md)를 읽습니다.
+6. 완료를 주장하기 전에 [rules/validation.md](rules/validation.md)를 읽습니다.
+
+</support_file_read_order>
 
 <input_check>
 

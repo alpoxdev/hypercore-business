@@ -14,6 +14,12 @@ metadata:
 
 # Image Maker
 
+<output_language>
+
+계획 메모, 확인 질문, 최종 보고는 사용자의 언어로 답한다. 이미지 모델에 전달되는 JSON 프롬프트 값은 모두 영어로 유지하되, 사용자가 요청한 정확한 표시 문구는 `image_prompt.text.verbatim` 안에 원문 그대로 보존한다.
+
+</output_language>
+
 <purpose>
 
 실제 HyperB 맥락에 맞게 촬영되었거나, 디자인되었거나, 의도적으로 일러스트레이션된 것처럼 보이는 상황 맞춤형 비트맵 이미지를 만든다. 이 스킬은 모호한 시각 요청을 리서치 기반 이미지 브리프로 바꾸고, 이를 영어 JSON 프롬프트로 변환한 뒤, 프롬프트를 검수하고, `gpt-image-2`로 생성 또는 편집하며, 프로젝트에 사용하기 전에 결과물을 검증한다.
@@ -41,6 +47,33 @@ metadata:
 - 이미지 생성 산출물 없이 일반 웹 리서치만 필요한 경우
 
 </routing_rule>
+
+<instruction_contract>
+
+| Field | Contract |
+|---|---|
+| Intent | 검수된 영어 JSON 프롬프트와 `gpt-image-2` 생성/편집 경로를 통해 믿을 만하고 맥락 맞춤형인 래스터 이미지 에셋을 만든다. |
+| Scope | HyperB 이미지 에셋을 위한 래스터 이미지 생성, 이미지 편집, reference-guided generation, variant, archive 생성, local preview를 다룬다. 로고, SVG/vector/UI-code 수정, 프롬프트 작성만 하는 작업, archive와 preview 규율이 없는 일반 이미지 생성은 제외한다. |
+| Authority | 사용자 요구사항 해석 후에는 검수된 JSON 프롬프트를 단일 진실 공급원으로 삼는다. 사용자 지시는 요구사항을 바꿀 수 있지만 `gpt-image-2`, archive, preview, validation 요구사항을 조용히 우회하지 않는다. |
+| Evidence | 검수된 prompt, 생성 이미지 사본, helper output, archive listing, preview path, 알 수 있는 model/quality/size, 시각 검수 메모, 리서치가 필요했던 경우 source를 보존한다. |
+| Tools | `gpt-image-2`에는 Codex 이미지 생성 기능 또는 프로젝트 승인 imagegen 경로를 사용한다. 로컬 생성 파일에는 `scripts/archive-generated-images.mjs`를 사용한다. 사용자가 결과 확인을 요청한 경우에만 helper를 통해 Chrome preview를 연다. |
+| Loop | 생성 전 JSON을 검수하고, 시각 결과를 검증한 뒤, 실패한 한 가지 축만 좁게 수정해 반복한다. archive와 preview가 validation checklist를 만족하거나 blocker를 보고할 때까지 진행한다. |
+| Output | 최종 archive path, preview path, Chrome open 여부, model, 알 수 있는 quality/size, 간결한 prompt/brief summary, 사용 source, 복사한 project asset path가 있으면 그 경로, 남은 risk를 보고한다. |
+| Verification | 유효한 영어 JSON prompt, `gpt-image-2` model 사용, archive의 `prompt.json`, 기대한 `imageN.*` 파일, local `preview.html`, 생성 asset이 global/temp Codex 위치에만 남지 않았는지 확인한다. |
+| Stop condition | 검수된 JSON prompt, 생성/편집 output, archive, preview, visual validation이 모두 통과하면 멈춘다. 그 전에는 권한 부족, 생성 경로 차단, unsafe request, 또는 사용자가 명시적으로 수용한 unresolved risk가 있을 때만 멈춘다. |
+
+</instruction_contract>
+
+<support_file_read_order>
+
+1. 모델 동작, 지원 generation setting, quality/size 선택, provider-sensitive claim이 작업에 영향을 주면 `references/gpt-image-2-research.ko.md`를 읽는다.
+2. 영어 JSON prompt 구조를 만들거나 바꾸기 전에 `references/prompt-schema.ko.md`와 `references/json-prompt-best-practices.ko.md`를 읽는다.
+3. naturalism, realism, anti-AI-looking capture detail을 추가하기 전에 `rules/natural-image-workflow.ko.md`를 읽는다.
+4. 생성/편집 후 로컬 generated image path 또는 latest-output count를 알 수 있으면 `scripts/archive-generated-images.mjs`를 사용하고, 최종 응답 전에 helper output과 archive listing을 검사한다.
+5. Preview rendering을 디버깅하는 경우가 아니면 `assets/image-preview-template.html`은 archive helper를 통해서만 사용한다.
+6. 간결한 reference를 넘어 더 깊은 근거 또는 source context가 필요하면 `.hypercore/research/2026-04-29-image-maker-naturalism.md`와 `.hypercore/research/2026-04-29-json-prompt-best-practices-for-image-maker.md`를 사용한다.
+
+</support_file_read_order>
 
 <execution_contract>
 

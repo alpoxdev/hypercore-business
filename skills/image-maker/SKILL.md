@@ -14,6 +14,12 @@ metadata:
 
 # Image Maker
 
+<output_language>
+
+Respond in the user's language for planning notes, clarifying questions, and final reports. Keep all image-model-facing JSON prompt values in English, except exact visible text requested by the user, which must remain verbatim in `image_prompt.text.verbatim`.
+
+</output_language>
+
 <purpose>
 
 Create situation-appropriate bitmap images that feel photographed, designed, or illustrated for the actual HyperB context rather than obviously AI-generated. The skill turns a vague visual request into a researched image brief, converts it into an English JSON prompt, reviews the prompt, generates or edits with `gpt-image-2`, and validates the result before it is used in the project.
@@ -41,6 +47,33 @@ Do not use this skill when:
 - the request is only generic web research with no raster-image deliverable
 
 </routing_rule>
+
+<instruction_contract>
+
+| Field | Contract |
+|---|---|
+| Intent | Produce believable, context-aware raster image assets through a reviewed English JSON prompt and `gpt-image-2` generation or editing path. |
+| Scope | Covers raster image generation, image editing, reference-guided generation, variants, archive creation, and local preview for HyperB image assets. It does not cover logos, SVG/vector/UI-code edits, prompt-only tasks, or generic image runs without the archive and preview discipline. |
+| Authority | The reviewed JSON prompt is the source of truth after user requirements are interpreted. User instructions can change requirements, but do not silently override the `gpt-image-2`, archive, preview, or validation requirements. |
+| Evidence | Preserve the reviewed prompt, generated image copies, helper output, archive listing, preview path, model/quality/size where known, visual validation notes, and research sources when research was needed. |
+| Tools | Use the Codex image generation capability or project-approved imagegen path for `gpt-image-2`; use `scripts/archive-generated-images.mjs` for local generated files; use Chrome preview only through the helper when the user asked to inspect the result. |
+| Loop | Review JSON before generation, validate the visual output, then iterate narrowly on one failed dimension at a time until the archive and preview satisfy the validation checklist or a blocker is reported. |
+| Output | Return final archive path, preview path, Chrome-open status, model, quality/size if known, concise prompt/brief summary, sources used, copied project asset paths when any, and remaining risks. |
+| Verification | Confirm valid English JSON prompt, `gpt-image-2` model usage, archive `prompt.json`, expected `imageN.*` files, local `preview.html`, and no generated asset left only in a global/temp Codex location. |
+| Stop condition | Stop when the reviewed JSON prompt, generation/edit output, archive, preview, and visual validation all pass; stop earlier only for missing authority, blocked generation path, unsafe request, or an explicitly accepted unresolved risk. |
+
+</instruction_contract>
+
+<support_file_read_order>
+
+1. Read `references/gpt-image-2-research.md` when model behavior, supported generation settings, quality/size choices, or provider-sensitive claims affect the task.
+2. Read `references/prompt-schema.md` and `references/json-prompt-best-practices.md` before creating or changing the English JSON prompt structure.
+3. Read `rules/natural-image-workflow.md` before adding naturalism, realism, or anti-AI-looking capture details.
+4. Use `scripts/archive-generated-images.mjs` after generation/editing when local generated image paths or a latest-output count are available; inspect its output and archive listing before final response.
+5. Rely on `assets/image-preview-template.html` only through the archive helper unless debugging preview rendering.
+6. Use `.hypercore/research/2026-04-29-image-maker-naturalism.md` and `.hypercore/research/2026-04-29-json-prompt-best-practices-for-image-maker.md` when deeper rationale or source context is needed beyond the concise references.
+
+</support_file_read_order>
 
 <execution_contract>
 

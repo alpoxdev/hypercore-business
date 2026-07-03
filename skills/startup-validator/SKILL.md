@@ -23,7 +23,13 @@ description: "[Hyper] Validate startup and product ideas with an evidence ladder
 
 </purpose>
 
-<when_to_use>
+<output_language>
+
+Respond in the user's language. Use English for file names, JSON keys, evidence levels, score labels, and framework names unless the user explicitly asks otherwise.
+
+</output_language>
+
+<routing_rule>
 
 Use this skill when:
 
@@ -46,7 +52,11 @@ Boundary routing:
 - Use `research` for source-backed market or trend research without a startup verdict.
 - Use `plan` when the idea is already validated and the user wants implementation planning.
 
-Positive examples:
+</routing_rule>
+
+<trigger_examples>
+
+Positive triggers:
 
 ```bash
 /startup-validator B2B purchasing automation for mid-market finance teams
@@ -54,21 +64,34 @@ Positive examples:
 /startup-validator PMF인지 아닌지 evidence 기준으로 평가해줘
 ```
 
-Negative examples:
+Negative triggers:
 
 ```bash
 새 스타트업 아이디어 50개 뽑아줘
 이 기능 구현 계획 짜줘
 ```
 
-Boundary example:
+Boundary trigger:
 
 ```bash
 제1원칙으로 사업모델을 완전히 다시 설계해줘
 # Route to elon-musk unless the user asks for validation scoring or go/no-go judgment.
 ```
 
-</when_to_use>
+</trigger_examples>
+
+<support_file_read_order>
+
+Read support files only as needed, in this order:
+
+1. [rules/evidence-and-scoring.md](rules/evidence-and-scoring.md) before inventorying evidence, assigning E0-E7 levels, or adjusting confidence.
+2. [references/frameworks.md](references/frameworks.md) before scoring venture-scale potential, PMF forces, or go/no-go tradeoffs.
+3. [rules/customer-discovery.md](rules/customer-discovery.md) before writing interview questions, discovery quality gates, or customer signal caveats.
+4. [rules/validation-experiments.md](rules/validation-experiments.md) before designing the next validation sprint, metrics, and experiment sequence.
+5. [rules/verdict-and-reporting.md](rules/verdict-and-reporting.md) before producing the verdict, kill criteria, and "what would change my mind" section.
+6. [references/flow-schema.md](references/flow-schema.md) before creating or updating `flow.json`.
+
+</support_file_read_order>
 
 <input_check>
 
@@ -79,6 +102,20 @@ If the startup idea is missing, ask exactly one question:
 If founder, market, customer, or traction evidence is missing, continue with explicit assumptions and low confidence instead of inventing certainty.
 
 </input_check>
+
+<instruction_contract>
+
+- Intent: validate a concrete startup, product, wedge, or market-entry idea and produce an evidence-weighted decision.
+- Scope: assess problem, customer, value, distribution, monetization, defensibility, PMF readiness, and next validation steps; do not ideate from a blank page, redesign from first principles, perform market research only, or plan implementation.
+- Authority: treat user-provided facts and saved `.hypercore/startup-validator/[topic-slug]/` files as working inputs, but grade every claim by evidence quality before using it in a verdict.
+- Evidence: classify signals on the E0-E7 ladder, name the source or assumption behind each score change, and keep raw attractiveness separate from confidence.
+- Tools: read and write only the startup-validator output folder for the current topic unless the user requests otherwise; use support files for scoring, discovery, experiments, verdicts, and flow state.
+- Loop: frame the idea, inventory evidence, score frameworks, assess PMF forces, apply confidence gates, design the next sprint, and update `flow.json` after each phase.
+- Output: save `flow.json`, `thesis.md`, `thiel-scores.md`, `pmf-forces.md`, and `verdict.md` under `.hypercore/startup-validator/[topic-slug]/`.
+- Verification: run the validation checklist, confirm weak evidence cannot produce a high-confidence Go, and ensure the verdict includes success metrics, kill criteria, and what would change the decision.
+- Stop condition: finish when all output files exist, `flow.json` is `completed`, and the user has a concrete Go / Validate First / Narrow / Pivot / Stop decision with the next 7-day validation sprint.
+
+</instruction_contract>
 
 <owned_job>
 

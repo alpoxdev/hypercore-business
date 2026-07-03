@@ -13,22 +13,56 @@ description: "[Hyper] 일반 브레인스토밍이 너무 얕을 때, 막힌 제
 
 > 검증된 혁신 프레임워크 몇 가지를 조합해 다양한 선택지를 만들고, 명시적 근거로 우선순위를 정합니다. 결과는 이후 참조할 수 있도록 다중 파일 폴더로 정리합니다.
 
-## 사용 시점
+<output_language>
+사용자가 요청한 언어를 기본으로 사용합니다. 별도 언어 요청이 없으면 사용자-facing 출력은 한국어로 작성하되, machine-readable 파일명, JSON key, phase name, path는 문서에 적힌 그대로 유지합니다.
+</output_language>
 
-### 긍정 트리거
+<purpose>
+일반 브레인스토밍이 얕거나 서로 비슷한 선택지만 만들 때, 막힌 제품·전략·시장·혁신 문제를 위해 차별화된 아이디어를 생성하고 우선순위를 정합니다.
+</purpose>
 
-- `직장인을 위한 차별화된 AI 교육 아이디어를 생성해줘.`
-- `우리 스타트업의 고객 확보가 계속 평범한 SaaS 전술만 반복해. 완전히 다시 생각해줘.`
-- `경쟁사와 비슷해 보이는 헬스케어 앱의 과감한 제품 방향을 찾아줘.`
+<routing_rule>
+제품, 전략, 시장, 혁신 과제에서 넓고 차별화된 아이데이션과 우선순위화가 함께 필요할 때 이 skill을 사용합니다. 단순 요약, 근거 없는 무작위 아이디어 목록, 이미 강한 선택지 사이의 최종 의사결정, 이미 선택된 아이디어의 실행 계획에는 사용하지 않습니다.
+</routing_rule>
 
-### 범위 밖
+<instruction_contract>
+| Field | Contract |
+|---|---|
+| Intent | 막히거나 평범해진 기회를 다양하고 우선순위가 정해진 아이디어 세트로 전환합니다. |
+| Scope | 과제를 재정의하고, 적합한 혁신 프레임워크 2-3개를 선택하며, 아이디어 10개 이상을 생성하고, 가장 강한 선택지를 우선순위화합니다. |
+| Authority | `.hypercore/genius-thinking/[topic-slug]/` 아래 실행 폴더만 생성하거나 업데이트하며, 관련 없는 프로젝트 파일은 수정하지 않습니다. |
+| Evidence | 분석과 우선순위화에서 관찰 근거, 사용자 제공 사실, 추론을 분리합니다. |
+| Tools | 아래 support file 순서에 따라 읽고, 병렬 아이데이션은 다양성을 실제로 높일 때만 사용합니다. |
+| Loop | `flow.json`으로 phase 진행을 추적하고, 마지막 미완료 phase부터 재개하며, 완료된 phase를 다시 시작하지 않습니다. |
+| Output | `.hypercore/genius-thinking/[topic-slug]/` 아래에 `frameworks.md`, `analysis.md`, `ideas.md`, `priorities.md`, 완료된 `flow.json`을 저장합니다. |
+| Verification | 완료 전 프레임워크 적합성, 아이디어 다양성, 중복 방지, 근거 기반 순위, 다음 저비용 테스트를 점검합니다. |
+| Stop condition | 모든 출력 파일이 존재하고, `flow.json`이 completed이며, 우선순위가 정해진 아이디어 세트가 사용자 검토 가능한 상태가 되면 멈춥니다. |
+</instruction_contract>
 
-- `새 아이디어를 더하지 말고 기존 제품 아이디어만 요약해줘.`
-- `우선순위나 근거 없이 무작위 아이디어 열 개만 줘.`
+<trigger_examples>
 
-### 경계 사례
+| Type | Example | Expected routing |
+|---|---|---|
+| Positive | `직장인을 위한 차별화된 AI 교육 아이디어를 생성해줘.` | 이 skill을 사용합니다. |
+| Positive | `우리 스타트업의 고객 확보가 계속 평범한 SaaS 전술만 반복해. 완전히 다시 생각해줘.` | 이 skill을 사용합니다. |
+| Positive | `경쟁사와 비슷해 보이는 헬스케어 앱의 과감한 제품 방향을 찾아줘.` | 이 skill을 사용합니다. |
+| Negative | `새 아이디어를 더하지 말고 기존 제품 아이디어만 요약해줘.` | 사용하지 않고 요약합니다. |
+| Negative | `우선순위나 근거 없이 무작위 아이디어 열 개만 줘.` | 우선순위와 근거가 허용되지 않으면 사용하지 않습니다. |
+| Boundary | `이미 세 가지 강한 선택지가 있고 최종 결정만 필요해.` | 실제 문제가 약한 아이디어 생성이나 재프레이밍이 아니라면 의사결정 리뷰를 사용합니다. |
 
-- `이미 세 가지 강한 선택지가 있고 최종 결정만 필요해.` 이 경우 실제 문제가 약한 아이디어 생성이나 재프레이밍이 아니라면 의사결정 리뷰를 사용합니다.
+</trigger_examples>
+
+<support_file_read_order>
+
+1. 실행 폴더를 만들거나 업데이트하기 전에 `rules/execution-rules.ko.md`를 읽어 side effect를 문서화된 output path로 제한합니다.
+2. 산출물을 작성하기 전에 `rules/output-discipline.ko.md`를 읽어 보고서가 구체적이고 구조적이며 근거를 구분하도록 합니다.
+3. 프레임워크를 선택하고 아이디어 다양성을 점검할 때 `references/formula-guide.ko.md`를 읽습니다.
+4. `frameworks.md`, `analysis.md`, `ideas.md`, `priorities.md`를 쓰기 전에 `references/output-template.ko.md`를 읽습니다.
+5. `flow.json`을 생성, 업데이트, 재개하기 전에 `references/flow-schema.ko.md`를 읽습니다.
+
+</support_file_read_order>
+
+<workflow>
 
 ## 필수 입력
 
@@ -113,7 +147,9 @@ description: "[Hyper] 일반 브레인스토밍이 너무 얕을 때, 막힌 제
 
 전체 보고서와 아이디어 형식은 [references/output-template.ko.md](references/output-template.ko.md)를 사용합니다.
 
-## 검증
+</workflow>
+
+<validation>
 
 - 딱딱한 글자 수 할당량을 강요하지 않습니다.
 - 답을 바꾸지 않는 프레임워크 잡학을 쏟아내지 않습니다.
@@ -121,3 +157,5 @@ description: "[Hyper] 일반 브레인스토밍이 너무 얕을 때, 막힌 제
 - 가정과 다음 저비용 테스트 없이 아이디어를 우선순위화하지 않습니다.
 - 모든 출력 파일은 `.hypercore/genius-thinking/[topic-slug]/` 아래에 저장해야 합니다.
 - `flow.json` status는 `completed`로 설정해야 합니다.
+
+</validation>

@@ -23,7 +23,13 @@ description: "[Hyper] 스타트업/제품 아이디어를 evidence ladder, confi
 
 </purpose>
 
-<when_to_use>
+<output_language>
+
+사용자의 언어로 응답합니다. 파일명, JSON key, evidence level, score label, framework name은 사용자가 달리 요청하지 않는 한 영어로 유지합니다.
+
+</output_language>
+
+<routing_rule>
 
 사용하세요:
 
@@ -46,7 +52,11 @@ description: "[Hyper] 스타트업/제품 아이디어를 evidence ladder, confi
 - 스타트업 verdict 없는 시장/트렌드 조사는 `research`.
 - 이미 검증된 아이디어의 구현 계획은 `plan`.
 
-긍정 예시:
+</routing_rule>
+
+<trigger_examples>
+
+긍정 trigger:
 
 ```bash
 /startup-validator 중견기업 재무팀을 위한 B2B 구매 자동화
@@ -54,21 +64,34 @@ description: "[Hyper] 스타트업/제품 아이디어를 evidence ladder, confi
 /startup-validator PMF인지 아닌지 evidence 기준으로 평가해줘
 ```
 
-부정 예시:
+부정 trigger:
 
 ```bash
 새 스타트업 아이디어 50개 뽑아줘
 이 기능 구현 계획 짜줘
 ```
 
-경계 예시:
+경계 trigger:
 
 ```bash
 제1원칙으로 사업모델을 완전히 다시 설계해줘
 # validation scoring이나 go/no-go 판단을 요청하지 않았다면 elon-musk로 라우팅합니다.
 ```
 
-</when_to_use>
+</trigger_examples>
+
+<support_file_read_order>
+
+필요한 support file만 아래 순서로 읽습니다:
+
+1. evidence inventory, E0-E7 level 지정, confidence 조정 전 [rules/evidence-and-scoring.md](rules/evidence-and-scoring.md)를 읽습니다.
+2. venture-scale potential, PMF forces, go/no-go tradeoff를 점수화하기 전 [references/frameworks.md](references/frameworks.md)를 읽습니다.
+3. interview question, discovery quality gate, customer signal caveat 작성 전 [rules/customer-discovery.md](rules/customer-discovery.md)를 읽습니다.
+4. 다음 validation sprint, metric, experiment sequence 설계 전 [rules/validation-experiments.md](rules/validation-experiments.md)를 읽습니다.
+5. verdict, kill criteria, "what would change my mind" 섹션 작성 전 [rules/verdict-and-reporting.md](rules/verdict-and-reporting.md)를 읽습니다.
+6. `flow.json` 생성 또는 갱신 전 [references/flow-schema.md](references/flow-schema.md)를 읽습니다.
+
+</support_file_read_order>
 
 <input_check>
 
@@ -79,6 +102,20 @@ description: "[Hyper] 스타트업/제품 아이디어를 evidence ladder, confi
 창업자, 시장, 고객, traction evidence가 부족하면 확신을 만들지 말고 assumption과 low confidence로 진행합니다.
 
 </input_check>
+
+<instruction_contract>
+
+- Intent: 구체적인 스타트업, 제품, wedge, 시장 진입 아이디어를 검증하고 evidence-weighted decision을 만듭니다.
+- Scope: problem, customer, value, distribution, monetization, defensibility, PMF readiness, next validation step을 평가합니다. 빈 페이지 ideation, 제1원칙 재설계, 시장 조사만 수행, 구현 계획은 하지 않습니다.
+- Authority: 사용자가 준 사실과 저장된 `.hypercore/startup-validator/[topic-slug]/` 파일은 working input으로 쓰되, verdict에 반영하기 전 모든 claim을 evidence quality로 등급화합니다.
+- Evidence: signal을 E0-E7 ladder로 분류하고, 각 score change의 source나 assumption을 명명하며, raw attractiveness와 confidence를 분리합니다.
+- Tools: 사용자가 달리 요청하지 않는 한 현재 topic의 startup-validator output folder만 읽고 씁니다. scoring, discovery, experiment, verdict, flow state에는 support file을 사용합니다.
+- Loop: idea framing, evidence inventory, framework scoring, PMF forces 평가, confidence gate 적용, next sprint 설계, phase별 `flow.json` 갱신 순서로 진행합니다.
+- Output: `.hypercore/startup-validator/[topic-slug]/` 아래에 `flow.json`, `thesis.md`, `thiel-scores.md`, `pmf-forces.md`, `verdict.md`를 저장합니다.
+- Verification: validation checklist를 실행하고, weak evidence가 high-confidence Go를 만들지 않는지 확인하며, verdict에 success metric, kill criteria, decision을 바꿀 조건이 들어갔는지 점검합니다.
+- Stop condition: 모든 output file이 존재하고, `flow.json`이 `completed`이며, 사용자가 Go / Validate First / Narrow / Pivot / Stop decision과 다음 7-day validation sprint를 받으면 종료합니다.
+
+</instruction_contract>
 
 <owned_job>
 

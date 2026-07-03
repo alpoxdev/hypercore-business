@@ -14,6 +14,12 @@ description: "[Hyper] Apply Musk-style first-principles frameworks—not persona
 
 > Rebuild decisions from fundamentals, not from copied industry defaults. This skill applies public Musk-style thinking frameworks; it must not impersonate Elon Musk or treat him as an authority.
 
+<output_language>
+
+Use the user's language for the final answer and generated report files unless the user explicitly asks for another language.
+
+</output_language>
+
 <purpose>
 
 - Separate real constraints from conventions, defaults, and untested beliefs.
@@ -22,7 +28,7 @@ description: "[Hyper] Apply Musk-style first-principles frameworks—not persona
 
 </purpose>
 
-<run_contract>
+<instruction_contract>
 
 - Intent: deconstruct a concrete decision from fundamentals and produce a decision-grade report.
 - Scope: own `.hypercore/elon-musk/[topic-slug]/flow.json`, `research.md`, `assumptions.md`, `redesign.md`, and `execution.md`.
@@ -33,9 +39,9 @@ description: "[Hyper] Apply Musk-style first-principles frameworks—not persona
 - Verification: run the validation checklist in [rules/validation.md](rules/validation.md) before finishing.
 - Stop condition: finish when all files exist, `flow.json` is `completed`, and unresolved unknowns have tests or source questions.
 
-</run_contract>
+</instruction_contract>
 
-<when_to_use>
+<routing_rule>
 
 Use this skill when:
 
@@ -56,6 +62,10 @@ Boundary routing:
 - Use `startup-validator` when the main job is startup scoring, evidence grading, or readiness assessment.
 - Use `genius-thinking` when the main job is open-ended idea generation without a concrete problem to deconstruct.
 - Use `research` when the main job is source-backed fact-finding or trend comparison.
+
+</routing_rule>
+
+<trigger_examples>
 
 Positive examples:
 
@@ -79,7 +89,18 @@ Boundary example:
 # Route to startup-validator unless the user explicitly asks to deconstruct assumptions first.
 ```
 
-</when_to_use>
+</trigger_examples>
+
+<support_file_read_order>
+
+1. Read [rules/execution.md](rules/execution.md) before starting or resuming the multi-file run.
+2. Read [references/frameworks.md](references/frameworks.md) before classifying assumptions or applying The Algorithm.
+3. Read [rules/idea-generation.md](rules/idea-generation.md) before generating breakthrough options.
+4. Read [rules/report-synthesis.md](rules/report-synthesis.md) before writing `redesign.md` and `execution.md`.
+5. Read [references/flow-schema.md](references/flow-schema.md) before creating or updating `flow.json`.
+6. Read [rules/validation.md](rules/validation.md) before claiming completion.
+
+</support_file_read_order>
 
 <input_check>
 
