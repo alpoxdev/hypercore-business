@@ -1,9 +1,0 @@
-command used: node skills/validate-skills.mjs --json
-source JSON path: .omo/evidence/skills-instructions-refactor/validation-green.json
-validator exit code: 0
-filtered files:
-- skills/image-maker/SKILL.md
-- skills/image-maker/SKILL.ko.md
-image-maker canonical tag findings: 0
-image-maker support-link findings: 0
-image-maker line-budget findings: 0

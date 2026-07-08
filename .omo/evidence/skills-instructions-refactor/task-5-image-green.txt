@@ -1,3 +1,0 @@
-image-maker canonical tags ok
-image-maker preserved media contract
-PASS image-maker

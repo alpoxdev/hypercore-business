@@ -1,1 +1,0 @@
-Refactor the local skills/ folder according to the already-read instructions/ skill-authoring guidance. Preserve existing domain logic, normalize SKILL.md contracts, routing, support-file discoverability, bilingual mirrors, and validation evidence. Do not modify global home-directory skills/config. Execute via start-work delegation with evidence.

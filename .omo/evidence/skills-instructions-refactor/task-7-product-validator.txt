@@ -1,7 +1,0 @@
-product-detail-maker skill validation passed
-SKILL.md lines: 178
-Research URLs: 20
-Korean .ko.md coverage: passed
-PASS product-detail-maker
-$ node --check skills/product-detail-maker/scripts/validate-product-detail-maker-skill.mjs
-node --check exit 0

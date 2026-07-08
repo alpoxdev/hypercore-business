@@ -1,2 +1,0 @@
-startup-validator canonical tags ok
-startup-validator preserved validation contract

@@ -1,5 +1,0 @@
-skills/elon-musk/SKILL.ko.md
-skills/elon-musk/SKILL.md
- M skills/elon-musk/SKILL.ko.md
- M skills/elon-musk/SKILL.md
-?? .omo/evidence/skills-instructions-refactor/
